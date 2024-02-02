@@ -5,5 +5,6 @@ public abstract class Tile {
     // Each tile is an hexagon and it needs to know its position in the board
     private int x;
     private int y;
+    private int z;
     
 }
