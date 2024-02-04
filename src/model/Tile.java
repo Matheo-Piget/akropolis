@@ -9,6 +9,9 @@ public class Tile {
     private Grid grid;
     private TileTrio tileTrio;
 
+    private Tile above;
+    private Tile below;
+
     public Tile(int x, int y, Grid grid) {
         this.position = new Point(x, y);
         this.grid = grid;
@@ -38,6 +41,22 @@ public class Tile {
         return position.y;
     }
 
+    public Tile getAbove() {
+        return above;
+    }
+
+    public Tile getBelow() {
+        return below;
+    }
+
+    public void setAbove(Tile above) {
+        this.above = above;
+    }
+
+    public void setBelow(Tile below) {
+        this.below = below;
+    }
+
     public List<Tile> getNeighbors() {
         List<Tile> neighbors = new ArrayList<>();
 
@@ -60,5 +79,16 @@ public class Tile {
         }
 
         return neighbors;
+    }
+
+    public boolean hasAbove() {
+
+        return above != null;
+    }
+
+    public boolean hasBelow(){
+
+        return below != null;
+
     }
 }

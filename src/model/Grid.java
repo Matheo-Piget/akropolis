@@ -27,7 +27,15 @@ public class Grid {
     
         // Check if a tile with the same coordinates already exists
         if (tiles.containsKey(newPoint)) {
-            return false;
+            Tile existingTile = tiles.get(newPoint);
+
+            if (!existingTile.hasAbove() && !tile.hasBelow()) {
+                // If neither tile has a level above/below, set them as each other's levels
+                existingTile.setAbove(tile);
+                tile.setBelow(existingTile);
+                tiles.put(newPoint, tile);
+                return true;
+            }
         }
     
         // Check if the tile has at least one neighbor in the grid
@@ -35,7 +43,7 @@ public class Grid {
         for (int[] direction : directions) {
             int nx = x + direction[0];
             int ny = y + direction[1];
-            if (tiles.containsKey(new Point(nx, ny))) {
+            if (!tiles.containsKey(new Point(nx, ny))) {
                 // Add the tile to the grid
                 tiles.put(newPoint, tile);
                 return true;
