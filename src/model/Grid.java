@@ -1,54 +1,58 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.Point;
 
 public class Grid {
-    private ArrayList<ArrayList<Tile>> tiles;
+    private Map<Point, Tile> tiles;
 
     public Grid() {
-        tiles = new ArrayList<>();
+        tiles = new HashMap<>();
+        StartingTile startingTile1 = new StartingTile(0, 0, this);
+        StartingTile startingTile2 = new StartingTile(-1, 1, this);
+        StartingTile startingTile3 = new StartingTile(1, 1, this);
+        startingTile1.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
+        startingTile2.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
+        startingTile3.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
+        tiles.put(new Point(0, 0), startingTile1);
+        tiles.put(new Point(-1, 1), startingTile2);
+        tiles.put(new Point(1, 1), startingTile3);
     }
 
-    public ArrayList<ArrayList<Tile>> getTiles() {
-        return tiles;
-    }
-
-    public void addTile(Tile tile, int x, int y) {
-        if (tiles.size() <= x) {
-            for (int i = tiles.size(); i <= x; i++) {
-                tiles.add(new ArrayList<>());
+    public boolean addTile(Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY();
+        Point newPoint = new Point(x, y);
+    
+        // Check if a tile with the same coordinates already exists
+        if (tiles.containsKey(newPoint)) {
+            return false;
+        }
+    
+        // Check if the tile has at least one neighbor in the grid
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {1, -1}};
+        for (int[] direction : directions) {
+            int nx = x + direction[0];
+            int ny = y + direction[1];
+            if (tiles.containsKey(new Point(nx, ny))) {
+                // Add the tile to the grid
+                tiles.put(newPoint, tile);
+                return true;
             }
         }
-        if (tiles.get(x).size() <= y) {
-            for (int i = tiles.get(x).size(); i <= y; i++) {
-                tiles.get(x).add(null);
-            }
-        }
-        tiles.get(x).set(y, tile);
-    }
-
-    // I haven't tested this method so I'm not sure if it works
-    public void addTile(Tile tile) {
-        if (tiles.size() <= tile.getX()) {
-            for (int i = tiles.size(); i <= tile.getX(); i++) {
-                tiles.add(new ArrayList<>());
-            }
-        }
-        if (tiles.get(tile.getX()).size() <= tile.getY()) {
-            for (int i = tiles.get(tile.getX()).size(); i <= tile.getY(); i++) {
-                tiles.get(tile.getX()).add(null);
-            }
-        }
-        tiles.get(tile.getX()).set(tile.getY(), tile);
+    
+        // If the tile has no neighbors in the grid, return false
+        return false;
     }
 
     public Tile getTile(int x, int y) {
-        if (x < 0 || x >= tiles.size()) {
-            return null;
-        }
-        if (y < 0 || y >= tiles.get(x).size()) {
-            return null;
-        }
-        return tiles.get(x).get(y);
+        return tiles.get(new Point(x, y));
+    }
+
+    public void display() {
+        tiles.forEach((point, tile) -> {
+            System.out.println("Tile: " + tile.getClass() + " " + tile.getX() + " " + tile.getY() + " ");
+        });
     }
 }

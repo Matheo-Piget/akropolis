@@ -8,8 +8,19 @@ public class Board {
         grid = new Grid();
     }
 
-    public void addTile(Tile tile, int x, int y) {
-        grid.addTile(tile);
+    // Only for the terminal version of the game to debug purposes
+    public void display() {
+        grid.display();
+    }
+
+    // We can get a tile from the grid
+    public Tile getTile(int x, int y) {
+        return grid.getTile(x, y);
+    }
+
+    // We can add a tile only next to another tile if not we can't add it and we return false
+    public boolean addTile(Tile tile) {
+        return grid.addTile(tile);
     }
 
 }

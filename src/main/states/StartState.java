@@ -1,4 +1,4 @@
-package states;
+package main.states;
 import util.State;
 
 public class StartState extends State{

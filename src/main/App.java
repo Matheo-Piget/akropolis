@@ -2,7 +2,8 @@ package main;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import states.AppState;
+
+import main.states.AppState;
 
 public class App extends JFrame{
     private final int WIDTH = 700;

@@ -1,4 +1,4 @@
-package states;
+package main.states;
 import util.State;
 import util.StateMachine;
 

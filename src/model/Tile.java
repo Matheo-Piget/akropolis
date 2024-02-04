@@ -7,23 +7,27 @@ import java.util.List;
 public class Tile {
     private Point position;
     private Grid grid;
-
-    private Tile trio1;
-    private Tile trio2;
+    private TileTrio tileTrio;
 
     public Tile(int x, int y, Grid grid) {
         this.position = new Point(x, y);
         this.grid = grid;
     }
 
-    public void rotate() {
-        // Rotate the tile by 90 degrees by exchanging trio1 and trio2 positions in the grid and updating their positions
-        grid.addTile(trio1, trio2.getX(), trio2.getY());
+    public Tile(int x, int y) {
+        this.position = new Point(x, y);
     }
 
-    public void setTrio(Tile trio1, Tile trio2) {
-        this.trio1 = trio1;
-        this.trio2 = trio2;
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public void setTileTrio(TileTrio tileTrio) {
+        this.tileTrio = tileTrio;
+    }
+
+    public TileTrio getTileTrio() {
+        return tileTrio;
     }
 
     public int getX() {
