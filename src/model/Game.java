@@ -17,12 +17,24 @@ public class Game {
         players = new ArrayList<>();
     }
 
+    /***
+     * Add a player to our list of players
+     * @param player a player
+     */
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
     /**
      * Starts the game by setting the current player to the first player and initiating the first turn.
      */
     public void startGame() {
-        currentPlayer = players.get(0);
-        startTurn(currentPlayer);
+        if(!players.isEmpty()) {
+            currentPlayer = players.get(0);
+            startTurn(currentPlayer);
+        } else {
+            // TODO faire un trus si on démarrre une partie avec aucun jouurs
+        }
     }
 
     /**
