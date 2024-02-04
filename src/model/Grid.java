@@ -93,4 +93,19 @@ public class Grid {
             System.out.println("Tile: " + tile.getClass() + " " + tile.getX() + " " + tile.getY() + " ");
         });
     }
+
+    /***
+     * Clear the grid/board, for new game or otherwise
+     */
+    public void clearGrid(){
+
+        tiles.clear();
+
+    }
+
+    public void calculateScore(){
+
+        // TODO méthode à faire pour calculer le score selon les règles
+
+    }
 }
