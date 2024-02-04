@@ -4,59 +4,125 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a tile on the game grid.
+ */
 public class Tile {
-    private Point position;
-    private Grid grid;
-    private TileTrio tileTrio;
+    private Point position; // Coordinates of the tile
+    private Grid grid; // Reference to the grid containing the tile
+    private TileTrio tileTrio; // Reference to a trio of tiles
 
-    private Tile above;
-    private Tile below;
+    private Tile above; // Tile above the current tile
+    private Tile below; // Tile below the current tile
 
+    /**
+     * Constructor to create a tile with specified coordinates and grid.
+     *
+     * @param x    The x-coordinate of the tile.
+     * @param y    The y-coordinate of the tile.
+     * @param grid The grid containing the tile.
+     */
     public Tile(int x, int y, Grid grid) {
         this.position = new Point(x, y);
         this.grid = grid;
     }
 
+    /**
+     * Constructor to create a tile with specified coordinates (used without grid reference).
+     *
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     */
     public Tile(int x, int y) {
         this.position = new Point(x, y);
     }
 
+    /**
+     * Sets the grid reference for the tile.
+     *
+     * @param grid The grid containing the tile.
+     */
     public void setGrid(Grid grid) {
         this.grid = grid;
     }
 
+    /**
+     * Sets the trio of tiles for the current tile.
+     *
+     * @param tileTrio The trio of tiles containing the current tile.
+     */
     public void setTileTrio(TileTrio tileTrio) {
         this.tileTrio = tileTrio;
     }
 
+    /**
+     * Gets the trio of tiles containing the current tile.
+     *
+     * @return The trio of tiles containing the current tile.
+     */
     public TileTrio getTileTrio() {
         return tileTrio;
     }
 
+    /**
+     * Gets the x-coordinate of the tile.
+     *
+     * @return The x-coordinate of the tile.
+     */
     public int getX() {
         return position.x;
     }
 
+    /**
+     * Gets the y-coordinate of the tile.
+     *
+     * @return The y-coordinate of the tile.
+     */
     public int getY() {
         return position.y;
     }
 
+    /**
+     * Gets the tile above the current tile.
+     *
+     * @return The tile above the current tile.
+     */
     public Tile getAbove() {
         return above;
     }
 
+    /**
+     * Gets the tile below the current tile.
+     *
+     * @return The tile below the current tile.
+     */
     public Tile getBelow() {
         return below;
     }
 
-    public void setAbove(Tile above) {
-        this.above = above;
+    /**
+     * Sets the tile above the current tile.
+     *
+     * @param aboveTile The tile above the current tile.
+     */
+    public void setAbove(Tile aboveTile) {
+        this.above = aboveTile;
     }
 
-    public void setBelow(Tile below) {
-        this.below = below;
+    /**
+     * Sets the tile below the current tile.
+     *
+     * @param belowTile The tile below the current tile.
+     */
+    public void setBelow(Tile belowTile) {
+        this.below = belowTile;
     }
 
+    /**
+     * Gets a list of neighboring tiles based on the hexagonal grid layout.
+     *
+     * @return List of neighboring tiles.
+     */
     public List<Tile> getNeighbors() {
         List<Tile> neighbors = new ArrayList<>();
 
@@ -68,6 +134,7 @@ public class Tile {
             directions = new int[][]{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, -1}, {1, 0}};
         }
 
+        // Check each direction and add the neighboring tile if it exists
         for (int[] direction : directions) {
             int nx = position.x + direction[0];
             int ny = position.y + direction[1];
@@ -81,14 +148,21 @@ public class Tile {
         return neighbors;
     }
 
+    /**
+     * Checks if the tile has a tile above it.
+     *
+     * @return True if the tile has a tile above it, false otherwise.
+     */
     public boolean hasAbove() {
-
         return above != null;
     }
 
-    public boolean hasBelow(){
-
+    /**
+     * Checks if the tile has a tile below it.
+     *
+     * @return True if the tile has a tile below it, false otherwise.
+     */
+    public boolean hasBelow() {
         return below != null;
-
     }
 }
