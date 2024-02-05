@@ -227,6 +227,9 @@ public class Grid {
                 case "Market":
                     totalScore += calculateMarketScore(tile);
                     break;
+                default:
+                    totalScore += calculatePlaceScore((Place) tile);
+                    break;
             }
         }
 
@@ -262,5 +265,9 @@ public class Grid {
             }
         }
         return 1;
+    }
+
+    private int calculatePlaceScore(Place place) {
+        return place.getStars() * place.getElevation();
     }
 }
