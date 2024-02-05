@@ -122,6 +122,7 @@ public class Grid {
      */
     public int calculateScore() {
         // TODO : This method calculation is not correct, it should be fixed to calculate the score of each district
+        // TODO : peut être séparé cette méthode en plusieurs méthode car elle risque d'être longue
         // it gives just an example of how to calculate the score
         int gardenScore = 0;
         int barrackScore = 0;
@@ -169,10 +170,11 @@ public class Grid {
                 case "Building":
                     // We only increase the score if the building is next to another building
                     for (Tile neighbor : tile.getNeighbors()) {
-                        if (neighbor.getType() == "Building") {
+                        if (neighbor.getType().equals("Building")) {
                             currentNumberOfBuilding++;
                             buildingScore += tile.getElevation();
                             maxNumberOfBuilding = Math.max(maxNumberOfBuilding, currentNumberOfBuilding);
+                            maxBuildingScore = Math.max(maxBuildingScore, buildingScore);
                             break;
                         }
                     }
@@ -187,7 +189,7 @@ public class Grid {
                     // We only increase the score if the market has no adjacent market
                     boolean hasMarket = false;
                     for (Tile neighbor : tile.getNeighbors()) {
-                        if (neighbor.getType() == "Market") {
+                        if (neighbor.getType().equals("Market")) {
                             hasMarket = true;
                             break;
                         }
