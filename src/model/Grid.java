@@ -120,7 +120,7 @@ public class Grid {
     /**
      * Calculate the score of each district
      */
-    public int calculateScore() {
+    /*public int calculateScore() {
         // TODO : This method calculation is not correct, it should be fixed to calculate the score of each district
         // TODO : peut être séparé cette méthode en plusieurs méthode car elle risque d'être longue
         // it gives just an example of how to calculate the score
@@ -205,5 +205,62 @@ public class Grid {
                 maxBuildingScore * buildingMultiplier +
                 templeScore * templeMultiplier +
                 marketScore * marketMultiplier;
+    }*/
+
+    public int calculateScore() {
+        int totalScore = 0;
+
+        for (Tile tile : tiles.values()) {
+            switch (tile.getType()) {
+                case "Garden":
+                    totalScore += calculateGardenScore(tile);
+                    break;
+                case "Barrack":
+                    totalScore += calculateBarrackScore(tile);
+                    break;
+                case "Building":
+                    totalScore += calculateBuildingScore(tile);
+                    break;
+                case "Temple":
+                    totalScore += calculateTempleScore(tile);
+                    break;
+                case "Market":
+                    totalScore += calculateMarketScore(tile);
+                    break;
+            }
+        }
+
+        return totalScore;
+    }
+
+    private int calculateGardenScore(Tile tile) {
+        return tile.getElevation();
+    }
+
+    private int calculateBarrackScore(Tile tile) {
+        return (tile.getNeighbors().size() < 6) ? tile.getElevation() : 0;
+    }
+
+    private int calculateBuildingScore(Tile tile) {
+        int adjacentBuildingScore = 0;
+        for (Tile neighbor : tile.getNeighbors()) {
+            if (neighbor.getType().equals("Building")) {
+                adjacentBuildingScore = Math.max(adjacentBuildingScore, neighbor.getElevation());
+            }
+        }
+        return adjacentBuildingScore;
+    }
+
+    private int calculateTempleScore(Tile tile) {
+        return tileIsSurrounded(tile) ? 1 : 0;
+    }
+
+    private int calculateMarketScore(Tile tile) {
+        for (Tile neighbor : tile.getNeighbors()) {
+            if (neighbor.getType().equals("Market")) {
+                return 0;
+            }
+        }
+        return 1;
     }
 }
