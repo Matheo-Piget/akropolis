@@ -1,18 +1,20 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.Point;
-
 /**
- * Represents the grid of the game board, containing tiles in different positions.
+ * Represents the grid of the game board, containing tiles in different
+ * positions.
  */
 public class Grid {
     // Map to store tiles based on their positions
     private Map<Point, Tile> tiles;
 
     /**
-     * Constructor to initialize the grid and add the starting tiles at the beginning of the game.
+     * Constructor to initialize the grid and add the starting tiles at the
+     * beginning of the game.
      */
     public Grid() {
         tiles = new HashMap<>();
@@ -59,7 +61,7 @@ public class Grid {
         }
 
         // Check if the tile has at least one neighbor in the grid
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {1, -1}};
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 1 }, { 1, -1 } };
         for (int[] direction : directions) {
             int nx = x + direction[0];
             int ny = y + direction[1];
@@ -94,18 +96,112 @@ public class Grid {
         });
     }
 
+    /**
+     * Return whether the tile is surrounded by other tiles or not
+     * 
+     * @param tile The tile to check if it is surrounded
+     */
+    private boolean tileIsSurrounded(Tile tile) {
+        if (tile.getNeighbors().size() == 6) {
+            return true;
+        }
+        return false;
+    }
+
     /***
      * Clear the grid/board, for new game or otherwise
      */
-    public void clearGrid(){
+    public void clearGrid() {
 
         tiles.clear();
 
     }
 
-    public void calculateScore(){
+    /**
+     * Calculate the score of each district
+     */
+    public int calculateScore() {
+        // TODO : This method calculation is not correct, it should be fixed to calculate the score of each district
+        // it gives just an example of how to calculate the score
+        int gardenScore = 0;
+        int barrackScore = 0;
+        int buildingScore = 0;
+        ArrayList<Integer> buildingScores = new ArrayList<Integer>();
+        int currentNumberOfBuilding = 0; // We count all the building
+        int maxNumberOfBuilding = 0; // We only count the maximum adjacent building
+        int maxBuildingScore = 0;
+        int templeScore = 0;
+        int marketScore = 0;
 
-        // TODO méthode à faire pour calculer le score selon les règles
+        int gardenMultiplier = 1;
+        int barrackMultiplier = 1;
+        int buildingMultiplier = 1;
+        int templeMultiplier = 1;
+        int marketMultiplier = 1;
 
+        for (Tile tile : tiles.values()) {
+            switch (tile.getType()) {
+                case "Garden Place":
+                    gardenMultiplier = ((Place) tile).getStars();
+                    break;
+                case "Barrack Place":
+                    barrackMultiplier = ((Place) tile).getStars();
+                    break;
+                case "Building Place":
+                    buildingMultiplier = ((Place) tile).getStars();
+                    break;
+                case "Temple Place":
+                    templeMultiplier = ((Place) tile).getStars();
+                    break;
+                case "Market Place":
+                    marketMultiplier = ((Place) tile).getStars();
+                    break;
+                
+                case "Garden":
+                    gardenScore += tile.getElevation(); // It should always increase the score
+                    break;
+                case "Barrack":
+                    // We only increase the score if the barrack is in the border of the grid
+                    if (tile.getNeighbors().size() < 6) {
+                        barrackScore += tile.getElevation();
+                    }
+                    break;
+                case "Building":
+                    // We only increase the score if the building is next to another building
+                    for (Tile neighbor : tile.getNeighbors()) {
+                        if (neighbor.getType() == "Building") {
+                            currentNumberOfBuilding++;
+                            buildingScore += tile.getElevation();
+                            maxNumberOfBuilding = Math.max(maxNumberOfBuilding, currentNumberOfBuilding);
+                            break;
+                        }
+                    }
+                    break;
+                case "Temple":
+                    // We only increase the score if the temple is surrounded by 6 tiles
+                    if (tileIsSurrounded(tile)) {
+                        templeScore++;
+                    }
+                    break;
+                case "Market":
+                    // We only increase the score if the market has no adjacent market
+                    boolean hasMarket = false;
+                    for (Tile neighbor : tile.getNeighbors()) {
+                        if (neighbor.getType() == "Market") {
+                            hasMarket = true;
+                            break;
+                        }
+                    }
+                    if (!hasMarket) {
+                        marketScore++;
+                    }
+                    break;
+            }
+        }
+        return gardenScore * gardenMultiplier +
+                barrackScore * barrackMultiplier +
+                maxBuildingScore * buildingMultiplier +
+                templeScore * templeMultiplier +
+                marketScore * marketMultiplier;
     }
 }

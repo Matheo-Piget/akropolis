@@ -16,15 +16,15 @@ public class Test {
         BetterAssert.assertIsTrue(board.getTile(1, 1) != null);
         BetterAssert.assertIsTrue(board.getTile(-1, 1) != null);
         // Then we will add a tile
-        Tile tile = new Tile(1, 0);
+        Quarrie tile = new Quarrie(1, 0);
         board.addTile(tile);
         // We verify that the tile is placed at the right position
         BetterAssert.assertIsTrue(board.getTile(1, 0) != null);
         // We will try to add an invalid tile
-        Tile invalidTile = new Tile(0, 0);
-        BetterAssert.assertIsTrue(!board.addTile(invalidTile));
+        Quarrie invalidTile1 = new Quarrie(0, 0);
+        BetterAssert.assertIsTrue(!board.addTile(invalidTile1));
         // We will try the case where the tile is not placed next to another tile
-        Tile invalidTile2 = new Tile(5, 5);
+        Quarrie invalidTile2 = new Quarrie(5, 5);
         BetterAssert.assertIsTrue(!board.addTile(invalidTile2));
         // Display the existing tiles
         board.display();

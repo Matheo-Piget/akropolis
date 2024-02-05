@@ -7,10 +7,12 @@ import java.util.List;
 /**
  * Represents a tile on the game grid.
  */
-public class Tile {
+public abstract class Tile {
     private Point position; // Coordinates of the tile
     private Grid grid; // Reference to the grid containing the tile
     private TileTrio tileTrio; // Reference to a trio of tiles
+
+    private int elevation = 1; // Elevation level of the tile
 
     private Tile above; // Tile above the current tile
     private Tile below; // Tile below the current tile
@@ -37,6 +39,8 @@ public class Tile {
         this.position = new Point(x, y);
     }
 
+    public abstract String getType();
+
     /**
      * Sets the grid reference for the tile.
      *
@@ -62,6 +66,15 @@ public class Tile {
      */
     public TileTrio getTileTrio() {
         return tileTrio;
+    }
+
+    /**
+     * Gets the elevation of the tile.
+     *
+     * @return The current elevation of the tile.
+     */
+    public int getElevation() {
+        return elevation;
     }
 
     /**
