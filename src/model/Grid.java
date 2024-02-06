@@ -65,7 +65,7 @@ public class Grid {
         for (int[] direction : directions) {
             int nx = x + direction[0];
             int ny = y + direction[1];
-            if (!tiles.containsKey(new Point(nx, ny))) {
+            if (tiles.containsKey(new Point(nx, ny))) {
                 // Add the tile to the grid
                 tiles.put(newPoint, tile);
                 return true;
