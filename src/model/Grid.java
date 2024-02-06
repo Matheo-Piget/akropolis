@@ -85,7 +85,7 @@ public class Grid {
      */
     public Tile getTile(int x, int y) {
         return tiles.get(new Point(x, y));
-    }
+    } // FIXME: This method should check if it's the most high tile in the grid
 
     /**
      * Displays information about each tile in the grid.
