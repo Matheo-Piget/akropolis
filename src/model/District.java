@@ -11,19 +11,13 @@ public class District extends Tile {
 
     @Override
     public String getType() {
-        switch (color) {
-            case RED:
-                return "Barrack";
-            case BLUE:
-                return "Building";
-            case GREEN:
-                return "Garden";
-            case YELLOW:
-                return "Market";
-            case PURPLE:
-                return "Temple";
-        }
+        return switch (color) {
+            case RED -> "Barrack";
+            case BLUE -> "Building";
+            case GREEN -> "Garden";
+            case YELLOW -> "Market";
+            case PURPLE -> "Temple";
+        };
         // This should never happen
-        return null;
     }
 }
