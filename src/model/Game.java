@@ -26,14 +26,17 @@ public class Game {
     }
 
     /**
-     * Starts the game by setting the current player to the first player and initiating the first turn.
+     * Démarre le jeu en définissant le joueur actuel sur le premier joueur et en lançant le premier tour.
+     * Lève une exception si aucun joueur n'est présent pour démarrer le jeu.
+     *
+     * @throws IllegalStateException si aucun joueur n'est présent pour démarrer le jeu.
      */
     public void startGame() {
-        if(!players.isEmpty()) {
-            currentPlayer = players.get(0);
+        if (!players.isEmpty()) {
+            currentPlayer = players.getFirst();
             startTurn(currentPlayer);
         } else {
-            // TODO faire un trus si on démarrre une partie avec aucun jouurs
+            throw new IllegalStateException("Impossible de démarrer le jeu sans joueur. Veuillez ajouter des joueurs avant de commencer.");
         }
     }
 

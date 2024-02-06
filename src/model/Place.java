@@ -16,19 +16,13 @@ public class Place extends Tile{
 
     @Override
     public String getType() {
-        switch (color) {
-            case RED:
-                return "Barrack Place";
-            case BLUE:
-                return "Building Place";
-            case GREEN:
-                return "Garden Place";
-            case YELLOW:
-                return "Market Place";
-            case PURPLE:
-                return "Temple Place";
-        }
+        return switch (color) {
+            case RED -> "Barrack Place";
+            case BLUE -> "Building Place";
+            case GREEN -> "Garden Place";
+            case YELLOW -> "Market Place";
+            case PURPLE -> "Temple Place";
+        };
         // This should never happen
-        return null;
     }
 }

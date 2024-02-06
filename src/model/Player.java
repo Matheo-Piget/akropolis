@@ -6,14 +6,14 @@ import java.util.List;
 public class Player {
     private String name;
     private int score;
-    private List<District> ownedDistricts;  // List of districts owned by the player
+    private List<Tile> ownedTiles;  // List of tiles owned by the player
     private Tile selectedTile;  // The tile selected by the player during their turn
 
     // Constructor
     public Player(String name) {
         this.name = name;
         this.score = 0;
-        this.ownedDistricts = new ArrayList<>();
+        this.ownedTiles = new ArrayList<>();
         this.selectedTile = null;
     }
 
@@ -27,8 +27,8 @@ public class Player {
         return score;
     }
 
-    public List<District> getOwnedDistricts() {
-        return ownedDistricts;
+    public List<Tile> getOwnedTiles() {
+        return ownedTiles;
     }
 
     public Tile getSelectedTile() {
