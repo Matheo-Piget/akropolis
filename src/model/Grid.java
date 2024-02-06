@@ -77,15 +77,23 @@ public class Grid {
     }
 
     /**
-     * Retrieves the tile at the specified position in the grid.
+     * Retrieves the topmost tile at the specified position in the grid.
      *
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
-     * @return The tile at the specified position, or null if no tile exists.
+     * @return The topmost tile at the specified position, or null if no tile exists.
      */
     public Tile getTile(int x, int y) {
-        return tiles.get(new Point(x, y));
-    } // FIXME: This method should check if it's the most high tile in the grid
+        Point point = new Point(x, y);
+        Tile tile = tiles.get(point);
+
+        // If the tile exists and has no tile above it, then it's the topmost tile
+        if (tile != null && !tile.hasAbove()) {
+            return tile;
+        }
+
+        return null;
+    } // pas testé et preque sur que ca ne marche pas mais et une piste pour la suite
 
     /**
      * Displays information about each tile in the grid.
