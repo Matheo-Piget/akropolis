@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.Point;
@@ -48,7 +49,7 @@ public class Grid {
 
         // Check if a tile with the same coordinates already exists
         if (tiles.containsKey(newPoint)) {
-            Tile existingTile = tiles.get(newPoint);
+            Tile existingTile = getTile(x, y);
 
             // Check if neither tile has a level above/below
             if (!existingTile.hasAbove() && !tile.hasBelow()) {
@@ -65,7 +66,7 @@ public class Grid {
         for (int[] direction : directions) {
             int nx = x + direction[0];
             int ny = y + direction[1];
-            if (tiles.containsKey(new Point(nx, ny))) {
+            if (tiles.containsKey(new Point(nx, ny)) && tile.getElevation() == 0) {
                 // Add the tile to the grid
                 tiles.put(newPoint, tile);
                 return true;
@@ -85,15 +86,28 @@ public class Grid {
      */
     public Tile getTile(int x, int y) {
         Point point = new Point(x, y);
-        Tile tile = tiles.get(point);
 
-        // If the tile exists and has no tile above it, then it's the topmost tile
-        if (tile != null && !tile.hasAbove()) {
-            return tile;
+        // Retrieve all tiles at the specified position
+        List<Tile> tilesAtPosition = new ArrayList<>();
+        for (Map.Entry<Point, Tile> entry : tiles.entrySet()) {
+            if (entry.getKey().equals(point)) {
+                tilesAtPosition.add(entry.getValue());
+            }
         }
 
-        return null;
-    } // pas testé et preque sur que ca ne marche pas mais et une piste pour la suite
+        // Find the topmost tile among the tiles at the specified position
+        Tile topmostTile = null;
+        for (Tile tile : tilesAtPosition) {
+            if (!tile.hasAbove()) {
+                // If no tile is currently marked as the topmost, or if this tile is higher, set it as the topmost tile
+                if (topmostTile == null || tile.getElevation() > topmostTile.getElevation()) {
+                    topmostTile = tile;
+                }
+            }
+        }
+
+        return topmostTile;
+    }
 
     /**
      * Displays information about each tile in the grid.
