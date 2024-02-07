@@ -20,7 +20,7 @@ public class Grid {
         tiles = new HashMap<>();
 
         // Creating starting tiles
-        StartingTile startingTile1 = new StartingTile(0, 0, this);
+        StartingTile startingTile1 = new StartingTile(1, 0, this);
         StartingTile startingTile2 = new StartingTile(-1, 1, this);
         StartingTile startingTile3 = new StartingTile(1, 1, this);
 
