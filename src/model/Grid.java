@@ -124,10 +124,7 @@ public class Grid {
      * @param tile The tile to check if it is surrounded
      */
     private boolean tileIsSurrounded(Tile tile) {
-        if (tile.getNeighbors().size() == 6) {
-            return true;
-        }
-        return false;
+        return tile.getNeighbors().size() == 6;
     }
 
     /***
