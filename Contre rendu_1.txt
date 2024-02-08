@@ -1,0 +1,43 @@
+Compte Rendu Hebdomadaire - Projet Akropolis en Java
+
+Semaine du semaine du 4/02/2024:
+
+Tâches Accomplies:
+1. Bilal - Il a donne une partie de l'implementation du plateau du jeu.
+2. Matheo - Rectification du code disponible sur le git, ajoute du javadoc sur certaine classes.
+3. Nidhal - Modification de la méthode add pour ajouter un trio de tuile.
+
+
+Avancements Individuels:
+1. Bilal:
+   - Tâche accomplie : 
+	.Modélisation du plateau: Utilisation du Hashmap avec des objets points pour determiner la position de tuiles ainsi que de leurs voisins.
+
+	.Creation des différents classes des tuiles.
+
+	.Creation de class utilitaires 
+
+   - Problèmes rencontrés :Aucune
+   - Suggestions pour l'amélioration : Gerer la superposition.
+
+2. Mathéo:
+
+   - Tâche accomplie : 
+	.Creation de la classe player et game.
+
+	.Ajout de la logique des étages.
+
+	.Ajout de la javadoc dans certaines telle que Title,grild, board, player.
+
+	.Implémentation de la méthode de score séparer en d'autre petite méthodes.
+
+   - Problèmes rencontrés : Aucune
+   - Suggestions pour l'amélioration : Aucune.
+
+
+Objectifs pour la Semaine Prochaine:
+-Superposition en respectant les règles du jeu.
+-Réfléchir a la vue.
+-Compléter les classes déjà existants.
+
+
