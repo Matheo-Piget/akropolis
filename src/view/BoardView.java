@@ -14,6 +14,9 @@ import java.util.Map;
 public class BoardView extends JPanel {
 
     private Grid tileMap;
+    private final int hexSize = 50; // Taille arbitraire pour la taille de l'hexagone
+    private final int xOffset;
+    private final int yOffset;
 
     /**
      * Constructs a new BoardView with the specified tile map.
@@ -22,7 +25,11 @@ public class BoardView extends JPanel {
      */
     public BoardView(Grid tileMap) {
         this.tileMap = tileMap;
-        setPreferredSize(new Dimension(1700, 1300)); // Arbitrary size for the example
+        setPreferredSize(new Dimension(1000, 800)); // Taille arbitraire pour l'exemple
+
+        // Calculer les décalages pour centrer la coordonnée (0, 0)
+        xOffset = 500 - hexSize; // 500 est la moitié de la largeur de la fenêtre de dessin
+        yOffset = 400 - hexSize; // 400 est la moitié de la hauteur de la fenêtre de dessin
     }
 
     @Override
@@ -34,30 +41,31 @@ public class BoardView extends JPanel {
             Point point = entry.getKey();
             List<Tile> tiles = entry.getValue();
 
-            // Draw each tile from the list
+            // Dessiner chaque tuile à partir de la liste
             for (Tile tile : tiles) {
-                int x = point.x * 50; // Arbitrary size for the example
-                int y = point.y * 50; // Arbitrary size for the example
+                int x = point.x%2 == 0 ? point.x * hexSize + xOffset : point.x * hexSize - hexSize / 4 + xOffset;
+                int y = point.x%2 == 0 ? -point.y * hexSize + yOffset : -point.y * hexSize + hexSize / 2 + yOffset;
 
-                // Draw the tile based on its type and level
-                switch (tile.getType()) {
-                    case "StartingTile":
-                        g.setColor(Color.RED);
-                        break;
-                    case "Type2":
-                        g.setColor(Color.BLUE);
-                        break;
-                    default:
-                        g.setColor(Color.GREEN);
-                        break;
-                }
 
-                // Draw the hexagon representing the tile
-                int[] xPoints = {x, x + 50, x + 75, x + 50, x, x - 25};
-                int[] yPoints = {y + 25, y, y + 25, y + 50, y + 75, y + 50};
+                if(point.x < 0){ x += hexSize/2;}
+                else if (point.x > 1){ x -= hexSize/2;}
+
+
+
+                // Dessiner l'hexagone représentant la tuile
+                g.setColor(getTileColor(tile));
+                int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
+                int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
                 g.fillPolygon(xPoints, yPoints, 6);
+
+                // Dessiner le contour autour de l'hexagone
+                g.setColor(Color.BLACK);
+                g.drawPolygon(xPoints, yPoints, 6);
+
             }
         }
+
+        tileMap.display();
     }
 
     /**
@@ -68,6 +76,20 @@ public class BoardView extends JPanel {
     public void updateMap(Grid newTileMap) {
         this.tileMap = newTileMap;
         repaint(); // Redraw the map with the new data
+    }
+
+    /**
+     * Returns the color for the specified tile.
+     *
+     * @param tile The tile to determine the color for.
+     * @return The color for the tile.
+     */
+    private Color getTileColor(Tile tile) {
+        return switch (tile.getType()) {
+            case "StartingTile" -> Color.RED;
+            case "Quarrie" -> Color.BLUE;
+            default -> Color.GREEN;
+        };
     }
 
     public static void main(String[] args) {

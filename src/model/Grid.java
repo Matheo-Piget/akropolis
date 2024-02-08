@@ -20,20 +20,83 @@ public class Grid {
     public Grid() {
         tiles = new HashMap<>();
 
-        // Creating starting tiles
-        StartingTile startingTile1 = new StartingTile(1, 0, this);
-        StartingTile startingTile2 = new StartingTile(-1, 1, this);
+        // Creating starting tiles for the first trio
+        StartingTile startingTile1 = new StartingTile(0, 0, this);
+        StartingTile startingTile2 = new StartingTile(-1, 0, this);
         StartingTile startingTile3 = new StartingTile(1, 1, this);
 
-        // Setting up the tile trio relationship
+// Setting up the tile trio relationship for the first trio
         startingTile1.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
         startingTile2.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
         startingTile3.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
 
-        // Adding starting tiles to the grid
+// Adding the first trio of tiles to the grid
         tiles.put(new Point(0, 0), List.of(startingTile1));
         tiles.put(new Point(-1, 1), List.of(startingTile2));
         tiles.put(new Point(1, 1), List.of(startingTile3));
+
+// Creating starting tiles for the second trio
+        StartingTile startingTile4 = new StartingTile(0, 0, this);
+        StartingTile startingTile5 = new StartingTile(1, 2, this);
+        StartingTile startingTile6 = new StartingTile(0, 2, this);
+
+// Setting up the tile trio relationship for the second trio
+        startingTile4.setTileTrio(new TileTrio(startingTile4, startingTile5, startingTile6));
+        startingTile5.setTileTrio(new TileTrio(startingTile4, startingTile5, startingTile6));
+        startingTile6.setTileTrio(new TileTrio(startingTile4, startingTile5, startingTile6));
+
+// Adding the second trio of tiles to the grid
+        tiles.put(new Point(0, 1), List.of(startingTile4));
+        tiles.put(new Point(1, 2), List.of(startingTile5));
+        tiles.put(new Point(0, 2), List.of(startingTile6));
+
+        Tile startingTile7 = new Quarrie(-1, 0);
+        Tile startingTile8 = new Quarrie(-1, 2);
+        Tile startingTile9 = new Quarrie(-2, 1);
+
+// Setting up the tile trio relationship for the second trio
+        startingTile7.setTileTrio(new TileTrio(startingTile7, startingTile8, startingTile9));
+        startingTile8.setTileTrio(new TileTrio(startingTile7, startingTile8, startingTile9));
+        startingTile9.setTileTrio(new TileTrio(startingTile7, startingTile8, startingTile9));
+
+// Adding the second trio of tiles to the grid
+        tiles.put(new Point(-1, 0), List.of(startingTile7));
+        tiles.put(new Point(-1, 2), List.of(startingTile8));
+        tiles.put(new Point(-2, 1), List.of(startingTile9));
+
+        Tile startingTile10 = new Quarrie(2, 0);
+        Tile startingTile11 = new Quarrie(2, 2);
+        Tile startingTile12 = new Quarrie(2, 1);
+
+// Setting up the tile trio relationship for the second trio
+        startingTile10.setTileTrio(new TileTrio(startingTile10, startingTile11, startingTile12));
+        startingTile11.setTileTrio(new TileTrio(startingTile10, startingTile11, startingTile12));
+        startingTile12.setTileTrio(new TileTrio(startingTile10, startingTile11, startingTile12));
+
+// Adding the second trio of tiles to the grid
+        tiles.put(new Point(2, 0), List.of(startingTile10));
+        tiles.put(new Point(2, 2), List.of(startingTile11));
+        tiles.put(new Point(2, 1), List.of(startingTile12));
+
+        StartingTile startingTile13 = new StartingTile(2, 0, this);
+        startingTile13.setElevation(2);
+        StartingTile startingTile14 = new StartingTile(2, 2, this);
+        startingTile14.setElevation(2);
+        StartingTile startingTile15 = new StartingTile(2, 1, this);
+        startingTile15.setElevation(2);
+
+// Setting up the tile trio relationship for the second trio
+        startingTile13.setTileTrio(new TileTrio(startingTile13, startingTile14, startingTile15));
+        startingTile14.setTileTrio(new TileTrio(startingTile13, startingTile14, startingTile15));
+        startingTile15.setTileTrio(new TileTrio(startingTile13, startingTile14, startingTile15));
+
+// Adding the second trio of tiles to the grid
+        tiles.put(new Point(2, 0), List.of(startingTile13));
+        tiles.put(new Point(2, 2), List.of(startingTile14));
+        tiles.put(new Point(2, 1), List.of(startingTile15));
+
+// You can continue this process to create more trios of tiles as needed
+
     }
 
     public Map<Point, List<Tile>> getTiles() {

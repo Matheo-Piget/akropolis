@@ -12,7 +12,7 @@ public abstract class Tile {
     private Grid grid; // Reference to the grid containing the tile
     private TileTrio tileTrio; // Reference to a trio of tiles
 
-    private int elevation = 1; // Elevation level of the tile
+    private int elevation ; // Elevation level of the tile
 
     private Tile above; // Tile above the current tile
     private Tile below; // Tile below the current tile
@@ -180,5 +180,9 @@ public abstract class Tile {
      */
     public boolean hasBelow() {
         return below != null;
+    }
+
+    public void setElevation(int elevation) {
+        this.elevation = elevation;
     }
 }
