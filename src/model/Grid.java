@@ -11,7 +11,7 @@ import java.awt.Point;
  */
 public class Grid {
     // Map to store tiles based on their positions
-    private Map<Point, Tile> tiles;
+    private Map<Point, List<Tile>> tiles;
 
     /**
      * Constructor to initialize the grid and add the starting tiles at the
@@ -31,9 +31,13 @@ public class Grid {
         startingTile3.setTileTrio(new TileTrio(startingTile1, startingTile2, startingTile3));
 
         // Adding starting tiles to the grid
-        tiles.put(new Point(0, 0), startingTile1);
-        tiles.put(new Point(-1, 1), startingTile2);
-        tiles.put(new Point(1, 1), startingTile3);
+        tiles.put(new Point(0, 0), List.of(startingTile1));
+        tiles.put(new Point(-1, 1), List.of(startingTile2));
+        tiles.put(new Point(1, 1), List.of(startingTile3));
+    }
+
+    public Map<Point, List<Tile>> getTiles() {
+        return tiles;
     }
 
     /**
@@ -74,13 +78,13 @@ public class Grid {
                 canBePlaced = isSupported(newTile_i);
             }
             if (canBePlaced) {
-                Tile existingTile = tiles.get(tile.getPosition());
+                List<Tile> existingTile = tiles.get(tile.getPosition());
                 if (existingTile!=null) {
                     adjustTileElevation(tile, existingTile);// manage L'elevation 
                 }
                 
                 //Add the tile to the grid
-                tiles.put(newTile_i.getPosition(), newTile_i);
+                tiles.put(newTile_i.getPosition(), List.of(newTile_i));
                 return true;
             }
             
@@ -88,12 +92,15 @@ public class Grid {
         return false;
     }
 
-    private void adjustTileElevation(Tile newTile , Tile existingTile){
-        while (existingTile.getAbove()!=null) {// get the top existingTile ;
-            existingTile = existingTile.getAbove(); 
+    private void adjustTileElevation(Tile newTile , List<Tile> existingTile){
+
+        for (Tile tile : existingTile) {
+            if(tile.getAbove() == null){
+                tile.setAbove(newTile);
+                newTile.setBelow(tile);
+                return;
+            }
         }
-        existingTile.setAbove(newTile);
-        newTile.setBelow(existingTile);
     
     }
     private boolean isSupported(Tile tile) {
@@ -112,15 +119,11 @@ public class Grid {
         Point point = new Point(x, y);
 
         // Retrieve all tiles at the specified position
-        List<Tile> tilesAtPosition = new ArrayList<>();
-        for (Map.Entry<Point, Tile> entry : tiles.entrySet()) {
-            if (entry.getKey().equals(point)) {
-                tilesAtPosition.add(entry.getValue());
-            }
-        }
+        List<Tile> tilesAtPosition = tiles.get(point);
 
         // Find the topmost tile among the tiles at the specified position
         Tile topmostTile = null;
+
         for (Tile tile : tilesAtPosition) {
             if (!tile.hasAbove()) {
                 // If no tile is currently marked as the topmost, or if this tile is higher, set it as the topmost tile
@@ -138,7 +141,9 @@ public class Grid {
      */
     public void display() {
         tiles.forEach((point, tile) -> {
-            System.out.println("Tile: " + tile.getClass() + " " + tile.getX() + " " + tile.getY() + " ");
+            tile.forEach((t) -> {
+                System.out.println("Tile: " + t.getClass() + " " + t.getX() + " " + t.getY() + " ");
+            });
         });
     }
 
@@ -250,10 +255,22 @@ public class Grid {
                 marketScore * marketMultiplier;
     }*/
 
+    public List<Tile> getTopTiles() {
+        List<Tile> topTiles = new ArrayList<>();
+        for (List<Tile> tileList : tiles.values()) {
+            for (Tile tile : tileList) {
+                if (!tile.hasAbove()) {
+                    topTiles.add(tile);
+                }
+            }
+        }
+        return topTiles;
+    }
+
     public int calculateScore() {
         int totalScore = 0;
 
-        for (Tile tile : tiles.values()) {
+        for (Tile tile : getTopTiles()) {
             switch (tile.getType()) {
                 case "Garden":
                     totalScore += calculateGardenScore(tile);
