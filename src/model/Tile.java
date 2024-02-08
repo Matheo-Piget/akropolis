@@ -94,6 +94,9 @@ public abstract class Tile {
     public int getY() {
         return position.y;
     }
+    public Point getPosition(){
+        return this.position;
+    }
 
     /**
      * Gets the tile above the current tile.

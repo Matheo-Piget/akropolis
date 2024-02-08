@@ -42,39 +42,58 @@ public class Grid {
      * @param tile The tile to be added to the grid.
      * @return True if the tile is successfully added, false otherwise.
      */
-    public boolean addTile(Tile tile) {
+    public boolean canAdd(Tile tile , Point p){
         int x = tile.getX();
         int y = tile.getY();
-        Point newPoint = new Point(x, y);
-
-        // Check if a tile with the same coordinates already exists
-        if (tiles.containsKey(newPoint)) {
-            Tile existingTile = getTile(x, y);
-
-            // Check if neither tile has a level above/below
-            if (!existingTile.hasAbove() && !tile.hasBelow()) {
-                // Set them as each other's levels
-                existingTile.setAbove(tile);
-                tile.setBelow(existingTile);
-                tiles.put(newPoint, tile);
-                return true;
-            }
-        }
-
         // Check if the tile has at least one neighbor in the grid
         int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 1 }, { 1, -1 } };
         for (int[] direction : directions) {
             int nx = x + direction[0];
             int ny = y + direction[1];
-            if (tiles.containsKey(new Point(nx, ny)) && tile.getElevation() == 1) {
-                // Add the tile to the grid
-                tiles.put(newPoint, tile);
+            if (tiles.containsKey(new Point(nx, ny))) {
                 return true;
             }
         }
-
+    
         // If the tile has no neighbors in the grid, return false
         return false;
+    }
+    
+    public boolean addTile(Tile tile){
+        for (int i = 0; i < 3; i++) {
+            Tile newTile_i = tile.getTileTrio().getTile(i);
+            boolean canBePlaced;
+            if (newTile_i.getElevation()==1) {
+                canBePlaced = canAdd(newTile_i, newTile_i.getPosition());
+            }
+            else{
+                canBePlaced = isSupported(newTile_i);
+            }
+            if (canBePlaced) {
+                Tile existingTile = tiles.get(tile.getPosition());
+                if (existingTile!=null) {
+                    adjustTileElevation(tile, existingTile);
+                }
+                
+                //Add the tile to the grid
+                tiles.put(newTile_i.getPosition(), newTile_i);
+                return true;
+            }
+            
+        }
+        return false;
+    }
+    private void adjustTileElevation(Tile newTile , Tile existingTile){
+        while (existingTile.getAbove()!=null) {
+            existingTile = existingTile.getAbove();
+        }
+        existingTile.setAbove(newTile);
+        newTile.setBelow(existingTile);
+    
+    }
+    private boolean isSupported(Tile tile) {
+        // Implement logic to check if the tile is supported by two different tiles at its elevation.
+        return true; 
     }
 
     /**
