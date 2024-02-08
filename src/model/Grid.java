@@ -42,6 +42,8 @@ public class Grid {
      * @param tile The tile to be added to the grid.
      * @return True if the tile is successfully added, false otherwise.
      */
+
+     // on regarde si l'elevation est de 1 alors faut que la tuille aie des voisisns pour etre placer 
     public boolean canAdd(Tile tile , Point p){
         int x = tile.getX();
         int y = tile.getY();
@@ -60,9 +62,11 @@ public class Grid {
     }
     
     public boolean addTile(Tile tile){
+        // Iterate over each tile in the TileTrio associated with the main tile.
         for (int i = 0; i < 3; i++) {
             Tile newTile_i = tile.getTileTrio().getTile(i);
             boolean canBePlaced;
+        // First, check if the tile can be placed (using canAdd for ground-level tiles or isSupported for higher elevation).
             if (newTile_i.getElevation()==1) {
                 canBePlaced = canAdd(newTile_i, newTile_i.getPosition());
             }
@@ -72,7 +76,7 @@ public class Grid {
             if (canBePlaced) {
                 Tile existingTile = tiles.get(tile.getPosition());
                 if (existingTile!=null) {
-                    adjustTileElevation(tile, existingTile);
+                    adjustTileElevation(tile, existingTile);// manage L'elevation 
                 }
                 
                 //Add the tile to the grid
@@ -83,9 +87,10 @@ public class Grid {
         }
         return false;
     }
+
     private void adjustTileElevation(Tile newTile , Tile existingTile){
-        while (existingTile.getAbove()!=null) {
-            existingTile = existingTile.getAbove();
+        while (existingTile.getAbove()!=null) {// get the top existingTile ;
+            existingTile = existingTile.getAbove(); 
         }
         existingTile.setAbove(newTile);
         newTile.setBelow(existingTile);
