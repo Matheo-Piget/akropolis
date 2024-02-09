@@ -6,8 +6,8 @@ import util.Point3D;
 public class District extends Tile {
     private DistrictColor color;
 
-    public District(Point3D p, DistrictColor color, Grid grid) {
-        super(p, grid);
+    public District(Point3D p, DistrictColor color) {
+        super(p);
         this.color = color;
     }
 

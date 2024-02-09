@@ -13,6 +13,12 @@ public class Place extends Tile{
         this.color = color;
     }
 
+    public Place(Point3D position, int stars, DistrictColor color) {
+        super(position);
+        this.stars = stars;
+        this.color = color;
+    }
+
     public int getStars() {
         return stars;
     }

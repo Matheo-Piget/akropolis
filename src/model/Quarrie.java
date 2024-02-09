@@ -6,6 +6,10 @@ import util.Point3D;
 public class Quarrie extends Tile{
 
     public Quarrie(Point3D p, Grid grid) {
+        super(p, grid);
+    }
+
+    public Quarrie(Point3D p) {
         super(p);
     }
 

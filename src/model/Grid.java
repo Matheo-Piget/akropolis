@@ -73,21 +73,21 @@ public class Grid {
         boolean canBePlaced = true;
         for (int i = 0; i < 3; i++) {
             Tile newTile_i = tile.getTileTrio().getTile(i);
-            // First, check if the tile can be placed (using canAdd for ground-level tiles
-            // or isSupported for higher elevation).
-            if(!tiles.containsKey(newTile_i.getPosition())){
+            // First, check if the tile can be placed we only need to verify for the first
+            // one to be a neighbor (using canAdd for ground-level tiles
+            // or handleElevation for higher elevation).
+            if (!tiles.containsKey(newTile_i.getPosition()) && i == 0) {
                 // That means that this tile will not overlap with another tile
                 canBePlaced = canBePlaced && canAdd(newTile_i, newTile_i.getPosition());
-            }
-            else{
+            } else if (tiles.containsKey(newTile_i.getPosition())) {
                 // Handle the case where the tile is elevated
                 canBePlaced = canBePlaced && handleElevation(newTile_i, tiles.get(newTile_i.getPosition()));
             }
         }
         // We need to verify that they are all at the same level
         int elevation = tile.getTileTrio().getTile(0).getElevation();
-        for(int i = 0; i < 3; i++){
-            if(tile.getTileTrio().getTile(i).getElevation() != elevation){
+        for (int i = 0; i < 3; i++) {
+            if (tile.getTileTrio().getTile(i).getElevation() != elevation) {
                 canBePlaced = false;
             }
         }
@@ -96,6 +96,7 @@ public class Grid {
             for (int i = 0; i < 3; i++) {
                 Tile newTile_i = tile.getTileTrio().getTile(i);
                 tiles.put(newTile_i.getPosition(), newTile_i);
+                tile.setGrid(this);
             }
         }
         return canBePlaced;
@@ -104,11 +105,11 @@ public class Grid {
     private boolean handleElevation(Tile new_tile, Tile existing_tile) {
         // We need to get the correct z value by getting the tile above the current tile
         Tile topMostTile = existing_tile;
-        while(topMostTile.hasAbove()){
+        while (topMostTile.hasAbove()) {
             topMostTile = topMostTile.getAbove();
         }
         new_tile.getPosition().z = topMostTile.getElevation() + 1;
-        if(topMostTile.getType().equals(new_tile.getType())){
+        if (topMostTile.getType().equals(new_tile.getType())) {
             return false;
         }
         topMostTile.setAbove(new_tile);
