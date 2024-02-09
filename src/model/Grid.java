@@ -70,18 +70,18 @@ public class Grid {
 
     public boolean addTile(Tile tile) {
         // Iterate over each tile in the TileTrio associated with the main tile.
-        boolean canBePlaced = false;
+        boolean canBePlaced = true;
         for (int i = 0; i < 3; i++) {
             Tile newTile_i = tile.getTileTrio().getTile(i);
             // First, check if the tile can be placed (using canAdd for ground-level tiles
             // or isSupported for higher elevation).
             if(!tiles.containsKey(newTile_i.getPosition())){
                 // That means that this tile will not overlap with another tile
-                canBePlaced = canAdd(newTile_i, newTile_i.getPosition());
+                canBePlaced = canBePlaced && canAdd(newTile_i, newTile_i.getPosition());
             }
             else{
                 // Handle the case where the tile is elevated
-                canBePlaced = handleElevation(newTile_i, tiles.get(newTile_i.getPosition()));
+                canBePlaced = canBePlaced && handleElevation(newTile_i, tiles.get(newTile_i.getPosition()));
             }
         }
         // We need to verify that they are all at the same level
