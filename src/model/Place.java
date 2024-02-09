@@ -1,13 +1,16 @@
 package model;
 
+import util.Point3D;
+
 // A place is a tile that allow you to earn more score points.
 public class Place extends Tile{
     private int stars;
     private DistrictColor color;
 
-    public Place(int x, int y, int z, int stars, Grid grid) {
-        super(x, y, grid);
+    public Place(Point3D position, int stars, DistrictColor color, Grid grid) {
+        super(position, grid);
         this.stars = stars;
+        this.color = color;
     }
 
     public int getStars() {

@@ -1,11 +1,13 @@
 package model;
 
+import util.Point3D;
+
 // They are different districts in the game, each with its own color and its own rules
 public class District extends Tile {
     private DistrictColor color;
 
-    public District(int x, int y, DistrictColor color) {
-        super(x, y);
+    public District(Point3D p, DistrictColor color, Grid grid) {
+        super(p, grid);
         this.color = color;
     }
 

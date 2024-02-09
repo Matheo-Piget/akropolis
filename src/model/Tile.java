@@ -1,19 +1,15 @@
 package model;
 
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
+import util.Point3D;
 
 /**
  * Represents a tile on the game grid.
  */
 public abstract class Tile {
-    private Point position; // Coordinates of the tile
+    private Point3D position; // Coordinates of the tile
     private Grid grid; // Reference to the grid containing the tile
     private TileTrio tileTrio; // Reference to a trio of tiles
-
-    private int elevation = 1; // Elevation level of the tile
-
     private Tile above; // Tile above the current tile
     private Tile below; // Tile below the current tile
 
@@ -24,8 +20,8 @@ public abstract class Tile {
      * @param y    The y-coordinate of the tile.
      * @param grid The grid containing the tile.
      */
-    public Tile(int x, int y, Grid grid) {
-        this.position = new Point(x, y);
+    public Tile(Point3D p, Grid grid) {
+        this.position = p;
         this.grid = grid;
     }
 
@@ -35,8 +31,8 @@ public abstract class Tile {
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
      */
-    public Tile(int x, int y) {
-        this.position = new Point(x, y);
+    public Tile(Point3D p) {
+        this.position = p;
     }
 
     public abstract String getType();
@@ -74,7 +70,7 @@ public abstract class Tile {
      * @return The current elevation of the tile.
      */
     public int getElevation() {
-        return elevation;
+        return position.z;
     }
 
     /**
@@ -94,7 +90,17 @@ public abstract class Tile {
     public int getY() {
         return position.y;
     }
-    public Point getPosition(){
+
+    /**
+     * Gets the z-coordinate of the tile.
+     *
+     * @return The z-coordinate of the tile.
+     */
+    public int getZ() {
+        return position.z;
+    }
+    
+    public Point3D getPosition(){
         return this.position;
     }
 
@@ -139,8 +145,8 @@ public abstract class Tile {
      *
      * @return List of neighboring tiles.
      */
-    public List<Tile> getNeighbors() {
-        List<Tile> neighbors = new ArrayList<>();
+    public ArrayList<Tile> getNeighbors() {
+        ArrayList<Tile> neighbors = new ArrayList<>();
 
         // Define the directions for the 6 neighbors in a hexagonal grid
         int[][] directions;

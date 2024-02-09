@@ -2,10 +2,10 @@ package view;
 
 import model.Grid;
 import model.Tile;
+import util.Point3D;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,33 +30,31 @@ public class BoardView extends JPanel {
         super.paintComponent(g);
 
         // Draw each tile on the board
-        for (Map.Entry<Point, List<Tile>> entry : tileMap.getTiles().entrySet()) {
-            Point point = entry.getKey();
-            List<Tile> tiles = entry.getValue();
+        for (Map.Entry<Point3D, Tile> entry : tileMap.getTiles().entrySet()) {
+            Point3D point = entry.getKey();
+            Tile tile = entry.getValue();
 
             // Draw each tile from the list
-            for (Tile tile : tiles) {
-                int x = point.x * 50; // Arbitrary size for the example
-                int y = point.y * 50; // Arbitrary size for the example
+            int x = point.x * 50; // Arbitrary size for the example
+            int y = point.y * 50; // Arbitrary size for the example
 
-                // Draw the tile based on its type and level
-                switch (tile.getType()) {
-                    case "StartingTile":
-                        g.setColor(Color.RED);
-                        break;
-                    case "Type2":
-                        g.setColor(Color.BLUE);
-                        break;
-                    default:
-                        g.setColor(Color.GREEN);
-                        break;
-                }
-
-                // Draw the hexagon representing the tile
-                int[] xPoints = {x, x + 50, x + 75, x + 50, x, x - 25};
-                int[] yPoints = {y + 25, y, y + 25, y + 50, y + 75, y + 50};
-                g.fillPolygon(xPoints, yPoints, 6);
+            // Draw the tile based on its type and level
+            switch (tile.getType()) {
+                case "StartingTile":
+                    g.setColor(Color.RED);
+                    break;
+                case "Type2":
+                    g.setColor(Color.BLUE);
+                    break;
+                default:
+                    g.setColor(Color.GREEN);
+                    break;
             }
+
+            // Draw the hexagon representing the tile
+            int[] xPoints = {x, x + 50, x + 75, x + 50, x, x - 25};
+            int[] yPoints = {y + 25, y, y + 25, y + 50, y + 75, y + 50};
+            g.fillPolygon(xPoints, yPoints, 6);
         }
     }
 
