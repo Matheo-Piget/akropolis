@@ -33,7 +33,7 @@ public class Game {
      */
     public void startGame() {
         if (!players.isEmpty()) {
-            currentPlayer = players.getFirst();
+            //currentPlayer = players.getFirst();
             startTurn(currentPlayer);
         } else {
             throw new IllegalStateException("Impossible de démarrer le jeu sans joueur. Veuillez ajouter des joueurs avant de commencer.");
