@@ -54,4 +54,38 @@ public class BoardTest {
         assertEquals(validTile2, board.getTile(-1, -1));
         assertEquals(validTile3, board.getTile(1, -1));
     }
+
+    @Test
+    public void testTotalScore(){
+        Board board = new Board();
+        District validTile1 = new District(new Point3D(0, 0, 1), DistrictColor.RED);
+        District validTile2 = new District(new Point3D(-1, -1, 1), DistrictColor.BLUE);
+        District validTile3 = new District(new Point3D(1, -1, 1), DistrictColor.GREEN);
+
+        District validTile4 = new District(new Point3D(0, 2, 1), DistrictColor.BLUE);
+        District validTile5 = new District(new Point3D(-1, 3, 1), DistrictColor.BLUE);
+        District validTile6 = new District(new Point3D(1, 3, 1), DistrictColor.BLUE);
+
+        validTile1.setTileTrio(new TileTrio(validTile1, validTile2, validTile3));
+        validTile4.setTileTrio(new TileTrio(validTile4, validTile5, validTile6));
+        // We verify that we can add a tile to the board
+        assertTrue(board.addTile(validTile1));
+        assertTrue(board.addTile(validTile4));
+        // We verify that their height has been updated
+        assertEquals(2, validTile1.getElevation());
+        assertEquals(2, validTile2.getElevation());
+        assertEquals(2, validTile3.getElevation());
+        assertEquals(1, validTile4.getElevation());
+        assertEquals(1, validTile5.getElevation());
+        assertEquals(1, validTile6.getElevation());
+        // And that we can get it back
+        assertEquals(validTile1, board.getTile(0, 0));
+        assertEquals(validTile2, board.getTile(-1, -1));
+        assertEquals(validTile3, board.getTile(1, -1));
+        assertEquals(validTile4, board.getTile(0, 2));
+        assertEquals(validTile5, board.getTile(-1, 3));
+        assertEquals(validTile6, board.getTile(1, 3));
+        // We verify that the score is correct
+        assertEquals(5, board.getScore());
+    }
 }

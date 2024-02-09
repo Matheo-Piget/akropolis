@@ -96,7 +96,8 @@ public class Grid {
             for (int i = 0; i < 3; i++) {
                 Tile newTile_i = tile.getTileTrio().getTile(i);
                 tiles.put(newTile_i.getPosition(), newTile_i);
-                tile.setGrid(this);
+                newTile_i.setGrid(this);
+                System.out.println("Tile added at " + newTile_i.getPosition());
             }
         }
         return canBePlaced;
@@ -286,7 +287,6 @@ public class Grid {
                     totalScore += calculateMarketScore(tile);
                     break;
                 default:
-                    totalScore += calculatePlaceScore((Place) tile);
                     break;
             }
         }

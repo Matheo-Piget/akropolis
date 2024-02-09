@@ -23,4 +23,8 @@ public class Board {
         return grid.addTile(tile);
     }
 
+    public int getScore() {
+        return grid.calculateScore();
+    }
+
 }
