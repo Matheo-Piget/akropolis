@@ -47,19 +47,26 @@ public class BoardView extends JPanel {
 
             if(position.x % 2 == 1 && position.y > 0) {
                 y += hexSize / 2;
-                x -= hexSize / 4;
+                x -= (hexSize / 4)*position.x;
             }
             if(position.x % 2 == 1 && position.y <= 0) {
                 y -= hexSize / 2;
-                x -= hexSize / 4;
+                x -= (hexSize / 4) * position.x;
+            }
+            if(position.x %2 == 0 && position.x > 0) {
+                x -= (hexSize / 4)*position.x;
             }
             if(position.x % 2 == -1 && position.y > 0) {
                 y += hexSize / 2;
-                x += hexSize / 4;
+                x += (hexSize / 4)*-position.x;
             }
+
             if(position.x % 2 == -1 && position.y <= 0) {
                 y -= hexSize / 2;
-                x += hexSize / 4;
+                x += (hexSize / 4)*-position.x;
+            }
+            if(position.x %2 == 0 && position.x < 0) {
+                x += (hexSize / 4)*-position.x;
             }
 
             // Draw the hexagon representing the tile
@@ -80,6 +87,8 @@ public class BoardView extends JPanel {
         int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
         g.setColor(color);
         g.fillPolygon(xPoints, yPoints, 6);
+        g.setColor(Color.BLACK); // Couleur des bordures
+        g.drawPolygon(xPoints, yPoints, 6); // bordures
     }
 
     /**

@@ -24,19 +24,26 @@ public class Grid {
         tiles = new HashMap<>();
 
         // Creating starting tiles
-        Point3D p1 = new Point3D(0, 0, 1);
-        Point3D p2 = new Point3D(0, 1, 1);
-        Point3D p3 = new Point3D(-1, -1, 1);
-        Point3D p4 = new Point3D(1, 0, 1);
-        Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
-        Tile tile2 = new Quarrie(p2, this);
-        Tile tile3 = new Quarrie(p3, this);
-        Tile tile4 = new Quarrie(p4, this);
-
-        tiles.put(p1, tile1);
-        tiles.put(p2, tile2);
-        tiles.put(p3, tile3);
-        tiles.put(p4, tile4);
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+                Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
+                Tile tile;
+                if (x == 0 && y == 0) {
+                    // Tile centrale de couleur rouge
+                    tile = new District(position, DistrictColor.RED);
+                } else if (x % 2 == 0 && y % 2 == 0) {
+                    // Tuile de couleur bleue pour les coordonnées paires-paires
+                    tile = new Place(position, 1, DistrictColor.BLUE, this);
+                } else if (x % 2 == 1 && y % 2 == 1) {
+                    // Tuile de type Quarrie pour les coordonnées impaires-impaires
+                    tile = new Quarrie(position, this);
+                } else {
+                    // Tuile de type default pour les autres cas
+                    tile = new District(position, DistrictColor.GREEN);
+                }
+                tiles.put(position, tile);
+            }
+        }
     }
 
     public Map<Point3D, Tile> getTiles() {
