@@ -15,7 +15,7 @@ import java.util.Map;
 public class BoardView extends JPanel {
 
     private Grid tileMap;
-    private final int hexSize = 40; // Taille arbitraire pour la taille de l'hexagone
+    private final int hexSize = 4; // Taille arbitraire pour la taille de l'hexagone
     private final int xOffset;
     private final int yOffset;
 
@@ -135,6 +135,6 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        initialMap.display();
+        //initialMap.display();
     }
 }

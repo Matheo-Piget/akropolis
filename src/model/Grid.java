@@ -1,10 +1,8 @@
 package model;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import util.Point3D;
 import util.Tuple;
 
@@ -23,23 +21,28 @@ public class Grid {
     public Grid() {
         tiles = new HashMap<>();
 
-        // Creating starting tiles
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
+        Random random = new Random();
+
+        // Génération aléatoire des tuiles
+        for (int x = -150 ; x <= 140; x++) {
+            for (int y = -120; y <= 160; y++) {
                 Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
                 Tile tile;
-                if (x == 0 && y == 0) {
-                    // Tile centrale de couleur rouge
+                int randomValue = random.nextInt(100); // Génère un nombre aléatoire entre 0 et 99
+
+                // Utilisation du nombre aléatoire pour déterminer le type de tuile
+                if (randomValue < 10) {
                     tile = new District(position, DistrictColor.RED);
-                } else if (x % 2 == 0 && y % 2 == 0) {
-                    // Tuile de couleur bleue pour les coordonnées paires-paires
+                } else if (randomValue < 30) {
                     tile = new Place(position, 1, DistrictColor.BLUE, this);
-                } else if (x % 2 == 1 && y % 2 == 1) {
-                    // Tuile de type Quarrie pour les coordonnées impaires-impaires
+                } else if (randomValue < 50) {
                     tile = new Quarrie(position, this);
-                } else {
-                    // Tuile de type default pour les autres cas
+                } else if (randomValue < 70) {
                     tile = new District(position, DistrictColor.GREEN);
+                } else if (randomValue < 90) {
+                    tile = new Place(position, 1, DistrictColor.YELLOW, this);
+                } else {
+                    tile = new District(position, DistrictColor.PURPLE);
                 }
                 tiles.put(position, tile);
             }
