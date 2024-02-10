@@ -164,4 +164,8 @@ public abstract class Tile {
     public boolean hasBelow() {
         return below != null;
     }
+
+    public void setElevation(int elevation) {
+        this.elevation = elevation;
+    }
 }
