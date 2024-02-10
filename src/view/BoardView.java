@@ -15,7 +15,7 @@ import java.util.Map;
 public class BoardView extends JPanel {
 
     private Grid tileMap;
-    private final int hexSize = 50; // Taille arbitraire pour la taille de l'hexagone
+    private final int hexSize = 40; // Taille arbitraire pour la taille de l'hexagone
     private final int xOffset;
     private final int yOffset;
 
@@ -43,9 +43,24 @@ public class BoardView extends JPanel {
             Point3D position = entry.getKey();
 
             int x = position.x * hexSize + xOffset;
-            int y = position.y * hexSize + yOffset;
+            int y = -position.y * hexSize + yOffset;
 
-
+            if(position.x % 2 == 1 && position.y > 0) {
+                y += hexSize / 2;
+                x -= hexSize / 4;
+            }
+            if(position.x % 2 == 1 && position.y <= 0) {
+                y -= hexSize / 2;
+                x -= hexSize / 4;
+            }
+            if(position.x % 2 == -1 && position.y > 0) {
+                y += hexSize / 2;
+                x += hexSize / 4;
+            }
+            if(position.x % 2 == -1 && position.y <= 0) {
+                y -= hexSize / 2;
+                x += hexSize / 4;
+            }
 
             // Draw the hexagon representing the tile
             drawHexagon(g, x, y, getTileColor(tile));
@@ -74,14 +89,29 @@ public class BoardView extends JPanel {
      * @return The color for the tile.
      */
     private Color getTileColor(Tile tile) {
-        // Add your logic here to determine the color based on the tile type
-        // For example:
-        // return switch (tile.getType()) {
-        //     case "StartingTile" -> Color.RED;
-        //     case "Quarrie" -> Color.BLUE;
-        //     default -> Color.GREEN;
-        // };
-        return Color.GREEN; // Placeholder color
+        switch (tile.getType()) {
+            case "Barrack Place", "Barrack" -> {
+                return Color.RED;
+            }
+            case "Building Place", "Building" -> {
+                return Color.BLUE;
+            }
+            case "Garden Place", "Garden" -> {
+                return Color.GREEN;
+            }
+            case "Market Place", "Market" -> {
+                return Color.YELLOW;
+            }
+            case "Temple Place", "Temple" -> {
+                return Color.MAGENTA;
+            }
+            case "Quarrie" -> {
+                return Color.GRAY;
+            }
+            default -> {
+                return Color.WHITE;
+            }
+        }
     }
 
     public static void main(String[] args) {
