@@ -45,29 +45,31 @@ public class BoardView extends JPanel {
             int x = position.x * hexSize + xOffset;
             int y = -position.y * hexSize + yOffset;
 
-            if(position.x % 2 == 1 && position.y > 0) {
-                y += hexSize / 2;
-                x -= (hexSize / 4)*position.x;
-            }
-            if(position.x % 2 == 1 && position.y <= 0) {
-                y -= hexSize / 2;
-                x -= (hexSize / 4) * position.x;
-            }
-            if(position.x %2 == 0 && position.x > 0) {
-                x -= (hexSize / 4)*position.x;
-            }
-            if(position.x % 2 == -1 && position.y > 0) {
-                y += hexSize / 2;
-                x += (hexSize / 4)*-position.x;
+            int offsetX = 0;
+            if (position.x % 2 == 1) {
+                offsetX = -hexSize / 4 * position.x;
+                if (position.y > 0) {
+                    y += hexSize / 2;
+                } else {
+                    y -= hexSize / 2;
+                }
+            } else if (position.x % 2 == -1) {
+                offsetX = hexSize / 4 * -position.x;
+                if (position.y > 0) {
+                    y += hexSize / 2;
+                } else {
+                    y -= hexSize / 2;
+                }
+            } else if (position.x % 2 == 0){
+                if(position.x > 0){
+                    x -= hexSize / 4 * position.x;
+                } else {
+                    x += hexSize / 4 * -position.x;
+                }
+
             }
 
-            if(position.x % 2 == -1 && position.y <= 0) {
-                y -= hexSize / 2;
-                x += (hexSize / 4)*-position.x;
-            }
-            if(position.x %2 == 0 && position.x < 0) {
-                x += (hexSize / 4)*-position.x;
-            }
+            x += offsetX;
 
             // Draw the hexagon representing the tile
             drawHexagon(g, x, y, getTileColor(tile));
