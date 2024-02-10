@@ -58,7 +58,7 @@ public class Grid {
         int z = tile.getZ();
         // Check if the tile has at least one neighbor in the grid
         // Define the directions for the 6 neighbors in a hexagonal grid
-        Point axialDirections[] = {
+        Point[] axialDirections = {
             new Point(1, 0), new Point(1, -1), new Point(0, -1),
             new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };

@@ -6,6 +6,7 @@ import util.Point3D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,43 +39,32 @@ public class BoardView extends JPanel {
 
         // Draw each tile on the board
         for (Map.Entry<Point3D, Tile> entry : tileMap.getTiles().entrySet()) {
-            Point3D point = entry.getKey();
             Tile tile = entry.getValue();
+            Point3D position = entry.getKey();
 
-            // Draw each tile from the list
-            int x = point.x * 50; // Arbitrary size for the example
-            int y = point.y * 50; // Arbitrary size for the example
+            int x = position.x * hexSize + xOffset;
+            int y = position.y * hexSize + yOffset;
 
-            // Draw the tile based on its type and level
-            switch (tile.getType()) {
-                case "StartingTile":
-                    g.setColor(Color.RED);
-                    break;
-                case "Type2":
-                    g.setColor(Color.BLUE);
-                    break;
-                default:
-                    g.setColor(Color.GREEN);
-                    break;
-            }
+
 
             // Draw the hexagon representing the tile
-            int[] xPoints = {x, x + 50, x + 75, x + 50, x, x - 25};
-            int[] yPoints = {y + 25, y, y + 25, y + 50, y + 75, y + 50};
-            g.fillPolygon(xPoints, yPoints, 6);
+            drawHexagon(g, x, y, getTileColor(tile));
         }
-
-        tileMap.display();
     }
 
     /**
-     * Updates the displayed map with a new tile map.
+     * Draws a hexagon on the specified Graphics object.
      *
-     * @param newTileMap The new grid representing the updated game board.
+     * @param g     The Graphics object to draw on.
+     * @param x     The x-coordinate of the hexagon's center.
+     * @param y     The y-coordinate of the hexagon's center.
+     * @param color The color to fill the hexagon with.
      */
-    public void updateMap(Grid newTileMap) {
-        this.tileMap = newTileMap;
-        repaint(); // Redraw the map with the new data
+    private void drawHexagon(Graphics g, int x, int y, Color color) {
+        int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
+        int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
+        g.setColor(color);
+        g.fillPolygon(xPoints, yPoints, 6);
     }
 
     /**
@@ -84,11 +74,14 @@ public class BoardView extends JPanel {
      * @return The color for the tile.
      */
     private Color getTileColor(Tile tile) {
-        return switch (tile.getType()) {
-            case "StartingTile" -> Color.RED;
-            case "Quarrie" -> Color.BLUE;
-            default -> Color.GREEN;
-        };
+        // Add your logic here to determine the color based on the tile type
+        // For example:
+        // return switch (tile.getType()) {
+        //     case "StartingTile" -> Color.RED;
+        //     case "Quarrie" -> Color.BLUE;
+        //     default -> Color.GREEN;
+        // };
+        return Color.GREEN; // Placeholder color
     }
 
     public static void main(String[] args) {
@@ -100,5 +93,7 @@ public class BoardView extends JPanel {
         frame.getContentPane().add(new BoardView(initialMap));
         frame.pack();
         frame.setVisible(true);
+
+        initialMap.display();
     }
 }
