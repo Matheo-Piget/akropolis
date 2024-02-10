@@ -19,8 +19,8 @@ public class Board {
     }
 
     // We can add a tile only next to another tile if not we can't add it and we return false
-    public boolean addTile(Tile tile) {
-        return grid.addTile(tile);
+    public boolean addTile(TileTrio tiles) {
+        return grid.addTile(tiles);
     }
 
     public int getScore() {

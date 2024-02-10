@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import util.Point3D;
+import util.Tuple;
 
 /**
  * Represents the grid of the game board, containing tiles in different
@@ -26,7 +27,7 @@ public class Grid {
         Point3D p1 = new Point3D(0, 0, 1);
         Point3D p2 = new Point3D(0, 1, 1);
         Point3D p3 = new Point3D(-1, -1, 1);
-        Point3D p4 = new Point3D(1, -1, 1);
+        Point3D p4 = new Point3D(1, 0, 1);
         Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
         Tile tile2 = new Quarrie(p2, this);
         Tile tile3 = new Quarrie(p3, this);
@@ -56,11 +57,14 @@ public class Grid {
         int y = tile.getY();
         int z = tile.getZ();
         // Check if the tile has at least one neighbor in the grid
-        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 1 }, { 1, -1 } };
-        for (int[] direction : directions) {
-            int nx = x + direction[0];
-            int ny = y + direction[1];
-            if (tiles.containsKey(new Point3D(nx, ny, z))) {
+        // Define the directions for the 6 neighbors in a hexagonal grid
+        Point axialDirections[] = {
+            new Point(1, 0), new Point(1, -1), new Point(0, -1),
+            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+        };
+        for (Point direction : axialDirections) {
+            Tile neighbor = tiles.get(new Point3D(x + direction.x, y + direction.y, z));
+            if (neighbor != null) {
                 return true;
             }
         }
@@ -68,42 +72,58 @@ public class Grid {
         return false;
     }
 
-    public boolean addTile(Tile tile) {
+    public boolean addTile(TileTrio tileTrio) {
         // Iterate over each tile in the TileTrio associated with the main tile.
         boolean canBePlaced = true;
+        boolean hasNeighbor = false;
+        Tile[] bellowTiles = new Tile[3];
+        int sameTile = 0;
         for (int i = 0; i < 3; i++) {
-            Tile newTile_i = tile.getTileTrio().getTile(i);
-            // First, check if the tile can be placed we only need to verify for the first
-            // one to be a neighbor (using canAdd for ground-level tiles
-            // or handleElevation for higher elevation).
-            if (!tiles.containsKey(newTile_i.getPosition()) && i == 0) {
+            Tile newTile_i = tileTrio.getTile(i);
+            // First, check if the tile can be placed we only need to verify 
+            // one that at least one of the tile is placed next to another tile
+            if (!tiles.containsKey(newTile_i.getPosition()) && !hasNeighbor) {
                 // That means that this tile will not overlap with another tile
-                canBePlaced = canBePlaced && canAdd(newTile_i, newTile_i.getPosition());
+                hasNeighbor = canAdd(newTile_i, newTile_i.getPosition());
+                System.out.println("Has neighbor the tile : " + newTile_i.getPosition() + " " + hasNeighbor);
             } else if (tiles.containsKey(newTile_i.getPosition())) {
                 // Handle the case where the tile is elevated
-                canBePlaced = canBePlaced && handleElevation(newTile_i, tiles.get(newTile_i.getPosition()));
+                Tuple<Integer, Tile> result = handleElevation(newTile_i, tiles.get(newTile_i.getPosition()));
+                sameTile += result.x;
+                bellowTiles[i] = result.y;
+                System.out.println("Same tile : " + sameTile);
+                if(sameTile > 1){
+                    canBePlaced = false;
+                }
+                hasNeighbor = true;
             }
         }
         // We need to verify that they are all at the same level
-        int elevation = tile.getTileTrio().getTile(0).getElevation();
-        for (int i = 0; i < 3; i++) {
-            if (tile.getTileTrio().getTile(i).getElevation() != elevation) {
+        int elevation = tileTrio.getTile(0).getElevation();
+        for (int i = 1; i < 3; i++) {
+            if (tileTrio.getTile(i).getElevation() != elevation) {
                 canBePlaced = false;
             }
         }
-        if (canBePlaced) {
+        if (canBePlaced && hasNeighbor) {
             // We add each tile of the trio to the grid
             for (int i = 0; i < 3; i++) {
-                Tile newTile_i = tile.getTileTrio().getTile(i);
+                Tile newTile_i = tileTrio.getTile(i);
+                if(bellowTiles[i] != null){
+                    newTile_i.setBelow(bellowTiles[i]);
+                    bellowTiles[i].setAbove(newTile_i);
+                }
                 tiles.put(newTile_i.getPosition(), newTile_i);
                 newTile_i.setGrid(this);
                 System.out.println("Tile added at " + newTile_i.getPosition());
             }
         }
-        return canBePlaced;
+        display();
+        return canBePlaced && hasNeighbor;
     }
 
-    private boolean handleElevation(Tile new_tile, Tile existing_tile) {
+    private Tuple<Integer,Tile> handleElevation(Tile new_tile, Tile existing_tile) {
+        // TODO : Handle the case where we overlap a quarrie it should gives us a bonus
         // We need to get the correct z value by getting the tile above the current tile
         Tile topMostTile = existing_tile;
         while (topMostTile.hasAbove()) {
@@ -111,10 +131,9 @@ public class Grid {
         }
         new_tile.getPosition().z = topMostTile.getElevation() + 1;
         if (topMostTile.getType().equals(new_tile.getType())) {
-            return false;
+            return new Tuple<Integer,Tile>(1, new_tile);
         }
-        topMostTile.setAbove(new_tile);
-        return true;
+        return new Tuple<Integer,Tile>(0, new_tile);
     }
 
     /**
@@ -129,7 +148,10 @@ public class Grid {
         Point point = new Point(x, y);
         // Retrieve all tiles at the specified position
         Tile topMostTile = tiles.get(new Point3D(point, 1));
-        while (topMostTile != null && topMostTile.hasAbove()) {
+        if (topMostTile == null) {
+            return null;
+        }
+        while (topMostTile.hasAbove()) {
             topMostTile = topMostTile.getAbove();
         }
         return topMostTile;

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import util.Point3D;
+import java.awt.Point;
 
 /**
  * Represents a tile on the game grid.
@@ -9,7 +10,6 @@ import util.Point3D;
 public abstract class Tile {
     private Point3D position; // Coordinates of the tile
     private Grid grid; // Reference to the grid containing the tile
-    private TileTrio tileTrio; // Reference to a trio of tiles
     private Tile above; // Tile above the current tile
     private Tile below; // Tile below the current tile
 
@@ -44,24 +44,6 @@ public abstract class Tile {
      */
     public void setGrid(Grid grid) {
         this.grid = grid;
-    }
-
-    /**
-     * Sets the trio of tiles for the current tile.
-     *
-     * @param tileTrio The trio of tiles containing the current tile.
-     */
-    public void setTileTrio(TileTrio tileTrio) {
-        this.tileTrio = tileTrio;
-    }
-
-    /**
-     * Gets the trio of tiles containing the current tile.
-     *
-     * @return The trio of tiles containing the current tile.
-     */
-    public TileTrio getTileTrio() {
-        return tileTrio;
     }
 
     /**
@@ -149,19 +131,14 @@ public abstract class Tile {
         ArrayList<Tile> neighbors = new ArrayList<>();
 
         // Define the directions for the 6 neighbors in a hexagonal grid
-        int[][] directions;
-        if (position.x % 2 == 0) {
-            directions = new int[][]{{-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, 0}, {1, 1}};
-        } else {
-            directions = new int[][]{{-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, -1}, {1, 0}};
-        }
-
+        Point axialDirections[] = {
+            new Point(1, 0), new Point(1, -1), new Point(0, -1),
+            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+        };
+        
         // Check each direction and add the neighboring tile if it exists
-        for (int[] direction : directions) {
-            int nx = position.x + direction[0];
-            int ny = position.y + direction[1];
-            Tile neighbor = grid.getTile(nx, ny);
-
+        for (Point direction : axialDirections) {
+            Tile neighbor = grid.getTile(position.x + direction.x, position.y + direction.y);
             if (neighbor != null) {
                 neighbors.add(neighbor);
             }
