@@ -34,6 +34,11 @@ public class BoardView extends JPanel {
         yOffset = 400 - hexSize; // 400 est la moitié de la hauteur de la fenêtre de dessin
     }
 
+    /**
+     * Paints the component, rendering the game board.
+     *
+     * @param g The Graphics object to paint on.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -41,7 +46,7 @@ public class BoardView extends JPanel {
         // Sort tiles by their elevation (z-coordinate)
         List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
-                .toList();
+                .toList().reversed();
 
         // Draw each tile on the board, starting from the highest elevation
         for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
@@ -82,7 +87,6 @@ public class BoardView extends JPanel {
         }
     }
 
-
     /**
      * Draws a hexagon on the specified Graphics object.
      *
@@ -94,10 +98,24 @@ public class BoardView extends JPanel {
     private void drawHexagon(Graphics g, int x, int y, Color color) {
         int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
         int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
+
+        // Fill the hexagon with the tile color
         g.setColor(color);
         g.fillPolygon(xPoints, yPoints, 6);
-        g.setColor(Color.BLACK); // Couleur des bordures
-        g.drawPolygon(xPoints, yPoints, 6); // bordures
+
+        // Add shadow effect by drawing a darker gradient below the tile
+        int shadowIntensity = 50; // Adjust the intensity of the shadow
+        for (int i = 0; i < 6; i++) {
+            int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
+            int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
+            Color shadowColor = new Color(0, 0, 0, 40); // Adjust the transparency and color of the shadow
+            g.setColor(shadowColor);
+            g.fillPolygon(shadowXPoints, shadowYPoints, 4);
+        }
+
+        // Draw the borders of the hexagon
+        g.setColor(Color.BLACK);
+        g.drawPolygon(xPoints, yPoints, 6);
     }
 
     /**
@@ -132,6 +150,11 @@ public class BoardView extends JPanel {
         }
     }
 
+    /**
+     * Main method for testing the BoardView.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         // Example usage
         Grid initialMap = new Grid();
