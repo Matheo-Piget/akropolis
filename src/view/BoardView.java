@@ -6,6 +6,7 @@ import util.Point3D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 public class BoardView extends JPanel {
 
     private Grid tileMap;
-    private final int hexSize = 4; // Taille arbitraire pour la taille de l'hexagone
+    private final int hexSize = 40; // Taille arbitraire pour la taille de l'hexagone
     private final int xOffset;
     private final int yOffset;
 
@@ -37,36 +38,40 @@ public class BoardView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw each tile on the board
-        for (Map.Entry<Point3D, Tile> entry : tileMap.getTiles().entrySet()) {
+        // Sort tiles by their elevation (z-coordinate)
+        List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
+                .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
+                .toList();
+
+        // Draw each tile on the board, starting from the highest elevation
+        for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
             Tile tile = entry.getValue();
             Point3D position = entry.getKey();
 
             int x = position.x * hexSize + xOffset;
             int y = -position.y * hexSize + yOffset;
 
+            // Calculate vertical offset based on elevation
+            int z = position.z;
+            int verticalOffset = z * hexSize / 2; // Adjust the value as needed
+
+            // Adjust y-coordinate with vertical offset
+            y += verticalOffset;
+
             int offsetX = 0;
-            if (position.x % 2 == 1) {
+            if (position.x % 2 == 1 || position.x % 2 == -1) {
                 offsetX = -hexSize / 4 * position.x;
                 if (position.y > 0) {
                     y += hexSize / 2;
                 } else {
                     y -= hexSize / 2;
                 }
-            } else if (position.x % 2 == -1) {
-                offsetX = hexSize / 4 * -position.x;
-                if (position.y > 0) {
-                    y += hexSize / 2;
-                } else {
-                    y -= hexSize / 2;
-                }
-            } else if (position.x % 2 == 0){
-                if(position.x > 0){
+            } else if (position.x % 2 == 0) {
+                if (position.x > 0) {
                     x -= hexSize / 4 * position.x;
                 } else {
                     x += hexSize / 4 * -position.x;
                 }
-
             }
 
             x += offsetX;
@@ -75,6 +80,7 @@ public class BoardView extends JPanel {
             drawHexagon(g, x, y, getTileColor(tile));
         }
     }
+
 
     /**
      * Draws a hexagon on the specified Graphics object.
