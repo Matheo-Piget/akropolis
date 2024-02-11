@@ -53,10 +53,11 @@ public class BoardView extends JPanel {
 
             // Calculate vertical offset based on elevation
             int z = position.z;
-            int verticalOffset = z * hexSize / 2; // Adjust the value as needed
+            int verticalOffset = 0;
+            if(z > 1) verticalOffset = z * hexSize/4;// Adjust the value as needed
 
             // Adjust y-coordinate with vertical offset
-            y += verticalOffset;
+            y -= verticalOffset;
 
             int offsetX = 0;
             if (position.x % 2 == 1 || position.x % 2 == -1) {
@@ -141,6 +142,6 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        //initialMap.display();
+        initialMap.display();
     }
 }

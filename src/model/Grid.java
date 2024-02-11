@@ -24,33 +24,9 @@ public class Grid {
         Random random = new Random();
 
         // Génération aléatoire des tuiles
-        for (int x = -10 ; x <= 10; x++) {
-            for (int y = -5; y <= 5; y++) {
-                Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
-                Tile tile;
-                int randomValue = random.nextInt(100); // Génère un nombre aléatoire entre 0 et 99
-
-                // Utilisation du nombre aléatoire pour déterminer le type de tuile
-                if (randomValue < 10) {
-                    tile = new District(position, DistrictColor.RED);
-                } else if (randomValue < 30) {
-                    tile = new Place(position, 1, DistrictColor.BLUE, this);
-                } else if (randomValue < 50) {
-                    tile = new Quarrie(position, this);
-                } else if (randomValue < 70) {
-                    tile = new District(position, DistrictColor.GREEN);
-                } else if (randomValue < 90) {
-                    tile = new Place(position, 1, DistrictColor.YELLOW, this);
-                } else {
-                    tile = new District(position, DistrictColor.PURPLE);
-                }
-                tiles.put(position, tile);
-            }
-        }
-
-        for (int x = -4 ; x <= 4; x++) {
-            for (int y = -2; y <= 2; y++) {
-                Point3D position = new Point3D(x, y, 2); // Toutes les tuiles ont une élévation de 1 par défaut
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                Point3D position = new Point3D(x, y, random.nextInt(1,3)); // Toutes les tuiles ont une élévation de 1 par défaut
                 Tile tile;
                 int randomValue = random.nextInt(100); // Génère un nombre aléatoire entre 0 et 99
 
