@@ -106,11 +106,14 @@ public class BoardView extends JPanel {
         // Add shadow effect by drawing a darker gradient below the tile
         int shadowIntensity = 50; // Adjust the intensity of the shadow
         for (int i = 0; i < 6; i++) {
-            int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
-            int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
-            Color shadowColor = new Color(0, 0, 0, 40); // Adjust the transparency and color of the shadow
-            g.setColor(shadowColor);
-            g.fillPolygon(shadowXPoints, shadowYPoints, 4);
+            // Only draw shadow for the bottom sides of the hexagon
+            if (yPoints[i] >= y) {
+                int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
+                int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
+                Color shadowColor = darkenColor(color, 0.5f); // Adjust the transparency and color of the shadow
+                g.setColor(shadowColor);
+                g.fillPolygon(shadowXPoints, shadowYPoints, 4);
+            }
         }
 
         // Draw the borders of the hexagon
@@ -119,11 +122,26 @@ public class BoardView extends JPanel {
     }
 
     /**
-     * Returns the color for the specified tile.
+     * Returns a darker version of the specified color.
      *
-     * @param tile The tile to determine the color for.
-     * @return The color for the tile.
+     * @param color The color to darken.
+     * @param factor The factor by which to darken the color. Must be between 0.0 and 1.0.
+     * @return The darkened color.
      */
+    private Color darkenColor(Color color, float factor) {
+        int r = Math.max((int) (color.getRed() * factor), 0);
+        int g = Math.max((int) (color.getGreen() * factor), 0);
+        int b = Math.max((int) (color.getBlue() * factor), 0);
+        return new Color(r, g, b, color.getAlpha());
+    }
+
+
+        /**
+         * Returns the color for the specified tile.
+         *
+         * @param tile The tile to determine the color for.
+         * @return The color for the tile.
+         */
     private Color getTileColor(Tile tile) {
         switch (tile.getType()) {
             case "Barrack Place", "Barrack" -> {
