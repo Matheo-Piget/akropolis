@@ -24,8 +24,8 @@ public class Grid {
         Random random = new Random();
 
         // Génération aléatoire des tuiles
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int y = -2; y <= 2; y++) {
                 
                 Point3D position = new Point3D(x, y, random.nextInt(1,3)); // Toutes les tuiles ont une élévation de 1 par défaut
                 Tile tile;
@@ -114,6 +114,7 @@ public class Grid {
         for (int i = 1; i < 3; i++) {
             if (tileTrio.getTile(i).getElevation() != elevation) {
                 canBePlaced = false;
+                break;
             }
         }
         if (canBePlaced && hasNeighbor) {

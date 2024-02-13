@@ -46,7 +46,7 @@ public class BoardView extends JPanel {
         // Sort tiles by their elevation (z-coordinate)
         List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
-                .toList().reversed();
+                .toList();
 
         // Draw each tile on the board, starting from the highest elevation
         for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
@@ -104,7 +104,7 @@ public class BoardView extends JPanel {
         g.fillPolygon(xPoints, yPoints, 6);
 
         // Add shadow effect by drawing a darker gradient below the tile
-        int shadowIntensity = 50; // Adjust the intensity of the shadow
+        int shadowIntensity = 21; // Adjust the intensity of the shadow
         for (int i = 0; i < 6; i++) {
             // Only draw shadow for the bottom sides of the hexagon
             if (yPoints[i] >= y) {
@@ -136,12 +136,12 @@ public class BoardView extends JPanel {
     }
 
 
-        /**
-         * Returns the color for the specified tile.
-         *
-         * @param tile The tile to determine the color for.
-         * @return The color for the tile.
-         */
+    /**
+     * Returns the color for the specified tile.
+     *
+     * @param tile The tile to determine the color for.
+     * @return The color for the tile.
+     */
     private Color getTileColor(Tile tile) {
         switch (tile.getType()) {
             case "Barrack Place", "Barrack" -> {
