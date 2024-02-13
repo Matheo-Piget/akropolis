@@ -162,4 +162,8 @@ public abstract class Tile {
     public boolean hasBelow() {
         return below != null;
     }
+
+    public String toString(){
+        return this.getType() + " at " + this.position.toString();
+    }
 }

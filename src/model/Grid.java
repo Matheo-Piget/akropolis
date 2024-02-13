@@ -21,35 +21,15 @@ public class Grid {
     public Grid() {
         tiles = new HashMap<>();
 
-        Random random = new Random();
-
-        // Génération aléatoire des tuiles
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                
-                Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
-                Tile tile;
-                int randomValue = random.nextInt(100); // Génère un nombre aléatoire entre 0 et 99
-
-                // Utilisation du nombre aléatoire pour déterminer le type de tuile
-                if (randomValue < 10) {
-                    tile = new District(position, DistrictColor.RED);
-                } else if (randomValue < 30) {
-                    tile = new Place(position, 1, DistrictColor.BLUE, this);
-                } else if (randomValue < 50) {
-                    tile = new Quarrie(position, this);
-                } else if (randomValue < 70) {
-                    tile = new District(position, DistrictColor.GREEN);
-                } else if (randomValue < 90) {
-                    tile = new Place(position, 1, DistrictColor.YELLOW, this);
-                } else {
-                    tile = new District(position, DistrictColor.PURPLE);
-                }
-                tiles.put(position, tile);
+        for (int i = 0; i <= 2; i++) {
+            for (int j = -2; j <= 0; j++) {
+                Tile tile = new Place(new Point3D(i, j, 1), 2, DistrictColor.BLUE, this);
+                tiles.put(new Point3D(i, j, 1), tile);
+                tiles.put(new Point3D(i, j, 2), new Place(new Point3D(i, j, 2), 2, DistrictColor.BLUE, this));
             }
-
-
         }
+
+        //tiles.put(new Point3D(0, 0, 2), new Quarrie(new Point3D(0, 0, 2), this));
     }
 
     public Map<Point3D, Tile> getTiles() {
@@ -175,9 +155,11 @@ public class Grid {
      * Displays information about each tile in the grid.
      */
     public void display() {
-        tiles.forEach((position, tile) -> {
-            System.out.println("Tile at " + position + " : " + tile);
-        });
+        for (Map.Entry<Point3D, Tile> entry : tiles.entrySet()) {
+            Point3D point = entry.getKey();
+            Tile tile = entry.getValue();
+            System.out.println("Point: " + point + ", Tile: " + tile);
+        }
     }
 
     /**

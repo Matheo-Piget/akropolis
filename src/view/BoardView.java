@@ -51,7 +51,7 @@ public class BoardView extends JPanel {
         // Draw each tile on the board, starting from the highest elevation
         for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
             Tile tile = entry.getValue();
-            Point3D position = entry.getKey();
+            Point3D position = tile.getPosition();
 
             int x = position.x * hexSize + xOffset;
             int y = -position.y * hexSize + yOffset;
@@ -59,11 +59,12 @@ public class BoardView extends JPanel {
             // Calculate vertical offset based on elevation
             int z = position.z;
             int verticalOffset = 0;
-            if (z > 1) verticalOffset = z * hexSize / 4; // Adjust the value as needed
+            if (z > 1) {
+                verticalOffset = z * hexSize / 4;
+                System.out.println("debug");// Adjust the value as needed
+            }
 
-            // Adjust y-coordinate with vertical offset
             int offsetX = 0;
-            y -= verticalOffset;
             if (position.x % 2 == 1 || position.x % 2 == -1) {
                 offsetX = -hexSize / 4 * position.x;
                 if (position.y > 0) {
@@ -82,6 +83,8 @@ public class BoardView extends JPanel {
             if ((position.y <= 0 && position.x % 2 == 1) || (position.y <= 0 && position.x % 2 == -1)) y += hexSize;
 
             x += offsetX;
+
+            y -= verticalOffset;
 
             // Draw the hexagon representing the tile
             drawHexagon(g, x, y, getTileColor(tile), tile);
@@ -192,6 +195,8 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        // initialMap.display(); // This line may be uncommented for testing purposes
+        System.out.println(initialMap.getTiles().size());
+
+        initialMap.display(); // This line may be uncommented for testing purposes
     }
 }
