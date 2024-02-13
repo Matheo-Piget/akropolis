@@ -15,10 +15,10 @@ import java.util.Map;
  */
 public class BoardView extends JPanel {
 
-    private Grid tileMap;
-    private final int hexSize = 40; // Taille arbitraire pour la taille de l'hexagone
-    private final int xOffset;
-    private final int yOffset;
+    private Grid tileMap; // The grid representing the game board
+    private final int hexSize = 40; // Arbitrary size for the hexagon
+    private final int xOffset; // Offset for centering the (0, 0) coordinate
+    private final int yOffset; // Offset for centering the (0, 0) coordinate
 
     /**
      * Constructs a new BoardView with the specified tile map.
@@ -27,11 +27,11 @@ public class BoardView extends JPanel {
      */
     public BoardView(Grid tileMap) {
         this.tileMap = tileMap;
-        setPreferredSize(new Dimension(1920, 1080)); // Taille arbitraire pour l'exemple
+        setPreferredSize(new Dimension(1920, 1080)); // Arbitrary size for the example
 
-        // Calculer les décalages pour centrer la coordonnée (0, 0)
-        xOffset = 500 - hexSize; // 500 est la moitié de la largeur de la fenêtre de dessin
-        yOffset = 400 - hexSize; // 400 est la moitié de la hauteur de la fenêtre de dessin
+        // Calculate offsets to center the (0, 0) coordinate
+        xOffset = 500 - hexSize; // 500 is half the width of the drawing window
+        yOffset = 400 - hexSize; // 400 is half the height of the drawing window
     }
 
     /**
@@ -46,7 +46,7 @@ public class BoardView extends JPanel {
         // Sort tiles by their elevation (z-coordinate)
         List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
-                .toList();
+                .toList().reversed();
 
         // Draw each tile on the board, starting from the highest elevation
         for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
@@ -59,14 +59,11 @@ public class BoardView extends JPanel {
             // Calculate vertical offset based on elevation
             int z = position.z;
             int verticalOffset = 0;
-            if(z > 1) verticalOffset = z * hexSize/4;// Adjust the value as needed
+            if (z > 1) verticalOffset = z * hexSize / 4; // Adjust the value as needed
 
             // Adjust y-coordinate with vertical offset
-
             int offsetX = 0;
-
             y -= verticalOffset;
-
             if (position.x % 2 == 1 || position.x % 2 == -1) {
                 offsetX = -hexSize / 4 * position.x;
                 if (position.y > 0) {
@@ -82,8 +79,7 @@ public class BoardView extends JPanel {
                 }
             }
 
-            if((position.y <= 0 && position.x % 2 == 1) || (position.y <= 0 && position.x % 2 == -1)) y += hexSize;
-
+            if ((position.y <= 0 && position.x % 2 == 1) || (position.y <= 0 && position.x % 2 == -1)) y += hexSize;
 
             x += offsetX;
 
@@ -99,6 +95,7 @@ public class BoardView extends JPanel {
      * @param x     The x-coordinate of the hexagon's center.
      * @param y     The y-coordinate of the hexagon's center.
      * @param color The color to fill the hexagon with.
+     * @param t     The tile associated with the hexagon.
      */
     private void drawHexagon(Graphics g, int x, int y, Color color, Tile t) {
         int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
@@ -110,7 +107,7 @@ public class BoardView extends JPanel {
 
         // Add shadow effect by drawing a darker gradient below the tile
         int shadowIntensity = 5; // Adjust the intensity of the shadow
-        if(t.getElevation() > 1) {
+        if (t.getElevation() > 1) {
             for (int i = 0; i < 6; i++) {
                 // Only draw shadow for the bottom sides of the hexagon
                 if (yPoints[i] >= y) {
@@ -127,9 +124,10 @@ public class BoardView extends JPanel {
         g.setColor(Color.BLACK);
         g.drawPolygon(xPoints, yPoints, 6);
 
+        // Draw position text on the hexagon
         g.setColor(Color.BLACK);
         g.setFont(new Font("default", Font.BOLD, 8));
-        g.drawString(t.getPosition().toString(), x , y);
+        g.drawString(t.getPosition().toString(), x, y);
     }
 
     /**
@@ -194,6 +192,6 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        initialMap.display();
+        // initialMap.display(); // This line may be uncommented for testing purposes
     }
 }

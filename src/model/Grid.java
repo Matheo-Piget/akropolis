@@ -24,8 +24,8 @@ public class Grid {
         Random random = new Random();
 
         // Génération aléatoire des tuiles
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
                 
                 Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
                 Tile tile;
