@@ -24,10 +24,10 @@ public class Grid {
         Random random = new Random();
 
         // Génération aléatoire des tuiles
-        for (int x = -2; x <= 2; x++) {
-            for (int y = -2; y <= 2; y++) {
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
                 
-                Point3D position = new Point3D(x, y, random.nextInt(1,3)); // Toutes les tuiles ont une élévation de 1 par défaut
+                Point3D position = new Point3D(x, y, 1); // Toutes les tuiles ont une élévation de 1 par défaut
                 Tile tile;
                 int randomValue = random.nextInt(100); // Génère un nombre aléatoire entre 0 et 99
 
@@ -47,6 +47,8 @@ public class Grid {
                 }
                 tiles.put(position, tile);
             }
+
+
         }
     }
 
@@ -173,9 +175,9 @@ public class Grid {
      * Displays information about each tile in the grid.
      */
     public void display() {
-        for (Tile tile : tiles.values()) {
-            System.out.println(tile.getType() + " at " + tile.getPosition());
-        }
+        tiles.forEach((position, tile) -> {
+            System.out.println("Tile at " + position + " : " + tile);
+        });
     }
 
     /**

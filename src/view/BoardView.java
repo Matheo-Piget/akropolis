@@ -27,7 +27,7 @@ public class BoardView extends JPanel {
      */
     public BoardView(Grid tileMap) {
         this.tileMap = tileMap;
-        setPreferredSize(new Dimension(1000, 800)); // Taille arbitraire pour l'exemple
+        setPreferredSize(new Dimension(1920, 1080)); // Taille arbitraire pour l'exemple
 
         // Calculer les décalages pour centrer la coordonnée (0, 0)
         xOffset = 500 - hexSize; // 500 est la moitié de la largeur de la fenêtre de dessin
@@ -62,9 +62,11 @@ public class BoardView extends JPanel {
             if(z > 1) verticalOffset = z * hexSize/4;// Adjust the value as needed
 
             // Adjust y-coordinate with vertical offset
-            y -= verticalOffset;
 
             int offsetX = 0;
+
+            y -= verticalOffset;
+
             if (position.x % 2 == 1 || position.x % 2 == -1) {
                 offsetX = -hexSize / 4 * position.x;
                 if (position.y > 0) {
@@ -72,7 +74,7 @@ public class BoardView extends JPanel {
                 } else {
                     y -= hexSize / 2;
                 }
-            } else if (position.x % 2 == 0) {
+            } else {
                 if (position.x > 0) {
                     x -= hexSize / 4 * position.x;
                 } else {
@@ -80,10 +82,13 @@ public class BoardView extends JPanel {
                 }
             }
 
+            if((position.y <= 0 && position.x % 2 == 1) || (position.y <= 0 && position.x % 2 == -1)) y += hexSize;
+
+
             x += offsetX;
 
             // Draw the hexagon representing the tile
-            drawHexagon(g, x, y, getTileColor(tile));
+            drawHexagon(g, x, y, getTileColor(tile), tile);
         }
     }
 
@@ -95,7 +100,7 @@ public class BoardView extends JPanel {
      * @param y     The y-coordinate of the hexagon's center.
      * @param color The color to fill the hexagon with.
      */
-    private void drawHexagon(Graphics g, int x, int y, Color color) {
+    private void drawHexagon(Graphics g, int x, int y, Color color, Tile t) {
         int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
         int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
 
@@ -104,21 +109,27 @@ public class BoardView extends JPanel {
         g.fillPolygon(xPoints, yPoints, 6);
 
         // Add shadow effect by drawing a darker gradient below the tile
-        int shadowIntensity = 21; // Adjust the intensity of the shadow
-        for (int i = 0; i < 6; i++) {
-            // Only draw shadow for the bottom sides of the hexagon
-            if (yPoints[i] >= y) {
-                int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
-                int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
-                Color shadowColor = darkenColor(color, 0.5f); // Adjust the transparency and color of the shadow
-                g.setColor(shadowColor);
-                g.fillPolygon(shadowXPoints, shadowYPoints, 4);
+        int shadowIntensity = 5; // Adjust the intensity of the shadow
+        if(t.getElevation() > 1) {
+            for (int i = 0; i < 6; i++) {
+                // Only draw shadow for the bottom sides of the hexagon
+                if (yPoints[i] >= y) {
+                    int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
+                    int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
+                    Color shadowColor = darkenColor(color, 0.5f); // Adjust the transparency and color of the shadow
+                    g.setColor(shadowColor);
+                    g.fillPolygon(shadowXPoints, shadowYPoints, 4);
+                }
             }
         }
 
         // Draw the borders of the hexagon
         g.setColor(Color.BLACK);
         g.drawPolygon(xPoints, yPoints, 6);
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("default", Font.BOLD, 8));
+        g.drawString(t.getPosition().toString(), x , y);
     }
 
     /**

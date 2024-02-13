@@ -52,4 +52,8 @@ public class Point3D extends Point{
     public void setLocation(int x, int y){
         super.setLocation(x, y);
     }
+
+    public int getZ() {
+        return z;
+    }
 }
