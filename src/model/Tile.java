@@ -16,8 +16,7 @@ public abstract class Tile {
     /**
      * Constructor to create a tile with specified coordinates and grid.
      *
-     * @param x    The x-coordinate of the tile.
-     * @param y    The y-coordinate of the tile.
+     * @param p    The position of the tile.
      * @param grid The grid containing the tile.
      */
     public Tile(Point3D p, Grid grid) {
@@ -28,8 +27,7 @@ public abstract class Tile {
     /**
      * Constructor to create a tile with specified coordinates (used without grid reference).
      *
-     * @param x The x-coordinate of the tile.
-     * @param y The y-coordinate of the tile.
+     * @param p The position of the tile.
      */
     public Tile(Point3D p) {
         this.position = p;
@@ -163,5 +161,9 @@ public abstract class Tile {
      */
     public boolean hasBelow() {
         return below != null;
+    }
+
+    public String toString(){
+        return this.getType() + " at " + this.position.toString();
     }
 }
