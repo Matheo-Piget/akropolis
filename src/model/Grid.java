@@ -1,10 +1,14 @@
 package model;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.text.Position;
+
 import util.Point3D;
 import util.Tuple;
 
@@ -109,6 +113,7 @@ public class Grid {
             // We add each tile of the trio to the grid
             for (int i = 0; i < 3; i++) {
                 Tile newTile_i = tileTrio.getTile(i);
+                newTile_i.setGrid(this);
                 if(bellowTiles[i] != null){
                     newTile_i.setBelow(bellowTiles[i]);
                     bellowTiles[i].setAbove(newTile_i);
@@ -135,6 +140,62 @@ public class Grid {
         }
         return new Tuple<Integer,Tile>(0, new_tile);
     }
+    public Tile neighbor(Tile t , Point p){
+        Point p2 = new Point(t.getX(),t.getY());
+        return tiles.get(sommePos(p, p2));
+    }
+    public Point sommePos(Point p1 , Point p2){
+        return new Point(p1.x+p2.x, p1.y+p2.y);
+    }
+    
+    public static boolean tuileValide(TileTrio tileTrio){//verifier si les hexagones sont adjacent "coller"
+        Tile t1 = tileTrio.getTile(0);
+        Tile t2 = tileTrio.getTile(1);
+        Tile t3 = tileTrio.getTile(2);
+        boolean adjacent1_2 = t1.adjacent(t2);
+        boolean adjacent1_3 = t1.adjacent(t3);
+        boolean adjacent2_3 = t2.adjacent(t3);
+        int z1 =t1.getZ();int z2=t2.getZ();int z3 = t3.getZ();
+        System.out.println("z1: " + t1.getZ() + ", z2: " + t2.getZ() + ", z3: " + t3.getZ());
+        return (z1 == z2)&&(z2==z3) && adjacent1_2&&adjacent1_3&& adjacent2_3;
+    }
+    /*  public void addTile(TileTrio tileTrio){
+        boolean hasNeighbor;
+        boolean isSpported  ; 
+        int elevation = tileTrio.getTile(0).getZ() ;// verifier d'abord si au meme niveau avant d'ajouter
+    
+        for (int i = 1; i < 3; i++) {
+            if (tileTrio.getTile(i).getZ()!= elevation) {
+                return ;
+            }
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            Tile tileToadd = tileTrio.getTile(i);
+            if (!tiles.containsKey(tileToadd.getPosition())) {
+                hasNeighbor = canAdd(tileToadd);
+            }
+            else{
+                isSpported = 
+            }
+
+        }
+    }
+    public boolean isSpported(Tile t ){
+        
+    }
+    
+    public boolean canAdd(Tile tile){
+        Point [] axialDirection =  {new Point(0, 1), new Point(0, -1),new Point(-1, 1)
+            ,new Point(1, 1),new Point(1, -1),new Point(-1, -1),};
+        for (Point point : axialDirection) {
+            Point3D tileneighber = new Point3D(tile.getX()+point.x, tile.getY()+point.y, 0);
+            if (tiles.containsKey(tileneighber)) {
+                return true;
+            }
+        }
+        return false ;
+    }*/
 
     /**
      * Retrieves the topmost tile at the specified position in the grid.

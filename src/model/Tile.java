@@ -1,6 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+
+import javax.swing.text.Position;
+
 import util.Point3D;
 import java.awt.Point;
 
@@ -163,5 +166,20 @@ public abstract class Tile {
      */
     public boolean hasBelow() {
         return below != null;
+    }
+    public void afficher(){
+        System.out.println(this.getType());
+    }
+    public boolean adjacent(Tile t){
+        Point [] axialDirection =  {new Point(1, 0), new Point(1, -1),new Point(0, -1)
+                                    ,new Point(-1, 0),new Point(-1, 1),new Point(0, 1),};           
+        for (Point point : axialDirection) {
+            Point direct = new Point(this.getX()+point.x, this.getY()+point.y);
+            if (t.getX() ==direct.x && t.getY()==direct.y) {
+                System.out.println("T");
+                return true;
+            }
+        }
+        return false;
     }
 }

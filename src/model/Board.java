@@ -12,6 +12,9 @@ public class Board {
     public void display() {
         grid.display();
     }
+    public Grid getGrid(){
+        return this.grid;
+    }
 
     // We can get a tile from the grid
     public Tile getTile(int x, int y) {
