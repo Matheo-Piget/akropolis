@@ -1,13 +1,7 @@
 package model;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.text.Position;
+import java.util.*;
 
 import util.Point3D;
 import util.Tuple;
@@ -27,20 +21,15 @@ public class Grid {
     public Grid() {
         tiles = new HashMap<>();
 
-        // Creating starting tiles
-        Point3D p1 = new Point3D(0, 0, 1);
-        Point3D p2 = new Point3D(0, 1, 1);
-        Point3D p3 = new Point3D(-1, -1, 1);
-        Point3D p4 = new Point3D(1, 0, 1);
-        Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
-        Tile tile2 = new Quarrie(p2, this);
-        Tile tile3 = new Quarrie(p3, this);
-        Tile tile4 = new Quarrie(p4, this);
+        for (int i = 0; i <= 2; i++) {
+            for (int j = -2; j <= 0; j++) {
+                Tile tile = new Place(new Point3D(i, j, 1), 2, DistrictColor.BLUE, this);
+                tiles.put(new Point3D(i, j, 1), tile);
+                tiles.put(new Point3D(i, j, 2), new Place(new Point3D(i, j, 2), 2, DistrictColor.BLUE, this));
+            }
+        }
 
-        tiles.put(p1, tile1);
-        tiles.put(p2, tile2);
-        tiles.put(p3, tile3);
-        tiles.put(p4, tile4);
+        //tiles.put(new Point3D(0, 0, 2), new Quarrie(new Point3D(0, 0, 2), this));
     }
 
     public Map<Point3D, Tile> getTiles() {
@@ -62,7 +51,7 @@ public class Grid {
         int z = tile.getZ();
         // Check if the tile has at least one neighbor in the grid
         // Define the directions for the 6 neighbors in a hexagonal grid
-        Point axialDirections[] = {
+        Point[] axialDirections = {
             new Point(1, 0), new Point(1, -1), new Point(0, -1),
             new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };
@@ -107,6 +96,7 @@ public class Grid {
         for (int i = 1; i < 3; i++) {
             if (tileTrio.getTile(i).getElevation() != elevation) {
                 canBePlaced = false;
+                break;
             }
         }
         if (canBePlaced && hasNeighbor) {
@@ -222,8 +212,10 @@ public class Grid {
      * Displays information about each tile in the grid.
      */
     public void display() {
-        for (Tile tile : tiles.values()) {
-            System.out.println(tile.getType() + " at " + tile.getPosition());
+        for (Map.Entry<Point3D, Tile> entry : tiles.entrySet()) {
+            Point3D point = entry.getKey();
+            Tile tile = entry.getValue();
+            System.out.println("Point: " + point + ", Tile: " + tile);
         }
     }
 
