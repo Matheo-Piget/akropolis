@@ -4,7 +4,7 @@ Semaine du 11/02/2024
 
 Tâches Accomplies:
 1. Mathéo - Début de la vue du Board.
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
+2. Nidhal - le debut de la logique des tours et ajoute d'une methode tuileValide .
 3. ...
 
 Avancements Individuels:
@@ -13,19 +13,20 @@ Avancements Individuels:
    - Problèmes rencontrés : simulation de la 3d assez compliquée, qql test mais pas très concluant.
    - Suggestions pour l'amélioration : trouver un moyen de simuler la 3d plus facilement.
 
-2. [Nom du membre de l'équipe]:
-   - Tâche accomplie : [Description brève]
-   - Problèmes rencontrés : [le cas échéant]
-   - Suggestions pour l'amélioration : [le cas échéant]
+2. Nidhal:
+   - Tâche accomplie : une methode tuileValide pour verifer si les tuiles à ajouter sont bienAdjacent et "collés "je devrai l'ajouter dans addTile mais faudra faire quelque modification avant
+                       ajoute le debut de la logique des tours.
+   - Problèmes rencontrés : comprendre les directions axiales.
+   - Suggestions pour l'amélioration : ajoute l'attribut tileTrio pour la superposition sur deux tuiles differentes et utiliser la methode tuilevalide avant de add
 
 3. ...
 
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - continuer la vue du Board, finir la 3d, commencer la vue des joueurs, et des ressources.
-2. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
+2. Moussa - terminer la logique des tours , terminer le calcul de score avec le bonus, implementer les mouselistner 
 3. ...
 
 Problèmes Rencontrés:
 1. Mathéo - Difficulté pour bien dessiner la map d'hexagone, mais grâce à l'aide de l'équipe, j'ai pu trouver une solution.
-2. [Problème 2] - Description brève.
-3. ...
+2. Nidhal - comprendre les directions axiales.
+3. ...  - Description brève.
