@@ -60,7 +60,7 @@ public class BoardView extends JPanel {
             int z = position.z;
             int verticalOffset = 0;
             if (z > 1) {
-                verticalOffset = z * hexSize / 4;
+                verticalOffset = z * hexSize / 8;
                 System.out.println("debug");// Adjust the value as needed
             }
 
