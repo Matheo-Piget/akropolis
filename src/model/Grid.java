@@ -23,8 +23,8 @@ public class Grid {
         tiles = new HashMap<>();
         random = new Random();
 
-        for (int x = -5; x < 12; x++) {
-            for (int y = -7; y < 8; y++) {
+        for (int x = -20; x < 20; x++) {
+            for (int y = -10; y < 10; y++) {
                 int layers = random.nextInt(3) + 1;
                 for (int z = 0; z < layers; z++) {
                     Point3D position = new Point3D(x, y, z + 1);
