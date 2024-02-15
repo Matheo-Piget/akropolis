@@ -2,9 +2,7 @@ package model;
 
 import java.awt.Point;
 import java.util.*;
-
 import util.Point3D;
-import util.Tuple;
 
 /**
  * Represents the grid of the game board, containing tiles in different
@@ -13,7 +11,6 @@ import util.Tuple;
 public class Grid {
     // Map to store tiles based on their positions
     private Map<Point3D, Tile> tiles;
-    private Random random;
 
     /**
      * Constructor to initialize the grid and add the starting tiles at the
@@ -21,19 +18,21 @@ public class Grid {
      */
     public Grid() {
         tiles = new HashMap<>();
-        random = new Random();
-
-        for (int x = -20; x < 20; x++) {
-            for (int y = -10; y < 10; y++) {
-                int layers = random.nextInt(3) + 1;
-                for (int z = 0; z < layers; z++) {
-                    Point3D position = new Point3D(x, y, z + 1);
-                    Tile tile = new Place(position, 2, DistrictColor.values()[random.nextInt(DistrictColor.values().length)], this);
-                    tiles.put(position, tile);
-                }
-            }
-        }
+        // Creating starting tiles
+        Point3D p1 = new Point3D(0, 0, 1);
+        Point3D p2 = new Point3D(0, 1, 1);
+        Point3D p3 = new Point3D(-1, -1, 1);
+        Point3D p4 = new Point3D(1, 0, 1);
+        Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
+        Tile tile2 = new Quarrie(p2, this);
+        Tile tile3 = new Quarrie(p3, this);
+        Tile tile4 = new Quarrie(p4, this);
+        tiles.put(p1, tile1);
+        tiles.put(p2, tile2);
+        tiles.put(p3, tile3);
+        tiles.put(p4, tile4);
     }
+
 
     public Map<Point3D, Tile> getTiles() {
         return tiles;
@@ -55,8 +54,8 @@ public class Grid {
         // Check if the tile has at least one neighbor in the grid
         // Define the directions for the 6 neighbors in a hexagonal grid
         Point[] axialDirections = {
-            new Point(1, 0), new Point(1, -1), new Point(0, -1),
-            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+                new Point(1, 0), new Point(1, -1), new Point(0, -1),
+                new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };
         for (Point direction : axialDirections) {
             Tile neighbor = tiles.get(new Point3D(x + direction.x, y + direction.y, z));
@@ -73,16 +72,16 @@ public class Grid {
         boolean hasNeighbor = checkNeighborsAndSetBelowTiles(tileTrio, bellowTiles);
         boolean canBePlaced = checkElevation(tileTrio);
         int sameTile = countSameTiles(tileTrio, bellowTiles);
-    
+
         if (canBePlaced && hasNeighbor && sameTile <= 1) {
             addTilesToGrid(tileTrio, bellowTiles);
         }
-    
+
         display();
         System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", sameTile: " + sameTile);
         return canBePlaced && hasNeighbor && sameTile <= 1;
     }
-    
+
     private boolean checkNeighborsAndSetBelowTiles(TileTrio tileTrio, Tile[] bellowTiles) {
         boolean hasNeighbor = false;
         for (int i = 0; i < 3; i++) {
@@ -91,10 +90,9 @@ public class Grid {
                 hasNeighbor = hasNeighbor || canAdd(newTile_i, newTile_i.getPosition());
             } else if (tiles.containsKey(newTile_i.getPosition())) {
                 Tile topMostTile = getTile(newTile_i.getX(), newTile_i.getY());
-                if(topMostTile != null){
+                if (topMostTile != null) {
                     bellowTiles[i] = topMostTile;
                 }
-                System.out.println("topMostTile: " + topMostTile);
                 newTile_i.getPosition().z = topMostTile.getZ() + 1;
                 hasNeighbor = true;
             }
@@ -107,26 +105,24 @@ public class Grid {
             Tile newTile_i = tileTrio.getTile(i);
             newTile_i.setGrid(this);
             newTile_i.setTileTrio(tileTrio);
-            if(bellowTiles[i] != null){
+            if (bellowTiles[i] != null) {
                 newTile_i.setBelow(bellowTiles[i]);
                 bellowTiles[i].setAbove(newTile_i);
             }
             tiles.put(newTile_i.getPosition(), newTile_i);
         }
     }
-    
+
     private boolean checkElevation(TileTrio tileTrio) {
         int elevation = tileTrio.getTile(0).getElevation();
-        System.out.println("elevation: " + tileTrio.getTile(0).getElevation());
         for (int i = 1; i < 3; i++) {
-            System.out.println("elevation: " + tileTrio.getTile(i).getElevation());
             if (tileTrio.getTile(i).getElevation() != elevation) {
                 return false;
             }
         }
         return true;
     }
-    
+
     private int countSameTiles(TileTrio tileTrio, Tile[] bellowTiles) {
         int sameTile = 0;
         for (int i = 0; i < 3; i++) {
@@ -138,63 +134,69 @@ public class Grid {
         return sameTile;
     }
 
-
-    public Tile neighbor(Tile t , Point p){
-        Point p2 = new Point(t.getX(),t.getY());
+    public Tile neighbor(Tile t, Point p) {
+        Point p2 = new Point(t.getX(), t.getY());
         return tiles.get(sommePos(p, p2));
     }
-    public Point sommePos(Point p1 , Point p2){
-        return new Point(p1.x+p2.x, p1.y+p2.y);
+
+    public Point sommePos(Point p1, Point p2) {
+        return new Point(p1.x + p2.x, p1.y + p2.y);
     }
-    
-    public static boolean tuileValide(TileTrio tileTrio){//verifier si les hexagones sont adjacent "coller"
+
+    public static boolean tuileValide(TileTrio tileTrio) {// verifier si les hexagones sont adjacent "coller"
         Tile t1 = tileTrio.getTile(0);
         Tile t2 = tileTrio.getTile(1);
         Tile t3 = tileTrio.getTile(2);
         boolean adjacent1_2 = t1.isAdjacent(t2);
         boolean adjacent1_3 = t1.isAdjacent(t3);
         boolean adjacent2_3 = t2.isAdjacent(t3);
-        int z1 =t1.getZ();int z2=t2.getZ();int z3 = t3.getZ();
+        int z1 = t1.getZ();
+        int z2 = t2.getZ();
+        int z3 = t3.getZ();
         System.out.println("z1: " + t1.getZ() + ", z2: " + t2.getZ() + ", z3: " + t3.getZ());
-        return (z1 == z2)&&(z2==z3) && adjacent1_2&&adjacent1_3&& adjacent2_3;
+        return (z1 == z2) && (z2 == z3) && adjacent1_2 && adjacent1_3 && adjacent2_3;
     }
-    /*  public void addTile(TileTrio tileTrio){
-        boolean hasNeighbor;
-        boolean isSpported  ; 
-        int elevation = tileTrio.getTile(0).getZ() ;// verifier d'abord si au meme niveau avant d'ajouter
-    
-        for (int i = 1; i < 3; i++) {
-            if (tileTrio.getTile(i).getZ()!= elevation) {
-                return ;
-            }
-        }
-        
-        for (int i = 0; i < 3; i++) {
-            Tile tileToadd = tileTrio.getTile(i);
-            if (!tiles.containsKey(tileToadd.getPosition())) {
-                hasNeighbor = canAdd(tileToadd);
-            }
-            else{
-                isSpported = 
-            }
-
-        }
-    }
-    public boolean isSpported(Tile t ){
-        
-    }
-    
-    public boolean canAdd(Tile tile){
-        Point [] axialDirection =  {new Point(0, 1), new Point(0, -1),new Point(-1, 1)
-            ,new Point(1, 1),new Point(1, -1),new Point(-1, -1),};
-        for (Point point : axialDirection) {
-            Point3D tileneighber = new Point3D(tile.getX()+point.x, tile.getY()+point.y, 0);
-            if (tiles.containsKey(tileneighber)) {
-                return true;
-            }
-        }
-        return false ;
-    }*/
+    /*
+     * public void addTile(TileTrio tileTrio){
+     * boolean hasNeighbor;
+     * boolean isSpported ;
+     * int elevation = tileTrio.getTile(0).getZ() ;// verifier d'abord si au meme
+     * niveau avant d'ajouter
+     * 
+     * for (int i = 1; i < 3; i++) {
+     * if (tileTrio.getTile(i).getZ()!= elevation) {
+     * return ;
+     * }
+     * }
+     * 
+     * for (int i = 0; i < 3; i++) {
+     * Tile tileToadd = tileTrio.getTile(i);
+     * if (!tiles.containsKey(tileToadd.getPosition())) {
+     * hasNeighbor = canAdd(tileToadd);
+     * }
+     * else{
+     * isSpported =
+     * }
+     * 
+     * }
+     * }
+     * public boolean isSpported(Tile t ){
+     * 
+     * }
+     * 
+     * public boolean canAdd(Tile tile){
+     * Point [] axialDirection = {new Point(0, 1), new Point(0, -1),new Point(-1, 1)
+     * ,new Point(1, 1),new Point(1, -1),new Point(-1, -1),};
+     * for (Point point : axialDirection) {
+     * Point3D tileneighber = new Point3D(tile.getX()+point.x, tile.getY()+point.y,
+     * 0);
+     * if (tiles.containsKey(tileneighber)) {
+     * return true;
+     * }
+     * }
+     * return false ;
+     * }
+     */
 
     /**
      * Retrieves the topmost tile at the specified position in the grid.
@@ -241,9 +243,7 @@ public class Grid {
      * Clear the grid/board, for new game or otherwise
      */
     public void clearGrid() {
-
         tiles.clear();
-
     }
 
     /**
@@ -343,7 +343,7 @@ public class Grid {
     public ArrayList<Tile> getTopTiles() {
         ArrayList<Tile> topTiles = new ArrayList<>();
         for (Tile tile : tiles.values()) {
-            if (!tile.hasAbove() && topTiles.contains(tile) == false){
+            if (!tile.hasAbove() && topTiles.contains(tile) == false) {
                 topTiles.add(tile);
             }
         }

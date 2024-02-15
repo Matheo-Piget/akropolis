@@ -1,14 +1,18 @@
 package view;
 
+import model.DistrictColor;
 import model.Grid;
+import model.Place;
 import model.Tile;
+import model.TileTrio;
 import util.Point3D;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Panel for displaying the game board.
@@ -45,8 +49,11 @@ public class BoardView extends JPanel {
 
         // Sort tiles by their elevation (z-coordinate)
         List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
-                .toList().reversed();
+            .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
+            .toList();
+        ArrayList<Map.Entry<Point3D, Tile>> sortedTiles2 = new ArrayList<>(sortedTiles);
+        sortedTiles2.sort(Comparator.comparingInt(entry -> entry.getKey().x));
+        sortedTiles = sortedTiles2; 
 
         // Draw each tile on the board, starting from the highest elevation
         for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
@@ -177,6 +184,25 @@ public class BoardView extends JPanel {
         }
     }
 
+    private static Grid generateRandomGrid(){
+        Grid grid = new Grid();
+        grid.clearGrid();
+        grid.getTiles().put(new Point3D(0,0,1),new Place(new Point3D(0,0,1), 1, DistrictColor.BLUE));
+        Random random = new Random();
+        int numberOfTiles = 100;
+        // We generate a set number of tileTrios the tileTrio needs to be tiles next to each other
+        for(int i = 0; i< numberOfTiles; i ++){
+            int x = random.nextInt(-5, 5);
+            int y = random.nextInt(-5, 5);
+            Place tile1 = new Place(new Point3D(x, y, 1), 1, DistrictColor.BLUE);
+            Place tile2 = new Place(new Point3D(x,y,1), 2, DistrictColor.GREEN);
+            Place tile3 = new Place(new Point3D(x,y,1), 3, DistrictColor.RED);
+            TileTrio tileTrio = new TileTrio(tile1, tile2, tile3);
+            grid.addTile(tileTrio);
+        }
+        return grid;
+    }
+
     /**
      * Main method for testing the BoardView.
      *
@@ -184,7 +210,7 @@ public class BoardView extends JPanel {
      */
     public static void main(String[] args) {
         // Example usage
-        Grid initialMap = new Grid();
+        Grid initialMap = generateRandomGrid();
 
         JFrame frame = new JFrame("Board View Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

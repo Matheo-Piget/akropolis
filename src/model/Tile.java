@@ -1,9 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-
-import javax.swing.text.Position;
-
 import util.Point3D;
 import java.awt.Point;
 
