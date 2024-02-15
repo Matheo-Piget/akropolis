@@ -27,11 +27,11 @@ public class BoardView extends JPanel {
      */
     public BoardView(Grid tileMap) {
         this.tileMap = tileMap;
-        setPreferredSize(new Dimension(1920, 1080)); // Arbitrary size for the example
+        setPreferredSize(new Dimension(1500, 900)); // Arbitrary size for the example
 
         // Calculate offsets to center the (0, 0) coordinate
-        xOffset = 500 - hexSize; // 500 is half the width of the drawing window
-        yOffset = 400 - hexSize; // 400 is half the height of the drawing window
+        xOffset = 1500/2 - hexSize; // 500 is half the width of the drawing window
+        yOffset = 900/2 - hexSize; // 400 is half the height of the drawing window
     }
 
     /**
@@ -59,10 +59,8 @@ public class BoardView extends JPanel {
             // Calculate vertical offset based on elevation
             int z = position.z;
             int verticalOffset = 0;
-            if (z > 1) {
-                verticalOffset = z * hexSize / 4;
-                System.out.println("debug");// Adjust the value as needed
-            }
+            verticalOffset = z * hexSize / 8;
+
 
             int offsetX = 0;
             if (position.x % 2 == 1 || position.x % 2 == -1) {
@@ -116,7 +114,7 @@ public class BoardView extends JPanel {
                 if (yPoints[i] >= y) {
                     int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
                     int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
-                    Color shadowColor = darkenColor(color, 0.5f); // Adjust the transparency and color of the shadow
+                    Color shadowColor = darkenColor(color, 0.8f); // Adjust the transparency and color of the shadow
                     g.setColor(shadowColor);
                     g.fillPolygon(shadowXPoints, shadowYPoints, 4);
                 }

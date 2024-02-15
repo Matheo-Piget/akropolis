@@ -13,6 +13,7 @@ import util.Tuple;
 public class Grid {
     // Map to store tiles based on their positions
     private Map<Point3D, Tile> tiles;
+    private Random random;
 
     /**
      * Constructor to initialize the grid and add the starting tiles at the
@@ -20,16 +21,18 @@ public class Grid {
      */
     public Grid() {
         tiles = new HashMap<>();
+        random = new Random();
 
-         // Creating starting tiles
-         Point3D p1 = new Point3D(0, 0, 1);
-         Point3D p2 = new Point3D(0, 1, 1);
-         Point3D p3 = new Point3D(-1, -1, 1);
-         Point3D p4 = new Point3D(1, 0, 1);
-         Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
-         Tile tile2 = new Quarrie(p2, this);
-         Tile tile3 = new Quarrie(p3, this);
-         Tile tile4 = new Quarrie(p4, this);
+        for (int x = -20; x < 20; x++) {
+            for (int y = -10; y < 10; y++) {
+                int layers = random.nextInt(3) + 1;
+                for (int z = 0; z < layers; z++) {
+                    Point3D position = new Point3D(x, y, z + 1);
+                    Tile tile = new Place(position, 2, DistrictColor.values()[random.nextInt(DistrictColor.values().length)], this);
+                    tiles.put(position, tile);
+                }
+            }
+        }
 
         tiles.put(p1, tile1);
         tiles.put(p2, tile2);
