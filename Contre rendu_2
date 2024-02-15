@@ -5,8 +5,8 @@ Semaine du 11/02/2024
 Tâches Accomplies:
 1. Mathéo - Début de la vue du Board.
 2. Nidhal - le debut de la logique des tours et ajoute d'une methode tuileValide .
-3. ...
-
+3. Bilal - Ajout de JUnit avec quelques tests unitaires. Fin de la méthode addTile avec tests fournis. Simplification et réecriture de logique de Grid.
+4. Nerval - Debut de l'implementation de la logique concernant la gestion du chantier.
 Avancements Individuels:
 1. Mathéo:
    - Tâche accomplie : Début de la vue du Board, création de la classe BoardView, MainView etc, map d'héxagones, début d'idée pour la 3d.
@@ -19,14 +19,19 @@ Avancements Individuels:
    - Problèmes rencontrés : comprendre les directions axiales.
    - Suggestions pour l'amélioration : ajoute l'attribut tileTrio pour la superposition sur deux tuiles differentes et utiliser la methode tuilevalide avant de add
 
-3. ...
-
+3. Bilal :
+   - Tâche accomplie : Utilisation d'une classe Point3D pour gérer l'élévation et la position des tuiles. La méthode addTile a été découpé en sous méthode pour être la plus lisible possible.
+                       Rédaction de tests unitaires pour tester le bon fonctionnement de cette dernière dans différents cas (supperposition, positionnement interdis) dans la class BoardTest.
+                       Utilisation de coordonnées axiales pour des raisons de facilités implémentation d'algorithmes au détriment de coordonnées offset.
+    - Problèmes rencontrés : La supperposition était galère avec la référence et trouver la bonne manière de gérer la bonne représentation.
+4. Nerval :
+    - Tâche accomplie : Ajout d'une methode qui perrmet de gerer le choix de tuile d'un joueur dans le chantier
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - continuer la vue du Board, finir la 3d, commencer la vue des joueurs, et des ressources.
 2. Moussa - terminer la logique des tours , terminer le calcul de score avec le bonus, implementer les mouselistner 
-3. ...
+3. Bilal - s'occuper d'avoir une logique d'affichage solide pour afficher chaque tuiles (création de classes séparés)
+4. Nerval - creer le chnatier et implementer le renouvelement le cube.
 
 Problèmes Rencontrés:
 1. Mathéo - Difficulté pour bien dessiner la map d'hexagone, mais grâce à l'aide de l'équipe, j'ai pu trouver une solution.
 2. Nidhal - comprendre les directions axiales.
-3. ...  - Description brève.
