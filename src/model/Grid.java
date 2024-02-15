@@ -33,11 +33,6 @@ public class Grid {
                 }
             }
         }
-
-        tiles.put(p1, tile1);
-        tiles.put(p2, tile2);
-        tiles.put(p3, tile3);
-        tiles.put(p4, tile4);
     }
 
     public Map<Point3D, Tile> getTiles() {
@@ -156,9 +151,9 @@ public class Grid {
         Tile t1 = tileTrio.getTile(0);
         Tile t2 = tileTrio.getTile(1);
         Tile t3 = tileTrio.getTile(2);
-        boolean adjacent1_2 = t1.adjacent(t2);
-        boolean adjacent1_3 = t1.adjacent(t3);
-        boolean adjacent2_3 = t2.adjacent(t3);
+        boolean adjacent1_2 = t1.isAdjacent(t2);
+        boolean adjacent1_3 = t1.isAdjacent(t3);
+        boolean adjacent2_3 = t2.isAdjacent(t3);
         int z1 =t1.getZ();int z2=t2.getZ();int z3 = t3.getZ();
         System.out.println("z1: " + t1.getZ() + ", z2: " + t2.getZ() + ", z3: " + t3.getZ());
         return (z1 == z2)&&(z2==z3) && adjacent1_2&&adjacent1_3&& adjacent2_3;
