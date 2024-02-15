@@ -65,7 +65,7 @@ public class BoardTest {
         Board board = new Board();
         District validTile1 = new District(new Point3D(0, 0, 1), DistrictColor.RED);
         District validTile2 = new District(new Point3D(-1, -1, 1), DistrictColor.BLUE);
-        District validTile3 = new District(new Point3D(1, -1, 1), DistrictColor.GREEN);
+        District validTile3 = new District(new Point3D(1, 0, 1), DistrictColor.GREEN);
         TileTrio tileTrio1 = new TileTrio(validTile1, validTile2, validTile3);
         // We verify that we can add a tile to the board
         assertTrue(board.addTile(tileTrio1));
@@ -76,7 +76,7 @@ public class BoardTest {
         // And that we can get it back
         assertEquals(validTile1, board.getTile(0, 0));
         assertEquals(validTile2, board.getTile(-1, -1));
-        assertEquals(validTile3, board.getTile(1, -1));
+        assertEquals(validTile3, board.getTile(1, 0));
     }
 
     @Test

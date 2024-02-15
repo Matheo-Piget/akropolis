@@ -15,6 +15,7 @@ public abstract class Tile {
     private Grid grid; // Reference to the grid containing the tile
     private Tile above; // Tile above the current tile
     private Tile below; // Tile below the current tile
+    private TileTrio trio; // Tile trio containing the tile
 
     /**
      * Constructor to create a tile with specified coordinates and grid.
@@ -54,6 +55,10 @@ public abstract class Tile {
      */
     public int getElevation() {
         return position.z;
+    }
+
+    public void setTileTrio(TileTrio trio){
+        this.trio = trio;
     }
 
     /**
@@ -166,7 +171,7 @@ public abstract class Tile {
         return below != null;
     }
     
-    public boolean adjacent(Tile t){
+    public boolean isAdjacent(Tile t){
         Point [] axialDirection =  {new Point(1, 0), new Point(1, -1),new Point(0, -1)
                                     ,new Point(-1, 0),new Point(-1, 1),new Point(0, 1),};           
         for (Point point : axialDirection) {
