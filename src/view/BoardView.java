@@ -108,18 +108,17 @@ public class BoardView extends JPanel {
 
         // Add shadow effect by drawing a darker gradient below the tile
         int shadowIntensity = 5; // Adjust the intensity of the shadow
-        if (t.getElevation() > 1) {
-            for (int i = 0; i < 6; i++) {
-                // Only draw shadow for the bottom sides of the hexagon
-                if (yPoints[i] >= y) {
-                    int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
-                    int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
-                    Color shadowColor = darkenColor(color, 0.8f); // Adjust the transparency and color of the shadow
-                    g.setColor(shadowColor);
-                    g.fillPolygon(shadowXPoints, shadowYPoints, 4);
-                }
+        for (int i = 0; i < 6; i++) {
+            // Only draw shadow for the bottom sides of the hexagon
+            if (yPoints[i] >= y) {
+                int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
+                int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
+                Color shadowColor = darkenColor(color, 0.8f); // Adjust the transparency and color of the shadow
+                g.setColor(shadowColor);
+                g.fillPolygon(shadowXPoints, shadowYPoints, 4);
             }
         }
+
 
         // Draw the borders of the hexagon
         g.setColor(Color.BLACK);
