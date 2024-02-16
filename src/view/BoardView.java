@@ -3,8 +3,8 @@ package view;
 import model.DistrictColor;
 import model.Grid;
 import model.Place;
+import model.Hexagon;
 import model.Tile;
-import model.TileTrio;
 import util.Point3D;
 import javax.swing.*;
 import java.awt.*;
@@ -48,17 +48,17 @@ public class BoardView extends JPanel {
         super.paintComponent(g);
 
         // Sort tiles by their elevation (z-coordinate)
-        List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
+        List<Map.Entry<Point3D, Hexagon>> sortedTiles = tileMap.getHexagons().entrySet().stream()
             .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
             .toList();
-        ArrayList<Map.Entry<Point3D, Tile>> sortedTiles2 = new ArrayList<>(sortedTiles);
+        ArrayList<Map.Entry<Point3D, Hexagon>> sortedTiles2 = new ArrayList<>(sortedTiles);
         sortedTiles2.sort(Comparator.comparingInt(entry -> entry.getKey().x));
         sortedTiles = sortedTiles2; 
 
         // Draw each tile on the board, starting from the highest elevation
-        for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
-            Tile tile = entry.getValue();
-            Point3D position = tile.getPosition();
+        for (Map.Entry<Point3D, Hexagon> entry : sortedTiles) {
+            Hexagon tile = entry.getValue();
+            Point3D position = entry.getKey();
 
             int x = position.x * hexSize + xOffset;
             int y = -position.y * hexSize + yOffset;
@@ -92,7 +92,7 @@ public class BoardView extends JPanel {
             y -= verticalOffset;
 
             // Draw the hexagon representing the tile
-            drawHexagon(g, x, y, getTileColor(tile), tile);
+            drawHexagon(g, x, y, getHexagonColor(tile), tile);
         }
     }
 
@@ -105,7 +105,7 @@ public class BoardView extends JPanel {
      * @param color The color to fill the hexagon with.
      * @param t     The tile associated with the hexagon.
      */
-    private void drawHexagon(Graphics g, int x, int y, Color color, Tile t) {
+    private void drawHexagon(Graphics g, int x, int y, Color color, Hexagon t) {
         int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
         int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
 
@@ -153,13 +153,13 @@ public class BoardView extends JPanel {
 
 
     /**
-     * Returns the color for the specified tile.
+     * Returns the color for the specified hexagon.
      *
      * @param tile The tile to determine the color for.
-     * @return The color for the tile.
+     * @return The color for the hexagon
      */
-    private Color getTileColor(Tile tile) {
-        switch (tile.getType()) {
+    private Color getHexagonColor(Hexagon h) {
+        switch (h.getType()) {
             case "Barrack Place", "Barrack" -> {
                 return Color.RED;
             }
@@ -187,18 +187,18 @@ public class BoardView extends JPanel {
     private static Grid generateRandomGrid(){
         Grid grid = new Grid();
         grid.clearGrid();
-        grid.getTiles().put(new Point3D(0,0,1),new Place(new Point3D(0,0,1), 1, DistrictColor.BLUE));
+        grid.getHexagons().put(new Point3D(0,0,1),new Place(new Point3D(0,0,1), 1, DistrictColor.BLUE));
         Random random = new Random();
         int numberOfTiles = 100;
-        // We generate a set number of tileTrios the tileTrio needs to be tiles next to each other
+        // We generate a set number of tiles
         for(int i = 0; i< numberOfTiles; i ++){
             int x = random.nextInt(-5, 5);
             int y = random.nextInt(-5, 5);
-            Place tile1 = new Place(new Point3D(x, y, 1), 1, DistrictColor.BLUE);
-            Place tile2 = new Place(new Point3D(x,y,1), 2, DistrictColor.GREEN);
-            Place tile3 = new Place(new Point3D(x,y,1), 3, DistrictColor.RED);
-            TileTrio tileTrio = new TileTrio(tile1, tile2, tile3);
-            grid.addTile(tileTrio);
+            Place h1 = new Place(new Point3D(x, y, 1), 1, DistrictColor.BLUE);
+            Place h2 = new Place(new Point3D(x,y,1), 2, DistrictColor.GREEN);
+            Place h3 = new Place(new Point3D(x,y,1), 3, DistrictColor.RED);
+            Tile tile = new Tile(h1, h2, h3);
+            grid.addTile(tile);
         }
         return grid;
     }
@@ -218,7 +218,7 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        System.out.println(initialMap.getTiles().size());
+        System.out.println(initialMap.getHexagons().size());
 
         initialMap.display(); // This line may be uncommented for testing purposes
     }

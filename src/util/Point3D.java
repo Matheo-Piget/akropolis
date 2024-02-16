@@ -9,22 +9,16 @@ import java.util.Objects;
 public class Point3D extends Point{
     public int z;
 
+    public Point3D(int x, int y){
+        super(x, y);
+        this.z = 1;
+    }
+
     public Point3D(int x, int y, int z){
         super(x, y);
         this.z = z;
     }
-    public Point3D(Point p, int z){
-        super(p);
-        this.z = z;
-    }
-    public Point3D(){
-        super();
-        this.z = 0;
-    }
-    public Point3D(Point3D p){
-        super(p);
-        this.z = p.z;
-    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

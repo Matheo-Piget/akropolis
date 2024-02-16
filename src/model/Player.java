@@ -6,8 +6,8 @@ import java.util.List;
 public class Player {
     private String name;
     private int score;
-    private List<Tile> ownedTiles;  // List of tiles owned by the player
-    private Tile selectedTile;  // The tile selected by the player during their turn
+    private List<Hexagon> ownedTiles;  // List of tiles owned by the player
+    private Hexagon selectedTile;  // The tile selected by the player during their turn
 
     // Constructor
     public Player(String name) {
@@ -27,15 +27,15 @@ public class Player {
         return score;
     }
 
-    public List<Tile> getOwnedTiles() {
+    public List<Hexagon> getOwnedTiles() {
         return ownedTiles;
     }
 
-    public Tile getSelectedTile() {
+    public Hexagon getSelectedTile() {
         return selectedTile;
     }
 
-    public void setSelectedTile(Tile tile) {
+    public void setSelectedTile(Hexagon tile) {
         this.selectedTile = tile;
     }
 }

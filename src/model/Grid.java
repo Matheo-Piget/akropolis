@@ -5,174 +5,174 @@ import java.util.*;
 import util.Point3D;
 
 /**
- * Represents the grid of the game board, containing tiles in different
+ * Represents the grid of the game board, containing hexagons in different
  * positions.
  */
 public class Grid {
-    // Map to store tiles based on their positions
-    private Map<Point3D, Tile> tiles;
+    // Map to store hexagons based on their positions
+    private Map<Point3D, Hexagon> hexagons;
 
     /**
-     * Constructor to initialize the grid and add the starting tiles at the
+     * Constructor to initialize the grid and add the starting hexagons at the
      * beginning of the game.
      */
     public Grid() {
-        tiles = new HashMap<>();
-        // Creating starting tiles
-        Point3D p1 = new Point3D(0, 0, 1);
-        Point3D p2 = new Point3D(0, 1, 1);
-        Point3D p3 = new Point3D(-1, -1, 1);
-        Point3D p4 = new Point3D(1, 0, 1);
-        Tile tile1 = new Place(p1, 1, DistrictColor.BLUE, this);
-        Tile tile2 = new Quarrie(p2, this);
-        Tile tile3 = new Quarrie(p3, this);
-        Tile tile4 = new Quarrie(p4, this);
-        tiles.put(p1, tile1);
-        tiles.put(p2, tile2);
-        tiles.put(p3, tile3);
-        tiles.put(p4, tile4);
+        hexagons = new HashMap<>();
+        // Creating starting hexagons
+        Point3D p1 = new Point3D(0, 0);
+        Point3D p2 = new Point3D(0, 1);
+        Point3D p3 = new Point3D(-1, -1);
+        Point3D p4 = new Point3D(1, 0);
+        Hexagon hexagon1 = new Place(p1, 1, DistrictColor.BLUE, this);
+        Hexagon hexagon2 = new Quarrie(p2, this);
+        Hexagon hexagon3 = new Quarrie(p3, this);
+        Hexagon hexagon4 = new Quarrie(p4, this);
+        hexagons.put(p1, hexagon1);
+        hexagons.put(p2, hexagon2);
+        hexagons.put(p3, hexagon3);
+        hexagons.put(p4, hexagon4);
     }
 
 
-    public Map<Point3D, Tile> getTiles() {
-        return tiles;
+    public Map<Point3D, Hexagon> getHexagons() {
+        return hexagons;
     }
 
     /**
-     * Adds a tile to the grid at the specified position.
+     * Adds a hexagon to the grid at the specified position.
      *
-     * @param tile The tile to be added to the grid.
-     * @return True if the tile is successfully added, false otherwise.
+     * @param hexagon The hexagon to be added to the grid.
+     * @return True if the hexagon is successfully added, false otherwise.
      */
 
     // on regarde si l'elevation est de 1 alors faut que la tuille aie des voisisns
     // pour etre placer
-    public boolean canAdd(Tile tile, Point3D p) {
-        int x = tile.getX();
-        int y = tile.getY();
-        int z = tile.getZ();
-        // Check if the tile has at least one neighbor in the grid
+    public boolean canAdd(Hexagon hexagon, Point3D p) {
+        int x = hexagon.getX();
+        int y = hexagon.getY();
+        int z = hexagon.getZ();
+        // Check if the hexagon has at least one neighbor in the grid
         // Define the directions for the 6 neighbors in a hexagonal grid
         Point[] axialDirections = {
                 new Point(1, 0), new Point(1, -1), new Point(0, -1),
                 new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };
         for (Point direction : axialDirections) {
-            Tile neighbor = tiles.get(new Point3D(x + direction.x, y + direction.y, z));
+            Hexagon neighbor = hexagons.get(new Point3D(x + direction.x, y + direction.y, z));
             if (neighbor != null) {
                 return true;
             }
         }
-        // If the tile has no neighbors in the grid, return false
+        // If the hexagon has no neighbors in the grid, return false
         return false;
     }
 
-    public boolean addTile(TileTrio tileTrio) {
-        Tile[] bellowTiles = new Tile[3];
-        boolean hasNeighbor = checkNeighborsAndSetBelowTiles(tileTrio, bellowTiles);
-        boolean canBePlaced = checkElevation(tileTrio);
-        int sameTile = countSameTiles(tileTrio, bellowTiles);
+    public boolean addTile(Tile tile) {
+        Hexagon[] bellowHexagons = new Hexagon[3];
+        boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
+        boolean canBePlaced = checkElevation(tile);
+        int samehexagon = countSameHexagons(tile, bellowHexagons);
 
-        if (canBePlaced && hasNeighbor && sameTile <= 1) {
-            addTilesToGrid(tileTrio, bellowTiles);
+        if (canBePlaced && hasNeighbor && samehexagon <= 1) {
+            addHexagonsToGrid(tile, bellowHexagons);
         }
 
         display();
-        System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", sameTile: " + sameTile);
-        return canBePlaced && hasNeighbor && sameTile <= 1;
+        System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", samehexagon: " + samehexagon);
+        return canBePlaced && hasNeighbor && samehexagon <= 1;
     }
 
-    private boolean checkNeighborsAndSetBelowTiles(TileTrio tileTrio, Tile[] bellowTiles) {
+    private boolean checkNeighborsAndSetBelowTile(Tile tile, Hexagon[] bellowHexagons) {
         boolean hasNeighbor = false;
         for (int i = 0; i < 3; i++) {
-            Tile newTile_i = tileTrio.getTile(i);
-            if (!tiles.containsKey(newTile_i.getPosition()) && !hasNeighbor) {
-                hasNeighbor = hasNeighbor || canAdd(newTile_i, newTile_i.getPosition());
-            } else if (tiles.containsKey(newTile_i.getPosition())) {
-                Tile topMostTile = getTile(newTile_i.getX(), newTile_i.getY());
-                if (topMostTile != null) {
-                    bellowTiles[i] = topMostTile;
+            Hexagon newHexagon_i = tile.hexagons.get(i);
+            if (!hexagons.containsKey(newHexagon_i.getPosition()) && !hasNeighbor) {
+                hasNeighbor = hasNeighbor || canAdd(newHexagon_i, newHexagon_i.getPosition());
+            } else if (hexagons.containsKey(newHexagon_i.getPosition())) {
+                Hexagon topMosthexagon = getHexagon(newHexagon_i.getX(), newHexagon_i.getY());
+                if (topMosthexagon != null) {
+                    bellowHexagons[i] = topMosthexagon;
                 }
-                newTile_i.getPosition().z = topMostTile.getZ() + 1;
+                newHexagon_i.getPosition().z = topMosthexagon.getZ() + 1;
                 hasNeighbor = true;
             }
         }
         return hasNeighbor;
     }
 
-    private void addTilesToGrid(TileTrio tileTrio, Tile[] bellowTiles) {
+    private void addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) {
         for (int i = 0; i < 3; i++) {
-            Tile newTile_i = tileTrio.getTile(i);
-            newTile_i.setGrid(this);
-            newTile_i.setTileTrio(tileTrio);
-            if (bellowTiles[i] != null) {
-                newTile_i.setBelow(bellowTiles[i]);
-                bellowTiles[i].setAbove(newTile_i);
+            Hexagon newHexagon_i = tile.hexagons.get(i);
+            newHexagon_i.setGrid(this);
+            newHexagon_i.setTile(tile);
+            if (bellowHexagons[i] != null) {
+                newHexagon_i.setBelow(bellowHexagons[i]);
+                bellowHexagons[i].setAbove(newHexagon_i);
             }
-            tiles.put(newTile_i.getPosition(), newTile_i);
+            hexagons.put(newHexagon_i.getPosition(), newHexagon_i);
         }
     }
 
-    private boolean checkElevation(TileTrio tileTrio) {
-        int elevation = tileTrio.getTile(0).getElevation();
+    private boolean checkElevation(Tile t) {
+        int elevation = t.hexagons.get(0).getZ();
         for (int i = 1; i < 3; i++) {
-            if (tileTrio.getTile(i).getElevation() != elevation) {
+            if (t.hexagons.get(i).getZ() != elevation) {
                 return false;
             }
         }
         return true;
     }
 
-    private int countSameTiles(TileTrio tileTrio, Tile[] bellowTiles) {
-        int sameTile = 0;
+    private int countSameHexagons(Tile tile, Hexagon[] bellowHexagons) {
+        int samehexagon = 0;
         for (int i = 0; i < 3; i++) {
-            Tile newTile_i = tileTrio.getTile(i);
-            if (bellowTiles[i] != null && bellowTiles[i].getType().equals(newTile_i.getType())) {
-                sameTile++;
+            Hexagon newHexagon_i = tile.hexagons.get(i);
+            if (bellowHexagons[i] != null && bellowHexagons[i].getType().equals(newHexagon_i.getType())) {
+                samehexagon++;
             }
         }
-        return sameTile;
+        return samehexagon;
     }
 
-    public Tile neighbor(Tile t, Point p) {
+    public Hexagon neighbor(Hexagon t, Point p) {
         Point p2 = new Point(t.getX(), t.getY());
-        return tiles.get(sommePos(p, p2));
+        return hexagons.get(sommePos(p, p2));
     }
 
     public Point sommePos(Point p1, Point p2) {
         return new Point(p1.x + p2.x, p1.y + p2.y);
     }
 
-    public static boolean tuileValide(TileTrio tileTrio) {// verifier si les hexagones sont adjacent "coller"
-        Tile t1 = tileTrio.getTile(0);
-        Tile t2 = tileTrio.getTile(1);
-        Tile t3 = tileTrio.getTile(2);
-        boolean adjacent1_2 = t1.isAdjacent(t2);
-        boolean adjacent1_3 = t1.isAdjacent(t3);
-        boolean adjacent2_3 = t2.isAdjacent(t3);
-        int z1 = t1.getZ();
-        int z2 = t2.getZ();
-        int z3 = t3.getZ();
-        System.out.println("z1: " + t1.getZ() + ", z2: " + t2.getZ() + ", z3: " + t3.getZ());
+    public static boolean isAValidTile(Tile t) {
+        Hexagon h1 = t.hexagons.get(0);
+        Hexagon h2 = t.hexagons.get(1);
+        Hexagon h3 = t.hexagons.get(2);
+        boolean adjacent1_2 = h1.isAdjacent(h2);
+        boolean adjacent1_3 = h1.isAdjacent(h3);
+        boolean adjacent2_3 = h2.isAdjacent(h3);
+        int z1 = h1.getZ();
+        int z2 = h2.getZ();
+        int z3 = h3.getZ();
+        System.out.println("z1: " + h1.getZ() + ", z2: " + h2.getZ() + ", z3: " + h3.getZ());
         return (z1 == z2) && (z2 == z3) && adjacent1_2 && adjacent1_3 && adjacent2_3;
     }
     /*
-     * public void addTile(TileTrio tileTrio){
+     * public void addhexagon(hexagon hexagon){
      * boolean hasNeighbor;
      * boolean isSpported ;
-     * int elevation = tileTrio.getTile(0).getZ() ;// verifier d'abord si au meme
+     * int elevation = hexagon.gethexagon(0).getZ() ;// verifier d'abord si au meme
      * niveau avant d'ajouter
      * 
      * for (int i = 1; i < 3; i++) {
-     * if (tileTrio.getTile(i).getZ()!= elevation) {
+     * if (hexagon.gethexagon(i).getZ()!= elevation) {
      * return ;
      * }
      * }
      * 
      * for (int i = 0; i < 3; i++) {
-     * Tile tileToadd = tileTrio.getTile(i);
-     * if (!tiles.containsKey(tileToadd.getPosition())) {
-     * hasNeighbor = canAdd(tileToadd);
+     * hexagon hexagonToadd = hexagon.gethexagon(i);
+     * if (!hexagons.containsKey(hexagonToadd.getPosition())) {
+     * hasNeighbor = canAdd(hexagonToadd);
      * }
      * else{
      * isSpported =
@@ -180,17 +180,17 @@ public class Grid {
      * 
      * }
      * }
-     * public boolean isSpported(Tile t ){
+     * public boolean isSpported(hexagon t ){
      * 
      * }
      * 
-     * public boolean canAdd(Tile tile){
+     * public boolean canAdd(hexagon hexagon){
      * Point [] axialDirection = {new Point(0, 1), new Point(0, -1),new Point(-1, 1)
      * ,new Point(1, 1),new Point(1, -1),new Point(-1, -1),};
      * for (Point point : axialDirection) {
-     * Point3D tileneighber = new Point3D(tile.getX()+point.x, tile.getY()+point.y,
+     * Point3D hexagonneighber = new Point3D(hexagon.getX()+point.x, hexagon.getY()+point.y,
      * 0);
-     * if (tiles.containsKey(tileneighber)) {
+     * if (hexagons.containsKey(hexagonneighber)) {
      * return true;
      * }
      * }
@@ -199,51 +199,50 @@ public class Grid {
      */
 
     /**
-     * Retrieves the topmost tile at the specified position in the grid.
+     * Retrieves the topmost hexagon at the specified position in the grid.
      *
-     * @param x The x-coordinate of the tile.
-     * @param y The y-coordinate of the tile.
-     * @return The topmost tile at the specified position, or null if no tile
+     * @param x The x-coordinate of the hexagon.
+     * @param y The y-coordinate of the hexagon.
+     * @return The topmost hexagon at the specified position, or null if no hexagon
      *         exists.
      */
-    public Tile getTile(int x, int y) {
-        Point point = new Point(x, y);
-        // Retrieve all tiles at the specified position
-        Tile topMostTile = tiles.get(new Point3D(point, 1));
-        if (topMostTile == null) {
+    public Hexagon getHexagon(int x, int y) {
+        // Retrieve all hexagons at the specified position
+        Hexagon topMosthexagon = hexagons.get(new Point3D(x,y));
+        if (topMosthexagon == null) {
             return null;
         }
-        while (topMostTile.hasAbove()) {
-            topMostTile = topMostTile.getAbove();
+        while (topMosthexagon.hasAbove()) {
+            topMosthexagon = topMosthexagon.getAbove();
         }
-        return topMostTile;
+        return topMosthexagon;
     }
 
     /**
-     * Displays information about each tile in the grid.
+     * Displays information about each hexagon in the grid.
      */
     public void display() {
-        for (Map.Entry<Point3D, Tile> entry : tiles.entrySet()) {
+        for (Map.Entry<Point3D, Hexagon> entry : hexagons.entrySet()) {
             Point3D point = entry.getKey();
-            Tile tile = entry.getValue();
-            System.out.println("Point: " + point + ", Tile: " + tile);
+            Hexagon hexagon = entry.getValue();
+            System.out.println("Point: " + point + ", hexagon: " + hexagon);
         }
     }
 
     /**
-     * Return whether the tile is surrounded by other tiles or not
+     * Return whether the hexagon is surrounded by other hexagons or not
      * 
-     * @param tile The tile to check if it is surrounded
+     * @param hexagon The hexagon to check if it is surrounded
      */
-    private boolean tileIsSurrounded(Tile tile) {
-        return tile.getNeighbors().size() == 6;
+    private boolean hexagonIsSurrounded(Hexagon hexagon) {
+        return hexagon.getNeighbors().size() == 6;
     }
 
     /***
      * Clear the grid/board, for new game or otherwise
      */
     public void clearGrid() {
-        tiles.clear();
+        hexagons.clear();
     }
 
     /**
@@ -272,39 +271,39 @@ public class Grid {
      * int templeMultiplier = 1;
      * int marketMultiplier = 1;
      * 
-     * for (Tile tile : tiles.values()) {
-     * switch (tile.getType()) {
+     * for (hexagon hexagon : hexagons.values()) {
+     * switch (hexagon.getType()) {
      * case "Garden Place":
-     * gardenMultiplier = ((Place) tile).getStars();
+     * gardenMultiplier = ((Place) hexagon).getStars();
      * break;
      * case "Barrack Place":
-     * barrackMultiplier = ((Place) tile).getStars();
+     * barrackMultiplier = ((Place) hexagon).getStars();
      * break;
      * case "Building Place":
-     * buildingMultiplier = ((Place) tile).getStars();
+     * buildingMultiplier = ((Place) hexagon).getStars();
      * break;
      * case "Temple Place":
-     * templeMultiplier = ((Place) tile).getStars();
+     * templeMultiplier = ((Place) hexagon).getStars();
      * break;
      * case "Market Place":
-     * marketMultiplier = ((Place) tile).getStars();
+     * marketMultiplier = ((Place) hexagon).getStars();
      * break;
      * 
      * case "Garden":
-     * gardenScore += tile.getElevation(); // It should always increase the score
+     * gardenScore += hexagon.getElevation(); // It should always increase the score
      * break;
      * case "Barrack":
      * // We only increase the score if the barrack is in the border of the grid
-     * if (tile.getNeighbors().size() < 6) {
-     * barrackScore += tile.getElevation();
+     * if (hexagon.getNeighbors().size() < 6) {
+     * barrackScore += hexagon.getElevation();
      * }
      * break;
      * case "Building":
      * // We only increase the score if the building is next to another building
-     * for (Tile neighbor : tile.getNeighbors()) {
+     * for (hexagon neighbor : hexagon.getNeighbors()) {
      * if (neighbor.getType().equals("Building")) {
      * currentNumberOfBuilding++;
-     * buildingScore += tile.getElevation();
+     * buildingScore += hexagon.getElevation();
      * maxNumberOfBuilding = Math.max(maxNumberOfBuilding, currentNumberOfBuilding);
      * maxBuildingScore = Math.max(maxBuildingScore, buildingScore);
      * break;
@@ -312,15 +311,15 @@ public class Grid {
      * }
      * break;
      * case "Temple":
-     * // We only increase the score if the temple is surrounded by 6 tiles
-     * if (tileIsSurrounded(tile)) {
+     * // We only increase the score if the temple is surrounded by 6 hexagons
+     * if (hexagonIsSurrounded(hexagon)) {
      * templeScore++;
      * }
      * break;
      * case "Market":
      * // We only increase the score if the market has no adjacent market
      * boolean hasMarket = false;
-     * for (Tile neighbor : tile.getNeighbors()) {
+     * for (hexagon neighbor : hexagon.getNeighbors()) {
      * if (neighbor.getType().equals("Market")) {
      * hasMarket = true;
      * break;
@@ -340,35 +339,35 @@ public class Grid {
      * }
      */
 
-    public ArrayList<Tile> getTopTiles() {
-        ArrayList<Tile> topTiles = new ArrayList<>();
-        for (Tile tile : tiles.values()) {
-            if (!tile.hasAbove() && topTiles.contains(tile) == false) {
-                topTiles.add(tile);
+    public ArrayList<Hexagon> getTopHexagons() {
+        ArrayList<Hexagon> tophexagons = new ArrayList<>();
+        for (Hexagon hexagon : hexagons.values()) {
+            if (!hexagon.hasAbove() && tophexagons.contains(hexagon) == false) {
+                tophexagons.add(hexagon);
             }
         }
-        return topTiles;
+        return tophexagons;
     }
 
     public int calculateScore() {
         int totalScore = 0;
 
-        for (Tile tile : getTopTiles()) {
-            switch (tile.getType()) {
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
                 case "Garden":
-                    totalScore += calculateGardenScore(tile);
+                    totalScore += calculateGardenScore(hexagon);
                     break;
                 case "Barrack":
-                    totalScore += calculateBarrackScore(tile);
+                    totalScore += calculateBarrackScore(hexagon);
                     break;
                 case "Building":
-                    totalScore += calculateBuildingScore(tile);
+                    totalScore += calculateBuildingScore(hexagon);
                     break;
                 case "Temple":
-                    totalScore += calculateTempleScore(tile);
+                    totalScore += calculateTempleScore(hexagon);
                     break;
                 case "Market":
-                    totalScore += calculateMarketScore(tile);
+                    totalScore += calculateMarketScore(hexagon);
                     break;
                 default:
                     break;
@@ -378,17 +377,17 @@ public class Grid {
         return totalScore;
     }
 
-    private int calculateGardenScore(Tile tile) {
-        return tile.getElevation();
+    private int calculateGardenScore(Hexagon hexagon) {
+        return hexagon.getElevation();
     }
 
-    private int calculateBarrackScore(Tile tile) {
-        return (tile.getNeighbors().size() < 6) ? tile.getElevation() : 0;
+    private int calculateBarrackScore(Hexagon hexagon) {
+        return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation() : 0;
     }
 
-    private int calculateBuildingScore(Tile tile) {
+    private int calculateBuildingScore(Hexagon hexagon) {
         int adjacentBuildingScore = 0;
-        for (Tile neighbor : tile.getNeighbors()) {
+        for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Building")) {
                 adjacentBuildingScore = Math.max(adjacentBuildingScore, neighbor.getElevation());
             }
@@ -396,12 +395,12 @@ public class Grid {
         return adjacentBuildingScore;
     }
 
-    private int calculateTempleScore(Tile tile) {
-        return tileIsSurrounded(tile) ? 1 : 0;
+    private int calculateTempleScore(Hexagon hexagon) {
+        return hexagonIsSurrounded(hexagon) ? 1 : 0;
     }
 
-    private int calculateMarketScore(Tile tile) {
-        for (Tile neighbor : tile.getNeighbors()) {
+    private int calculateMarketScore(Hexagon hexagon) {
+        for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Market")) {
                 return 0;
             }
