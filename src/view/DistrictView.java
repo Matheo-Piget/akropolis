@@ -31,5 +31,10 @@ public class DistrictView extends HexagonView {
     public void paint(java.awt.Graphics2D g) {
         g.setPaint(this.texture);
         g.fill(this);
+
+        // Draw the border of the hexagon
+        g.setColor(java.awt.Color.BLACK);
+        g.setStroke(new java.awt.BasicStroke(3));
+        g.draw(this);
     }
 }

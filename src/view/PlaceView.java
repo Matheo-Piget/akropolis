@@ -62,9 +62,9 @@ public class PlaceView extends HexagonView {
         g.setPaint(this.texture);
         // Fill the hexagon with the texture
         g.fillPolygon(this);
-        // Then the stars are drawn
-        g.setColor(Color.WHITE);
-        // Not sure if this is the right way to draw the stars
-        g.fill(createStar(xpoints[0], ypoints[0], 10, 5, stars));
+        // Draw the border of the hexagon
+        g.setColor(Color.BLACK);
+        g.setStroke(new java.awt.BasicStroke(3));
+        g.draw(this);
     }
 }
