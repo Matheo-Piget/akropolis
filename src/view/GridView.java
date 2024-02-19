@@ -108,21 +108,24 @@ public class GridView extends JPanel {
         SwingUtilities.invokeLater(() -> {
             // This is just a test to see if the grid view works
             GridView gridView = new GridView(60);
-            QuarrieView test = new QuarrieView(0, 0, 40);
+            QuarrieView test = new QuarrieView(0, 0, 1, 40);
             test.setPosition(new Point3D(0, 0, 1));
-            QuarrieView test2 = new QuarrieView(1, 0, 40);
+            QuarrieView test2 = new QuarrieView(1, 0, 1,40);
             test2.setPosition(new Point3D(1, 0, 1));
-            QuarrieView test3 = new QuarrieView(1, 1, 40);
+            QuarrieView test3 = new QuarrieView(1, 1, 1, 40);
             test3.setPosition(new Point3D(1, 1, 1));
-            QuarrieView test4 = new QuarrieView(0, 1, 40);
+            QuarrieView test4 = new QuarrieView(0, 1, 1 ,40);
             test4.setPosition(new Point3D(0, 1, 1));
-            QuarrieView test5 = new QuarrieView(0, -1, 40);
+            QuarrieView test5 = new QuarrieView(0, -1, 1,40);
             test5.setPosition(new Point3D(0, -1, 1));
+            QuarrieView test6 = new QuarrieView(1, -1, 2,40);
+            test6.setPosition(new Point3D(1, -1, 2));
             gridView.hexagons.add(test2);
             gridView.hexagons.add(test);
             gridView.hexagons.add(test3);
             gridView.hexagons.add(test4);
             gridView.hexagons.add(test5);
+            gridView.hexagons.add(test6);
             ScrollableGridView scrollableGridView = new ScrollableGridView(gridView);
             JFrame frame = new JFrame();
             frame.add(scrollableGridView);

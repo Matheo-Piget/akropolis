@@ -6,9 +6,13 @@ public class QuarrieView extends HexagonView {
         super(x, y, side, java.awt.Color.GRAY);
     }
 
+    public QuarrieView(int x, int y, int z, int side) {
+        super(x, y, z, side, java.awt.Color.GRAY);
+    }
+
     @Override
     public void paint(java.awt.Graphics2D g) {
-        g.setPaint(this.texture);
+        g.setPaint(darkenTexturePaint(this.texture, this.getPosition().getZ()));
         g.fill(this);
 
         // Draw the border of the hexagon

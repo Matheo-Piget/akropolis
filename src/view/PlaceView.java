@@ -35,6 +35,30 @@ public class PlaceView extends HexagonView {
         }
     }
 
+    public PlaceView(int x, int y, int z, int side, Place place) {
+        super(x, y, z, side);
+        this.stars = place.getStars();
+        switch (place.getType()) {
+            case "Barrack Place":
+                this.texture = TextureFactory.getTexture("barrack");
+                break;
+            case "Building Place":
+                this.texture = TextureFactory.getTexture("building");
+                break;
+            case "Garden Place":
+                this.texture = TextureFactory.getTexture("garden");
+                break;
+            case "Market Place":
+                this.texture = TextureFactory.getTexture("market");
+                break;
+            case "Temple Place":
+                this.texture = TextureFactory.getTexture("temple");
+                break;
+            default:
+                break;
+        }
+    }
+
     private Polygon createStar(int x, int y, int radius, int innerRadius, int numPoints) {
         // Create a polygon to represent the star
         Polygon star = new Polygon();
@@ -59,7 +83,7 @@ public class PlaceView extends HexagonView {
     @Override
     public void paint(Graphics2D g) {
         // Set the paint to the texture
-        g.setPaint(this.texture);
+        g.setPaint(darkenTexturePaint(this.texture, position.getZ()));
         // Fill the hexagon with the texture
         g.fillPolygon(this);
         // Draw the border of the hexagon
