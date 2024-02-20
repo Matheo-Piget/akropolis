@@ -1,3 +1,14 @@
 Mathéo :
 
-    -
+    -création d'un fonction pour assombrir une texture :
+        Cette méthode est utilisée pour assombrir une texture. Elle prend en entrée une texture (`TexturePaint`) et un nombre entier (`floor`). Voici comment elle fonctionne :
+
+        1. Elle récupère l'image de la texture.
+        2. Elle crée une nouvelle image (`darkImg`) de la même taille que l'image originale, mais avec un format de couleur ARGB (Alpha, Rouge, Vert, Bleu).
+        3. Elle parcourt chaque pixel de l'image originale.
+        4. Pour chaque pixel, elle récupère sa couleur.
+        5. Elle assombrit la couleur du pixel autant de fois que spécifié par le paramètre `floor`.
+        6. Elle définit la couleur du pixel correspondant dans `darkImg` à la nouvelle couleur assombrie.
+        7. Finalement, elle retourne une nouvelle texture qui utilise `darkImg` comme image et qui a le même rectangle d'ancrage que la texture originale.
+
+        En résumé, cette méthode assombrit chaque pixel d'une texture donnée un certain nombre de fois, puis retourne la nouvelle texture assombrie.
