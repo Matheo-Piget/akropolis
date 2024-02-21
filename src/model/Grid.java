@@ -67,7 +67,7 @@ public class Grid {
         return false;
     }
 
-    public boolean addTile(Tile tile) {
+    public boolean addTile(Tile tile,Player player) {
         Hexagon[] bellowHexagons = new Hexagon[3];
         boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
         boolean canBePlaced = checkElevation(tile);
@@ -75,6 +75,11 @@ public class Grid {
 
         if (canBePlaced && hasNeighbor && samehexagon <= 1) {
             addHexagonsToGrid(tile, bellowHexagons);
+            for (Hexagon hexagon:bellowHexagons){
+                if(hexagon instanceof Quarrie){
+                    player.setRocks(1);
+                }
+            }
         }
 
         display();
