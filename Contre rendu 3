@@ -4,7 +4,7 @@ Semaine du [date de début] au [date de fin]
 
 Tâches Accomplies:
 1. Mathéo - Ajoute d'un fonction qui assombrit la texture sur chaque hexagone en fonction de sa hauteur.
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
+2. Nidhal - calcul du score pour les differents District et en prenant en compte la multiplication des places 
 3. ...
 
 Avancements Individuels:
@@ -13,16 +13,16 @@ Avancements Individuels:
    - Problèmes rencontrés : difficulté pour créer une fonction qui assombrit la texture + difficulté pour trouver les bonnes valeurs.
    - Suggestions pour l'amélioration : ajouter plus de détail sur les héxagones selon leurs nature
 
-2. [Nom du membre de l'équipe]:
-   - Tâche accomplie : [Description brève]
-   - Problèmes rencontrés : [le cas échéant]
-   - Suggestions pour l'amélioration : [le cas échéant]
+2. Nidhal:
+   - Tâche accomplie : calcul du score pour les differents District et en prenant en compte la multiplication des places
+   - Problèmes rencontrés : difficulté pour le calcul de score des habitations car si on parcours à chaque fois les voisins et les voisins des voisins on peut tomber sur une bouvle à l'infini 
+   - Suggestions pour l'amélioration : rajouter un attribut visited pour marquer les hexagones si ils ont été visités
 
 3. ...
 
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - Faire des spéciation pour chaque type d'héxagones.
-2. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
+2. Nidhal - implementer les mouselistener et si ils ont terminer la vue , faire la vue du tableau des tuiles et l'ajoute graphique des tuiles sur la map .
 3. ...
 
 Problèmes Rencontrés:
