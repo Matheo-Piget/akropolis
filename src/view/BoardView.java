@@ -1,14 +1,18 @@
 package view;
 
+import model.DistrictColor;
 import model.Grid;
+import model.Place;
+import model.Hexagon;
 import model.Tile;
 import util.Point3D;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Panel for displaying the game board.
@@ -27,11 +31,11 @@ public class BoardView extends JPanel {
      */
     public BoardView(Grid tileMap) {
         this.tileMap = tileMap;
-        setPreferredSize(new Dimension(1920, 1080)); // Arbitrary size for the example
+        setPreferredSize(new Dimension(1500, 900)); // Arbitrary size for the example
 
         // Calculate offsets to center the (0, 0) coordinate
-        xOffset = 500 - hexSize; // 500 is half the width of the drawing window
-        yOffset = 400 - hexSize; // 400 is half the height of the drawing window
+        xOffset = 1500/2 - hexSize; // 500 is half the width of the drawing window
+        yOffset = 900/2 - hexSize; // 400 is half the height of the drawing window
     }
 
     /**
@@ -44,14 +48,17 @@ public class BoardView extends JPanel {
         super.paintComponent(g);
 
         // Sort tiles by their elevation (z-coordinate)
-        List<Map.Entry<Point3D, Tile>> sortedTiles = tileMap.getTiles().entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
-                .toList().reversed();
+        List<Map.Entry<Point3D, Hexagon>> sortedTiles = tileMap.getHexagons().entrySet().stream()
+            .sorted(Comparator.comparingInt(entry -> -entry.getKey().z)) // Sort by descending z-coordinate
+            .toList();
+        ArrayList<Map.Entry<Point3D, Hexagon>> sortedTiles2 = new ArrayList<>(sortedTiles);
+        sortedTiles2.sort(Comparator.comparingInt(entry -> entry.getKey().x));
+        sortedTiles = sortedTiles2; 
 
         // Draw each tile on the board, starting from the highest elevation
-        for (Map.Entry<Point3D, Tile> entry : sortedTiles) {
-            Tile tile = entry.getValue();
-            Point3D position = tile.getPosition();
+        for (Map.Entry<Point3D, Hexagon> entry : sortedTiles) {
+            Hexagon tile = entry.getValue();
+            Point3D position = entry.getKey();
 
             int x = position.x * hexSize + xOffset;
             int y = -position.y * hexSize + yOffset;
@@ -59,10 +66,8 @@ public class BoardView extends JPanel {
             // Calculate vertical offset based on elevation
             int z = position.z;
             int verticalOffset = 0;
-            if (z > 1) {
-                verticalOffset = z * hexSize / 4;
-                System.out.println("debug");// Adjust the value as needed
-            }
+            verticalOffset = z * hexSize / 8;
+
 
             int offsetX = 0;
             if (position.x % 2 == 1 || position.x % 2 == -1) {
@@ -87,7 +92,7 @@ public class BoardView extends JPanel {
             y -= verticalOffset;
 
             // Draw the hexagon representing the tile
-            drawHexagon(g, x, y, getTileColor(tile), tile);
+            drawHexagon(g, x, y, getHexagonColor(tile), tile);
         }
     }
 
@@ -100,7 +105,7 @@ public class BoardView extends JPanel {
      * @param color The color to fill the hexagon with.
      * @param t     The tile associated with the hexagon.
      */
-    private void drawHexagon(Graphics g, int x, int y, Color color, Tile t) {
+    private void drawHexagon(Graphics g, int x, int y, Color color, Hexagon t) {
         int[] xPoints = {x + hexSize / 4, x + (hexSize * 3 / 4), x + hexSize, x + (hexSize * 3 / 4), x + hexSize / 4, x};
         int[] yPoints = {y + hexSize / 2, y + hexSize / 2, y, y - hexSize / 2, y - hexSize / 2, y};
 
@@ -110,18 +115,17 @@ public class BoardView extends JPanel {
 
         // Add shadow effect by drawing a darker gradient below the tile
         int shadowIntensity = 5; // Adjust the intensity of the shadow
-        if (t.getElevation() > 1) {
-            for (int i = 0; i < 6; i++) {
-                // Only draw shadow for the bottom sides of the hexagon
-                if (yPoints[i] >= y) {
-                    int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
-                    int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
-                    Color shadowColor = darkenColor(color, 0.5f); // Adjust the transparency and color of the shadow
-                    g.setColor(shadowColor);
-                    g.fillPolygon(shadowXPoints, shadowYPoints, 4);
-                }
+        for (int i = 0; i < 6; i++) {
+            // Only draw shadow for the bottom sides of the hexagon
+            if (yPoints[i] >= y) {
+                int[] shadowXPoints = {xPoints[i], xPoints[(i + 1) % 6], xPoints[(i + 1) % 6], xPoints[i]};
+                int[] shadowYPoints = {yPoints[i], yPoints[(i + 1) % 6], yPoints[(i + 1) % 6] + shadowIntensity, yPoints[i] + shadowIntensity};
+                Color shadowColor = darkenColor(color, 0.8f); // Adjust the transparency and color of the shadow
+                g.setColor(shadowColor);
+                g.fillPolygon(shadowXPoints, shadowYPoints, 4);
             }
         }
+
 
         // Draw the borders of the hexagon
         g.setColor(Color.BLACK);
@@ -149,13 +153,13 @@ public class BoardView extends JPanel {
 
 
     /**
-     * Returns the color for the specified tile.
+     * Returns the color for the specified hexagon.
      *
      * @param tile The tile to determine the color for.
-     * @return The color for the tile.
+     * @return The color for the hexagon
      */
-    private Color getTileColor(Tile tile) {
-        switch (tile.getType()) {
+    private Color getHexagonColor(Hexagon h) {
+        switch (h.getType()) {
             case "Barrack Place", "Barrack" -> {
                 return Color.RED;
             }
@@ -180,6 +184,25 @@ public class BoardView extends JPanel {
         }
     }
 
+    private static Grid generateRandomGrid(){
+        Grid grid = new Grid();
+        grid.clearGrid();
+        grid.getHexagons().put(new Point3D(0,0,1),new Place(new Point3D(0,0,1), 1, DistrictColor.BLUE));
+        Random random = new Random();
+        int numberOfTiles = 100;
+        // We generate a set number of tiles
+        for(int i = 0; i< numberOfTiles; i ++){
+            int x = random.nextInt(-5, 5);
+            int y = random.nextInt(-5, 5);
+            Place h1 = new Place(new Point3D(x, y, 1), 1, DistrictColor.BLUE);
+            Place h2 = new Place(new Point3D(x,y,1), 2, DistrictColor.GREEN);
+            Place h3 = new Place(new Point3D(x,y,1), 3, DistrictColor.RED);
+            Tile tile = new Tile(h1, h2, h3);
+            grid.addTile(tile);
+        }
+        return grid;
+    }
+
     /**
      * Main method for testing the BoardView.
      *
@@ -187,7 +210,7 @@ public class BoardView extends JPanel {
      */
     public static void main(String[] args) {
         // Example usage
-        Grid initialMap = new Grid();
+        Grid initialMap = generateRandomGrid();
 
         JFrame frame = new JFrame("Board View Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -195,7 +218,7 @@ public class BoardView extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        System.out.println(initialMap.getTiles().size());
+        System.out.println(initialMap.getHexagons().size());
 
         initialMap.display(); // This line may be uncommented for testing purposes
     }

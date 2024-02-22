@@ -16,13 +16,13 @@ public class Board {
         return this.grid;
     }
 
-    // We can get a tile from the grid
-    public Tile getTile(int x, int y) {
-        return grid.getTile(x, y);
+    // We can get a hexagon from the grid
+    public Hexagon getHexagon(int x, int y) {
+        return grid.getHexagon(x, y);
     }
 
     // We can add a tile only next to another tile if not we can't add it and we return false
-    public boolean addTile(TileTrio tiles) {
+    public boolean addTile(Tile tiles) {
         return grid.addTile(tiles);
     }
 

@@ -3,7 +3,7 @@ package model;
 import util.Point3D;
 
 // They are different districts in the game, each with its own color and its own rules
-public class District extends Tile {
+public class District extends Hexagon {
     private DistrictColor color;
 
     public District(Point3D p, DistrictColor color) {

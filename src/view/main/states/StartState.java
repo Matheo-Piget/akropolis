@@ -1,5 +1,7 @@
-package main.states;
+package view.main.states;
 import util.State;
+import view.MainMenuView;
+import view.main.App;
 
 public class StartState extends State{
     
@@ -16,6 +18,9 @@ public class StartState extends State{
     @Override
     public void enter() {
         System.out.println("Entering Start State");
+        MainMenuView mainMenu = new MainMenuView();
+        App.getInstance().getScreen().add(mainMenu, java.awt.BorderLayout.CENTER);
+        App.getInstance().getScreen().revalidate();
     }
 
     @Override

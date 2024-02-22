@@ -3,7 +3,7 @@ package model;
 import util.Point3D;
 
 // A place is a tile that allow you to earn more score points.
-public class Place extends Tile{
+public class Place extends Hexagon{
     private int stars;
     private DistrictColor color;
 

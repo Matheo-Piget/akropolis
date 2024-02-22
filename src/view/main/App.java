@@ -1,13 +1,13 @@
-package main;
+package view.main;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import main.states.AppState;
+import view.main.states.AppState;
 
 public class App extends JFrame{
-    private final int WIDTH = 700;
-    private final int HEIGHT = 700;
+    private final int WIDTH = 1500;
+    private final int HEIGHT = 800;
 
     private JPanel screen = new JPanel();
     private static final App INSTANCE = new App();
@@ -15,8 +15,9 @@ public class App extends JFrame{
     public AppState appState;
     
     public App() {
+        screen.setLayout(new java.awt.BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        setTitle("Akropolis");
         setResizable(false);
         
         getContentPane().setBackground(java.awt.Color.BLACK);
@@ -30,6 +31,10 @@ public class App extends JFrame{
 
     public static App getInstance() {
         return INSTANCE;
+    }
+
+    public JPanel getScreen() {
+        return screen;
     }
 
     public void run() {
