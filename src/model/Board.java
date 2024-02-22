@@ -1,9 +1,10 @@
 package model;
 
-// Template for a board which will be used to play the game
+/**
+ * This class represents the game board.
+ */
 public class Board {
     private Grid grid;
-    private Player player;
 
     public Board() {
         grid = new Grid();
@@ -11,11 +12,6 @@ public class Board {
 
     public Board(String playerName){
         grid = new Grid();
-        player = new Player(playerName);
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     // Only for the terminal version of the game to debug purposes
