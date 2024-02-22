@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collections;
 import java.util.Stack;
 /**
  * Représente la pile de tuiles dans le jeu Akropolis. Cette pile contient toutes les tuiles qui peuvent être tirées par les joueurs pendant le jeu.
@@ -20,5 +21,10 @@ public class StackTiles extends Stack<Tile>{
         // TODO: Implement this method
     }
 
-    
+    /**
+     * Mélange les tuiles dans la pile.
+     */
+    public void shuffle(){
+        Collections.shuffle(this);
+    }
 }

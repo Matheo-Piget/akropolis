@@ -67,7 +67,7 @@ public class Grid {
         return false;
     }
 
-    public boolean addTile(Tile tile,Player player) {
+    public boolean addTile(Tile tile , Player player) {
         Hexagon[] bellowHexagons = new Hexagon[3];
         boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
         boolean canBePlaced = checkElevation(tile);

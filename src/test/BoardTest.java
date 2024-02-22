@@ -62,7 +62,7 @@ public class BoardTest {
 
     @Test
     public void testOverlapTile(){
-        Board board = new Board();
+        Board board = new Board("TestPlayer");
         District validHexagon1 = new District(new Point3D(0, 0), DistrictColor.RED);
         District validHexagon2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
         District validHexagon3 = new District(new Point3D(1, 0), DistrictColor.GREEN);

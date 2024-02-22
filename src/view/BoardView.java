@@ -184,7 +184,7 @@ public class BoardView extends JPanel {
         }
     }
 
-    private static Grid generateRandomGrid(){
+    /**private static Grid generateRandomGrid(){
         Grid grid = new Grid();
         grid.clearGrid();
         grid.getHexagons().put(new Point3D(0,0,1),new Place(new Point3D(0,0,1), 1, DistrictColor.BLUE));
@@ -201,7 +201,7 @@ public class BoardView extends JPanel {
             grid.addTile(tile);
         }
         return grid;
-    }
+    }*/
 
     /**
      * Main method for testing the BoardView.
@@ -210,16 +210,16 @@ public class BoardView extends JPanel {
      */
     public static void main(String[] args) {
         // Example usage
-        Grid initialMap = generateRandomGrid();
+        //Grid initialMap = generateRandomGrid();
 
         JFrame frame = new JFrame("Board View Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new BoardView(initialMap));
+        //frame.getContentPane().add(new BoardView(initialMap));
         frame.pack();
         frame.setVisible(true);
 
-        System.out.println(initialMap.getHexagons().size());
+        //System.out.println(initialMap.getHexagons().size());
 
-        initialMap.display(); // This line may be uncommented for testing purposes
+        //initialMap.display(); // This line may be uncommented for testing purposes
     }
 }

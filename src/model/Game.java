@@ -1,15 +1,15 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * Represents the game with players and turns.
  */
 public class Game {
     private final List<Player> players;
-    private final PileTiles piletiles;
+    private final StackTiles stacktiles;
     private List<Tile> tableTiles;
     private Player currentPlayer;
 
@@ -18,12 +18,12 @@ public class Game {
      */
     public Game() {
         players = new ArrayList<>();
-        piletiles = new PileTiles(); 
+        stacktiles = new StackTiles(60); 
         tableTiles = new ArrayList<>(3);
         // Initialiser la liste avec les trois premières tuiles du paquet
         for (int i = 0; i < 3; i++) {
-            if (!piletiles.isEmpty()) {
-                tableTiles.add(piletiles.pop());
+            if (!stacktiles.isEmpty()) {
+                tableTiles.add(stacktiles.pop());
             }
         }
         
@@ -47,7 +47,7 @@ public class Game {
         if (!players.isEmpty()) {
             this.addPlayer(new Player("TunisianMonster")); // la creation et l'ajoute dun joueur
             currentPlayer = players.get(0); // recuperer le joueur qui vient d'etre ajouté
-            piletiles.shuffle();//melanger les tuiles;
+            stacktiles.shuffle(); // melanger les tuiles
             startTurn(currentPlayer);
         } else {
             throw new IllegalStateException("Impossible de démarrer le jeu sans joueur. Veuillez ajouter des joueurs avant de commencer.");
