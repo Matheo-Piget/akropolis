@@ -12,3 +12,7 @@ Mathéo :
         7. Finalement, elle retourne une nouvelle texture qui utilise `darkImg` comme image et qui a le même rectangle d'ancrage que la texture originale.
 
         En résumé, cette méthode assombrit chaque pixel d'une texture donnée un certain nombre de fois, puis retourne la nouvelle texture assombrie.
+        
+    -Terminer le score pour chaque type de district :
+        1.ajoute de la fonction placeDeTypeS pour avoir les places de chaque type de district
+        2.ajoute de la fonction nbetoile pour savoir le nombre des etoiles des ces places et les multiplier par le score de chaque hexagone de type district(en respecant les regles) qui sera ajouté au score totale (qui sera calculer plus tard en parcourant chaque hexagone)
