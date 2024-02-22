@@ -66,4 +66,8 @@ public class Player {
          }
          return rocks_get;
     }
+
+    void setRocks(int rocks){
+        this.rocks=rocks;
+    }
 }
