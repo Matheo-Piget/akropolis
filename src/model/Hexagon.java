@@ -13,6 +13,7 @@ public abstract class Hexagon {
     private Hexagon above; // Tile above the current tile
     private Hexagon below; // Tile below the current tile
     private Tile tile; // Tile containing the hexagons
+    private boolean isVisted ; // for counting the building score
 
     /**
      * Constructor to create a tile with specified coordinates and grid.
@@ -169,9 +170,11 @@ public abstract class Hexagon {
     }
     
     public boolean isAdjacent(Hexagon t){
-        Point [] axialDirection =  {new Point(1, 0), new Point(1, -1),new Point(0, -1)
-                                    ,new Point(-1, 0),new Point(-1, 1),new Point(0, 1),};           
-        for (Point point : axialDirection) {
+        Point[] axialDirections = {
+            new Point(1, 0), new Point(1, -1), new Point(0, -1),
+            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+    };
+        for (Point point : axialDirections) {
             Point direct = new Point(this.getX()+point.x, this.getY()+point.y);
             if (t.getX() ==direct.x && t.getY()==direct.y) {
                 System.out.println("T");

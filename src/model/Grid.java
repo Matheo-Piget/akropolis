@@ -344,7 +344,7 @@ public class Grid {
      * }
      */
 
-    public ArrayList<Hexagon> getTopHexagons() {
+     public ArrayList<Hexagon> getTopHexagons() {
         ArrayList<Hexagon> tophexagons = new ArrayList<>();
         for (Hexagon hexagon : hexagons.values()) {
             if (!hexagon.hasAbove() && tophexagons.contains(hexagon) == false) {
@@ -353,10 +353,29 @@ public class Grid {
         }
         return tophexagons;
     }
+    public ArrayList<Place> placeDeTypeS(String s){
+        ArrayList<Place> topPlaceTypeS = new ArrayList<>();
+        for (Hexagon hexagon : getTopHexagons()) {
+            if (hexagon instanceof Place) {
+                if (hexagon.getType().equals(s)) {
+                    topPlaceTypeS.add((Place)hexagon);
+                }
+            }
+        }
+        return topPlaceTypeS;
+    }
+    public int nbetoile(ArrayList<Place> place){
+        int nb =0;
+        for (Place p : place) {
+            nb+=p.getStars();
+        }
+        return nb;
+    }
 
-    public int calculateScore() {
+    public int calculateScore( ) {
         int totalScore = 0;
-
+        int buildingscore=0;
+        int lastbuildingS = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Garden":
@@ -366,7 +385,7 @@ public class Grid {
                     totalScore += calculateBarrackScore(hexagon);
                     break;
                 case "Building":
-                    totalScore += calculateBuildingScore(hexagon);
+                    buildingscore += calculateBuildingScore(hexagon);
                     break;
                 case "Temple":
                     totalScore += calculateTempleScore(hexagon);
@@ -377,20 +396,25 @@ public class Grid {
                 default:
                     break;
             }
+            if (buildingscore> lastbuildingS) {// si le score est pas plus grand on garde le dernier plus grand pour le nombre de batiment qui sont collé
+                lastbuildingS = buildingscore;
+            }
         }
 
-        return totalScore;
+        return totalScore+=lastbuildingS;
     }
 
     private int calculateGardenScore(Hexagon hexagon) {
-        return hexagon.getElevation();
+        int nb = nbetoile(placeDeTypeS("Garden Place"));
+        return hexagon.getElevation()*nb;
     }
 
     private int calculateBarrackScore(Hexagon hexagon) {
-        return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation() : 0;
+        int nb = nbetoile(placeDeTypeS("Barrack Place"));
+        return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation()*nb: 0;
     }
 
-    private int calculateBuildingScore(Hexagon hexagon) {
+    /*private int calculateBuildingScore(Hexagon hexagon) {
         int adjacentBuildingScore = 0;
         for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Building")) {
@@ -398,19 +422,39 @@ public class Grid {
             }
         }
         return adjacentBuildingScore;
+    }*/
+    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon){
+        ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
+        for (Hexagon neighbor : hexagon.getNeighbors()) {
+            if (neighbor.getType().equals("Building")) {
+                buildingNeighbors.add(neighbor);
+            }
+        }
+        return buildingNeighbors;
+    }
+    
+    private int calculateBuildingScore(Hexagon hexagon) {
+        ArrayList<Hexagon> buildingNeighbors = BuildingNeighbors(hexagon);
+        boolean visited = false;
+        while (visited) {
+            // à faire Ce soir ; systeme de marquage pour calculer le score du plus grand nombre d'habitation collé
+        }
+        return 0;
     }
 
     private int calculateTempleScore(Hexagon hexagon) {
-        return hexagonIsSurrounded(hexagon) ? 1 : 0;
+        int nb = nbetoile(placeDeTypeS("Temple Place"));
+        return hexagonIsSurrounded(hexagon) ? hexagon.getElevation()*nb : 0;
     }
 
     private int calculateMarketScore(Hexagon hexagon) {
+        int nb = nbetoile(placeDeTypeS("Market Place"));
         for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Market")) {
                 return 0;
             }
         }
-        return 1;
+        return 1*nb;
     }
 
     private int calculatePlaceScore(Place place) {
