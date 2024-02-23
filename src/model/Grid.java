@@ -396,7 +396,7 @@ public class Grid {
             }
         }
 
-        return totalScore+=lastbuildingS;
+        return totalScore+lastbuildingS;
     }
 
     private int calculateGardenScore(Hexagon hexagon) {
