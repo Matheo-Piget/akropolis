@@ -15,6 +15,7 @@ public class StackTiles extends Stack<Tile>{
         super();
         // We lock the size of the stack to avoid any modification
         this.setSize(size);
+        generateTiles();
     }
 
     public void generateTiles(){

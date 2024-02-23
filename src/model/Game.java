@@ -17,13 +17,13 @@ public class Game {
      * Constructs a new game with an empty list of players.
      * Initializes the stack of tiles and the table of tiles.
      */
-    public Game() {
-        players = new ArrayList<>();
+    public Game(List<Player> l) {
+        players = l;
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         tableTiles = new ArrayList<>(3); // Assuming 3 tiles on the table
         board = new Board();
         // Initialize the list with the first three tiles from the stack
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < switchSizePlayers(); i++) {
             if (!stackTiles.isEmpty()) {
                 tableTiles.add(stackTiles.pop());
             }
@@ -87,6 +87,24 @@ public class Game {
     }
 
     /**
+     * @return the number of players in the game
+     */
+    private int getNumberOfPlayers(){
+        return players.size();
+    }
+
+    /**
+     * @return the number of tiles to put on the table according to the number of players
+     */
+    private int switchSizePlayers(){
+        return switch (getNumberOfPlayers()) {
+            case 2 -> 4;
+            case 4 -> 6;
+            default -> 5;
+        };
+    }
+
+    /**
      * Starts the game by initializing the stack, shuffling it, and starting the first turn.
      * Throws an exception if there are no players to start the game.
      * @throws IllegalStateException If there are no players to start the game.
@@ -108,6 +126,11 @@ public class Game {
     public void startTurn(Player player) {
         // Assuming each player takes a turn by choosing a tile from the table
         // and adding it to their owned tiles
+        for(int i = tableTiles.size(); i < 3; i++){
+            if(!stackTiles.isEmpty()){
+                tableTiles.add(stackTiles.pop());
+            }
+        }
         player.setSelectedTile(tableTiles.get(0)); // For simplicity, let's say the player chooses the first tile on the table
         tableTiles.remove(0); // Remove the chosen tile from the table
         player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
