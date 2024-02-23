@@ -1,10 +1,10 @@
 @startuml
 
-!define TILE_SIZE 28
+!define TILE_SIZE 20
 !define BORDER_SIZE 1
 
 skinparam class {
-    BackgroundColor Bla
+    BackgroundColor LightCyan
     BorderColor Black
     ArrowColor Black
     FontName Arial
@@ -19,6 +19,8 @@ skinparam package {
             BorderColor DarkSlateGray
             FontColor DarkSlateGray
             ArrowColor DarkSlateGray
+            FontName Arial
+            FontSize 30
 }
 
 package model {
@@ -30,11 +32,12 @@ package model {
         ==
         + Board()
         ==
+        + getHexagon(int x, int y): Hexagon
+        + getScore(): int
+        ==
         + display(): void
         + getGrid(): Grid
         + addTile(Tile tile): void
-        + getHexagon(int x, int y): Hexagon
-        + getScore(): int
     }
 
     class Game {
@@ -116,30 +119,7 @@ package model {
         + hasAbove(): boolean
         + hasBelow(): boolean
         + isAdjacent(Hexagon t): boolean
-    }
-
-    class StackTiles {
-            - int remainingTiles
-            ==
-            + StackTiles(int size)
-            ==
-            + generateTiles(): void
-            + addPlaceWithStars(DistrictColor color): void
-            + generateRandomTiles(): void
-            - addPlaceWithStars(DistrictColor color): void
-            - getRandomDistrict(): Hexagon
-            - getRandomColor(): DistrictColor
-            + shuffle(): void
-    }
-
-    class Board {
-        + Board()
-        ==
-        - ArrayList<Tile> tiles
-        + addTile(Tile tile): void
-        + removeTile(Tile tile): void
-        + getTiles(): ArrayList<Tile>
-    }
+    }     + shuffle(): void
 
     class Grid {
             - Map<Point3D, Hexagon> hexagons
@@ -272,7 +252,7 @@ package util {
 
 package view{
 
-    class MainMenuView {
+    class MainMenuView extends JPanel{
         - backgroundImage: BufferedImage
         ==
         + MainMenuView()
@@ -281,7 +261,7 @@ package view{
         + startNewGame()
     }
 
-    class HexagonView {
+    class HexagonView extends JComponent {
         - size: int
         - isHovered: boolean
         - texture: TexturePaint
@@ -297,23 +277,33 @@ package view{
         + getPosition(): Point3D
     }
 
-    class QuarrieView {
+    class QuarrieView extends HexagonView {
         + paintComponent(Graphics g): void
     }
 
-    class PlaceView {
+    class PlaceView extends HexagonView{
         - stars: int
         ==
         + paintComponent(Graphics g): void
     }
 
-    class DistrictView {
+    class DistrictView extends HexagonView {
         + paintComponent(Graphics g): void
     }
 
-    QuarrieView --|> HexagonView
-    PlaceView --|> HexagonView
-    DistrictView --|> HexagonView
+    class RockLabel extends JLabel {
+        + RockLabel()
+        ==
+        + setRock(int rock): void
+    }
+
+    class TextureFactory {
+        + getTexture(String img): TexturePaint
+    }
+
+    class ScrollableGridView extends JScrollPane {
+        + ScrollableGridView(Grid grid)
+    }
 
 }
 
