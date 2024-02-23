@@ -1,0 +1,273 @@
+@startuml
+
+!define TILE_SIZE 28
+!define BORDER_SIZE 1
+
+skinparam class {
+    BackgroundColor Bla
+    BorderColor Black
+    ArrowColor Black
+    FontName Arial
+    FontSize 20
+}
+
+skinparam stereotypeCBackgroundColor LightGray
+skinparam stereotypeCBorderColor Black
+
+package model {
+
+    class Board {
+        - Grid grid
+        + display(): void
+        + getGrid(): Grid
+        + addTile(Tile tile): void
+        + getHexagon(int x, int y): Hexagon
+        + getScore(): int
+    }
+
+    class Game {
+        - List<Player> players
+        - StackTiles stackTiles
+        - List<Tile> tableTiles
+        - Player currentPlayer
+        - Board board
+        + Game(List<Player> players)
+        + getBoard(): Board
+        + getPlayers(): List<Player>
+        + getTableTiles(): List<Tile>
+        + getCurrentPlayer(): Player
+        + getStackTiles(): StackTiles
+        + setCurrentPlayer(Player currentPlayer): void
+        + addPlayer(Player player): void
+        - getNumberOfPlayers(): int
+        - switchSizePlayers(): int
+        + startGame(): void
+        + startTurn(Player player): void
+        + endTurn(Player player): void
+        - getNextPlayer(): Player
+        + isGameOver(): boolean
+        + getWinner(): Player
+    }
+
+    class Player {
+        - List<Tile> ownedTiles
+        - Tile selectedTile
+        - int score
+        + Player()
+        + getOwnedTiles(): List<Tile>
+        + getSelectedTile(): Tile
+        + setOwnedTiles(List<Tile> ownedTiles): void
+        + setSelectedTile(Tile selectedTile): void
+        + getScore(): int
+        + setScore(int score): void
+    }
+
+    class Tile {
+        - ArrayList<Hexagon> hexagons
+        + Tile(Hexagon tile1, Hexagon tile2, Hexagon tile3)
+        + rotate(): void
+        + exchange(Hexagon hexagon1, Hexagon hexagon2): void
+        + getHexagons(): ArrayList<Hexagon>
+    }
+
+    class Hexagon {
+        - Point3D position
+        - Grid grid
+        - Hexagon above
+        - Hexagon below
+        - Tile tile
+        - boolean isVisited
+        + Hexagon(Point3D p)
+        + Hexagon(Point3D p, Grid grid)
+        + getType(): String
+        + setGrid(Grid grid): void
+        + getElevation(): int
+        + getX(): int
+        + getY(): int
+        + getZ(): int
+        + getPosition(): Point3D
+        + getAbove(): Hexagon
+        + getBelow(): Hexagon
+        + setAbove(Hexagon aboveTile): void
+        + setBelow(Hexagon belowTile): void
+        + getNeighbors(): ArrayList<Hexagon>
+        + hasAbove(): boolean
+        + hasBelow(): boolean
+        + isAdjacent(Hexagon t): boolean
+    }
+
+    class StackTiles {
+        - int size
+        + StackTiles(int size)
+        + generateTiles(): void
+        + shuffle(): void
+    }
+
+    class Board {
+        + Board()
+        - ArrayList<Tile> tiles
+        + addTile(Tile tile): void
+        + removeTile(Tile tile): void
+        + getTiles(): ArrayList<Tile>
+    }
+
+    class Grid {
+            - Map<Point3D, Hexagon> hexagons
+            + Grid()
+            + getHexagons(): Map<Point3D, Hexagon>
+            + canAdd(Hexagon hexagon, Point3D p): boolean
+            + addTile(Tile tile): boolean
+            + getHexagon(int x, int y): Hexagon
+            + display(): void
+            + hexagonIsSurrounded(Hexagon hexagon): boolean
+            + clearGrid(): void
+            + getTopHexagons(): ArrayList<Hexagon>
+            + placeDeTypeS(String s): ArrayList<Place>
+            + nbetoile(ArrayList<Place> place): int
+            + calculateScore(): int
+            + calculateGardenScore(Hexagon hexagon): int
+            + calculateBarrackScore(Hexagon hexagon): int
+            + calculateBuildingScore(Hexagon hexagon): int
+            + BuildingNeighbors(Hexagon hexagon): ArrayList<Hexagon>
+            + calculateTempleScore(Hexagon hexagon): int
+            + calculateMarketScore(Hexagon hexagon): int
+            + calculatePlaceScore(Place place): int
+    }
+
+    enum DistrictColor {
+        RED
+        BLUE
+        GREEN
+        YELLOW
+        PURPLE
+    }
+
+    class District {
+        - DistrictColor color
+        + getType(): String
+    }
+
+    class Place {
+        - starts : int
+        - DistrictColor color
+        + getStars(): int
+        + getType(): String
+    }
+
+    class Quarrie {
+        + getType(): String
+    }
+
+    class StackTiles {
+        - int remainingTiles
+        + StackTiles(int size)
+        + generateTiles(): void
+        + addPlaceWithStars(DistrictColor color): void
+        + generateRandomTiles(): void
+        + getRandomDistrict(): Hexagon
+        + getRandomColor(): DistrictColor
+        + shuffle(): void
+    }
+
+    Hexagon <|-- District
+    Hexagon <|-- Place
+    Hexagon <|-- Quarrie
+
+    Game o-- Player
+    Game o-- Board
+    Game o-- StackTiles
+
+    Player --> Tile
+    Tile --> Hexagon
+    Hexagon --> Grid
+
+}
+
+package util {
+    class Point3D {
+        - int x
+        - int y
+        - int z
+        + Point3D(int x, int y, int z)
+        + getX(): int
+        + getY(): int
+        + getZ(): int
+        + toString(): String
+    }
+
+    interface StateMethods{
+        + exit(): void
+        + transitionTo(State nextState): void
+        + enter(): void
+    }
+
+    interface StateMachine {
+        + getState(): State
+        + changState(State state): void
+    }
+
+    class State {
+        - State INSTANCE
+        + State()
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
+    class Tuple<X, Y> {
+        - X x
+        - Y y
+        + Tuple(X x, Y y)
+        + getX(): X
+        + getY(): Y
+    }
+
+    State <|-- StateMethods
+
+    }
+
+package view{
+
+        class MainMenuView {
+            - backgroundImage: BufferedImage
+            + MainMenuView()
+            + paintComponent(Graphics g)
+            + startNewGame()
+        }
+
+        class HexagonView {
+            - size: int
+            - isHovered: boolean
+            - texture: TexturePaint
+            - position: Point3D
+            - hexagon: Polygon
+            + HexagonView(x: int, y: int, z: int)
+            + HexagonView(x: int, y: int, z: int, img: BufferedImage)
+            + HexagonView(x: int, y: int, z: int, color: Color)
+            + contains(x: int, y: int): boolean
+            + setPosition(position: Point3D): void
+            + getPosition(): Point3D
+        }
+
+        class QuarrieView {
+            + paintComponent(Graphics g): void
+        }
+
+        class PlaceView {
+            - stars: int
+            + paintComponent(Graphics g): void
+        }
+
+        class DistrictView {
+            + paintComponent(Graphics g): void
+        }
+
+        QuarrieView --|> HexagonView
+        PlaceView --|> HexagonView
+        DistrictView --|> HexagonView
+
+    }
+
+}
+
+@enduml
