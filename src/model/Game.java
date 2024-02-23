@@ -12,6 +12,7 @@ public class Game {
     private final List<Tile> tableTiles; // The tiles on the table
     private Player currentPlayer; // The current player
     private final Board board; // Instance of the game board
+    private int manche = 0;
 
     /**
      * Constructs a new game with an empty list of players.
@@ -126,16 +127,22 @@ public class Game {
     public void startTurn(Player player) {
         // Assuming each player takes a turn by choosing a tile from the table
         // and adding it to their owned tiles
-        for(int i = tableTiles.size(); i < 3; i++){
-            if(!stackTiles.isEmpty()){
-                tableTiles.add(stackTiles.pop());
+
+        if(manche % getNumberOfPlayers() == 0){
+            for(int i = tableTiles.size(); i < switchSizePlayers(); i++){
+                if(!stackTiles.isEmpty()){
+                    tableTiles.add(stackTiles.pop());
+                }
             }
         }
+
+        // TODO : Implement the turn logic when we have the controller
         player.setSelectedTile(tableTiles.get(0)); // For simplicity, let's say the player chooses the first tile on the table
         tableTiles.remove(0); // Remove the chosen tile from the table
         player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
         board.addTile(player.getSelectedTile()); // Add the chosen tile to the board
         // Other turn logic can be added here, such as scoring, checking for game end conditions, etc.
+        manche++;
         endTurn(player);
     }
 
