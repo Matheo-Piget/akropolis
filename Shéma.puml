@@ -119,7 +119,7 @@ package model {
         + hasAbove(): boolean
         + hasBelow(): boolean
         + isAdjacent(Hexagon t): boolean
-    }     + shuffle(): void
+    }
 
     class Grid {
             - Map<Point3D, Hexagon> hexagons
@@ -303,6 +303,15 @@ package view{
 
     class ScrollableGridView extends JScrollPane {
         + ScrollableGridView(Grid grid)
+    }
+
+}
+
+package view.main.states{
+    enum AppState implements StateMethods {
+        MAIN_MENU
+        GAME
+        GAME_OVER
     }
 
 }
