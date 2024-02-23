@@ -154,25 +154,32 @@ package model <<Node>>{
         PURPLE
     }
 
-    class District {
+    class District extends Hexagon{
         - DistrictColor color
+        ==
+        + District(Point3D p, DistrictColor color)
         ==
         + getType(): String
     }
 
-    class Place {
+    class Place extends Hexagon{
         - starts : int
         - DistrictColor color
+        ==
+        + Place(Point3D p, DistrictColor color, int stars)
         ==
         + getStars(): int
         + getType(): String
     }
 
-    class Quarrie {
+    class Quarrie extends Hexagon{
+        Quarrie(Point3D p, Grid grid)
+        Quarrie(Point3D p)
+        ==
         + getType(): String
     }
 
-    class StackTiles {
+    class StackTiles{
         - int remainingTiles
         ==
         + StackTiles(int size)
@@ -185,17 +192,8 @@ package model <<Node>>{
         + shuffle(): void
     }
 
-    Hexagon <|-- District
-    Hexagon <|-- Place
-    Hexagon <|-- Quarrie
 
-    Game o-- Player
-    Game o-- Board
-    Game o-- StackTiles
 
-    Player --> Tile
-    Tile --> Hexagon
-    Hexagon --> Grid
 
 }
 
@@ -304,7 +302,7 @@ package view <<Node>>{
 }
 
 package view.main.states <<Node>>{
-    enum AppState implements util.StateMethods {
+    enum AppState implements util.StateMachine {
         State currenState
         ==
         + AppState()
@@ -343,5 +341,23 @@ package view.main <<Node>>{
     }
 
 }
+
+Grid o-- Hexagon
+Game o-- Player
+Game o-- Board
+Game o-- StackTiles
+Player o-- Tile
+Hexagon o-- Grid
+Board o-- Grid
+Game o-- Tile
+
+Hexagon o-- Hexagon
+Hexagon o-- Tile
+Tile o-- Hexagon
+
+District o-- DistrictColor
+
+util.Point3D o-- Hexagon
+util.Point3D o-- Grid
 
 @enduml
