@@ -14,7 +14,16 @@ skinparam class {
 skinparam stereotypeCBackgroundColor LightGray
 skinparam stereotypeCBorderColor Black
 
+skinparam package {
+            BackgroundColor LightSkyBlue
+            BorderColor DarkSlateGray
+            FontColor DarkSlateGray
+            ArrowColor DarkSlateGray
+}
+
 package model {
+
+
 
     class Board {
         - Grid grid
@@ -224,49 +233,47 @@ package util {
 
     State <|-- StateMethods
 
-    }
+}
 
 package view{
 
-        class MainMenuView {
-            - backgroundImage: BufferedImage
-            + MainMenuView()
-            + paintComponent(Graphics g)
-            + startNewGame()
-        }
-
-        class HexagonView {
-            - size: int
-            - isHovered: boolean
-            - texture: TexturePaint
-            - position: Point3D
-            - hexagon: Polygon
-            + HexagonView(x: int, y: int, z: int)
-            + HexagonView(x: int, y: int, z: int, img: BufferedImage)
-            + HexagonView(x: int, y: int, z: int, color: Color)
-            + contains(x: int, y: int): boolean
-            + setPosition(position: Point3D): void
-            + getPosition(): Point3D
-        }
-
-        class QuarrieView {
-            + paintComponent(Graphics g): void
-        }
-
-        class PlaceView {
-            - stars: int
-            + paintComponent(Graphics g): void
-        }
-
-        class DistrictView {
-            + paintComponent(Graphics g): void
-        }
-
-        QuarrieView --|> HexagonView
-        PlaceView --|> HexagonView
-        DistrictView --|> HexagonView
-
+    class MainMenuView {
+        - backgroundImage: BufferedImage
+        + MainMenuView()
+        + paintComponent(Graphics g)
+        + startNewGame()
     }
+
+    class HexagonView {
+        - size: int
+        - isHovered: boolean
+        - texture: TexturePaint
+        - position: Point3D
+        - hexagon: Polygon
+        + HexagonView(x: int, y: int, z: int)
+        + HexagonView(x: int, y: int, z: int, img: BufferedImage)
+        + HexagonView(x: int, y: int, z: int, color: Color)
+        + contains(x: int, y: int): boolean
+        + setPosition(position: Point3D): void
+        + getPosition(): Point3D
+    }
+
+    class QuarrieView {
+        + paintComponent(Graphics g): void
+    }
+
+    class PlaceView {
+        - stars: int
+        + paintComponent(Graphics g): void
+    }
+
+    class DistrictView {
+        + paintComponent(Graphics g): void
+    }
+
+    QuarrieView --|> HexagonView
+    PlaceView --|> HexagonView
+    DistrictView --|> HexagonView
 
 }
 
