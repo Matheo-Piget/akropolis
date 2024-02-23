@@ -23,9 +23,7 @@ skinparam package {
             FontSize 30
 }
 
-package model {
-
-
+package model <<Node>>{
 
     class Board {
         - Grid grid
@@ -201,7 +199,7 @@ package model {
 
 }
 
-package util {
+package util <<Node>>{
     class Point3D {
         - int x
         - int y
@@ -227,7 +225,7 @@ package util {
         + changState(State state): void
     }
 
-    class State {
+    class State implements StateMethods{
         - State INSTANCE
         ==
         + State()
@@ -246,11 +244,9 @@ package util {
         + getY(): Y
     }
 
-    State <|-- StateMethods
-
 }
 
-package view{
+package view <<Node>>{
 
     class MainMenuView extends JPanel{
         - backgroundImage: BufferedImage
@@ -307,11 +303,43 @@ package view{
 
 }
 
-package view.main.states{
-    enum AppState implements StateMethods {
-        MAIN_MENU
-        GAME
-        GAME_OVER
+package view.main.states <<Node>>{
+    enum AppState implements util.StateMethods {
+        State currenState
+        ==
+        + AppState()
+        ==
+        + getState : State
+        changeState(State state): void
+    }
+
+    class StartState extends util.State {
+        - StartState INSTANCE
+        ==
+        + StartState()
+        ==
+        getInstance(): StartState
+        ==
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
+}
+
+package view.main <<Node>>{
+    class App extends JFrame{
+        - int width
+        - int height
+        - JPanel screen
+        - App INSTANCE
+        ==
+        + App()
+        ==
+        + getInstance(): App
+        + getScreens(): JPanel
+        ==
+        + run(): void
     }
 
 }
