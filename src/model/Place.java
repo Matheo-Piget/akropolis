@@ -13,16 +13,31 @@ public class Place extends Hexagon{
         this.color = color;
     }
 
+    /**
+     * Constructor to create a place with specified coordinates (used without grid reference).
+     *
+     * @param position The position of the place.
+     * @param stars The number of stars of the place.
+     * @param color The color of the place.
+     */
     public Place(Point3D position, int stars, DistrictColor color) {
         super(position);
         this.stars = stars;
         this.color = color;
     }
 
+    /**
+     * Returns the number of stars of the place.
+     * @return the number of stars of the place.
+     */
     public int getStars() {
         return stars;
     }
 
+    /**
+     * Returns the types of the place.
+     * @return the types of the place.
+     */
     @Override
     public String getType() {
         return switch (color) {

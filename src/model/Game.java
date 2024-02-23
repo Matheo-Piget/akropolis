@@ -125,9 +125,8 @@ public class Game {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
-        // Assuming each player takes a turn by choosing a tile from the table
-        // and adding it to their owned tiles
 
+        // Add tiles to the table if the manche is over
         if(manche % getNumberOfPlayers() == 0){
             for(int i = tableTiles.size(); i < switchSizePlayers(); i++){
                 if(!stackTiles.isEmpty()){

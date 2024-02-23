@@ -168,7 +168,13 @@ public abstract class Hexagon {
     public boolean hasBelow() {
         return below != null;
     }
-    
+
+
+    /**
+     * checks if the tile is adjacent to the given tile
+     * @param t the tile to check
+     * @return true if the tile is adjacent to the given tile, false otherwise
+     */
     public boolean isAdjacent(Hexagon t){
         Point[] axialDirections = {
             new Point(1, 0), new Point(1, -1), new Point(0, -1),
