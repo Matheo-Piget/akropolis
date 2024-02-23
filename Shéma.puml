@@ -170,6 +170,7 @@ package model <<Node>>{
         ==
         + getStars(): int
         + getType(): String
+
     }
 
     class Quarrie extends Hexagon{
