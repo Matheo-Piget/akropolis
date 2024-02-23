@@ -24,14 +24,18 @@ public class StackTiles extends Stack<Tile>{
 
     }
 
+    /**
+     * Generates the tiles for the stack randomly.
+     */
     public void generateTiles() {
         // Generate one place of each type with stars
-        int rendom_number = (int) (Math.random() * 20);
+        int randomNumberOfPlaces = (int) (Math.random() * 20);
         for (DistrictColor color : DistrictColor.values()) {
             addPlaceWithStars(color);
             remainingTiles--;
         }
-        for (int i = 0; i < rendom_number; i++) {
+        // Generate a random number of places with stars
+        for (int i = 0; i < randomNumberOfPlaces; i++) {
             addPlaceWithStars(DistrictColor.values()[(int) (Math.random() * 5)]);
             remainingTiles--;
         }
@@ -62,6 +66,9 @@ public class StackTiles extends Stack<Tile>{
         add(tile);
     }
 
+    /**
+     * Generates the rest of the tiles randomly.
+     */
     private void generateRandomTiles() {
         // Generate the rest of the tiles randomly
         for (int i = 0; i < remainingTiles; i++) {
@@ -72,12 +79,22 @@ public class StackTiles extends Stack<Tile>{
 
     }
 
+    /**
+     * Returns a random district.
+     *
+     * @return a random district.
+     */
     private Hexagon getRandomDistrict() {
         // Create a district with a random color
         Point3D position = new Point3D(0, 0, 0); // Example position, can be adjusted
         return new District(position, getRandomColor());
     }
 
+    /**
+     * Returns a random color.
+     *
+     * @return a random color.
+     */
     private DistrictColor getRandomColor() {
         // Get a random color from the DistrictColor enum
         DistrictColor[] colors = DistrictColor.values();
@@ -86,7 +103,7 @@ public class StackTiles extends Stack<Tile>{
     }
 
     /**
-     * Mélange les tuiles dans la pile.
+     * Shuffles the stack of tiles.
      */
     public void shuffle(){
         Collections.shuffle(this);
