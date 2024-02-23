@@ -109,6 +109,10 @@ public class GridView extends JPanel {
             gridView.addHexagon(test4);
             gridView.addHexagon(test5);
             gridView.addHexagon(test6);
+
+            TileView tile = new TileView(new QuarrieView(3,3,1), new QuarrieView(4,3,1), new QuarrieView(3,4,1));
+            tile.setLocation(0, 0);
+            gridView.add(tile);
             ScrollableGridView scrollableGridView = new ScrollableGridView(gridView);
             JFrame frame = new JFrame();
             frame.add(scrollableGridView);
