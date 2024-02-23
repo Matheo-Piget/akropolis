@@ -67,6 +67,12 @@ public class Grid {
         return false;
     }
 
+    /**
+     * Adds a tile to the grid.
+     *
+     * @param tile The tile to be added to the grid.
+     * @return True if the tile is successfully added, false otherwise.
+     */
     public boolean addTile(Tile tile) {
         Hexagon[] bellowHexagons = new Hexagon[3];
         boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
@@ -82,6 +88,14 @@ public class Grid {
         return canBePlaced && hasNeighbor && samehexagon <= 1;
     }
 
+    /**
+     * Checks if the tile can be placed on the grid and sets the below hexagons for
+     * the tile.
+     *
+     * @param tile          The tile to be placed on the grid.
+     * @param bellowHexagons The array to store the below hexagons for the tile.
+     * @return True if the tile can be placed, false otherwise.
+     */
     private boolean checkNeighborsAndSetBelowTile(Tile tile, Hexagon[] bellowHexagons) {
         boolean hasNeighbor = false;
         for (int i = 0; i < 3; i++) {
@@ -100,6 +114,13 @@ public class Grid {
         return hasNeighbor;
     }
 
+    /**
+     * Adds the hexagons of the tile to the grid and sets the below hexagons for the
+     * tile.
+     *
+     * @param tile          The tile to be placed on the grid.
+     * @param bellowHexagons The array of below hexagons for the tile.
+     */
     private void addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) {
         for (int i = 0; i < 3; i++) {
             Hexagon newHexagon_i = tile.hexagons.get(i);
@@ -113,6 +134,13 @@ public class Grid {
         }
     }
 
+    /**
+     * Checks if the tile has the same elevation for all its hexagons.
+     *
+     * @param t The tile to be checked.
+     * @return True if the tile has the same elevation for all its hexagons, false
+     *         otherwise.
+     */
     private boolean checkElevation(Tile t) {
         int elevation = t.hexagons.get(0).getZ();
         for (int i = 1; i < 3; i++) {
@@ -123,6 +151,15 @@ public class Grid {
         return true;
     }
 
+    /**
+     * Counts the number of hexagons in the tile that are the same as the below
+     * hexagons.
+     *
+     * @param tile          The tile to be checked.
+     * @param bellowHexagons The array of below hexagons for the tile.
+     * @return The number of hexagons in the tile that are the same as the below
+     *         hexagons.
+     */
     private int countSameHexagons(Tile tile, Hexagon[] bellowHexagons) {
         int samehexagon = 0;
         for (int i = 0; i < 3; i++) {
@@ -339,6 +376,10 @@ public class Grid {
      * }
      */
 
+    /**
+     * Get the top hexagons of the grid
+     * @return the top hexagons of the grid
+     */
      public ArrayList<Hexagon> getTopHexagons() {
         ArrayList<Hexagon> tophexagons = new ArrayList<>();
         for (Hexagon hexagon : hexagons.values()) {
@@ -348,6 +389,7 @@ public class Grid {
         }
         return tophexagons;
     }
+
     public ArrayList<Place> placeDeTypeS(String s){
         ArrayList<Place> topPlaceTypeS = new ArrayList<>();
         for (Hexagon hexagon : getTopHexagons()) {
