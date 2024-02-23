@@ -10,20 +10,30 @@ import java.util.Stack;
 
 public class StackTiles extends Stack<Tile>{
 
+    int remainingTiles;
+
      /**
      * Construit une pile de tuiles vide prête à être remplie avec des tuiles.
      */
     public StackTiles(int size){
         super();
         // We lock the size of the stack to avoid any modification
+        remainingTiles = size;
         this.setSize(size);
         generateTiles();
+
     }
 
     public void generateTiles() {
         // Generate one place of each type with stars
+        int rendom_number = (int) (Math.random() * 20);
         for (DistrictColor color : DistrictColor.values()) {
             addPlaceWithStars(color);
+            remainingTiles--;
+        }
+        for (int i = 0; i < rendom_number; i++) {
+            addPlaceWithStars(DistrictColor.values()[(int) (Math.random() * 5)]);
+            remainingTiles--;
         }
 
         // Generate the rest of the tiles randomly
@@ -54,7 +64,7 @@ public class StackTiles extends Stack<Tile>{
 
     private void generateRandomTiles() {
         // Generate the rest of the tiles randomly
-        for (int i = 0; i < size() - DistrictColor.values().length; i++) {
+        for (int i = 0; i < remainingTiles; i++) {
             // Create a tile with three random districts
             Tile tile = new Tile(getRandomDistrict(), getRandomDistrict(), getRandomDistrict());
             add(tile);
