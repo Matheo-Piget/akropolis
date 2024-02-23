@@ -15,6 +15,7 @@ public class Game {
 
     /**
      * Constructs a new game with an empty list of players.
+     * Initializes the stack of tiles and the table of tiles.
      */
     public Game() {
         players = new ArrayList<>();
@@ -27,6 +28,54 @@ public class Game {
                 tableTiles.add(stackTiles.pop());
             }
         }
+    }
+
+    /**
+     * Returns the game board.
+     * @return the game board.
+     */
+    public Board getBoard() {
+        return board;
+    }
+
+    /**
+     * Returns the list of players.
+     * @return the list of players.
+     */
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Returns the list of tiles on the table.
+     * @return the list of tiles on the table.
+     */
+    public List<Tile> getTableTiles() {
+        return tableTiles;
+    }
+
+    /**
+     * Returns the current player.
+     * @return the current player.
+     */
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * Returns the stack of tiles.
+     * @return the stack of tiles.
+     */
+    public StackTiles getStackTiles() {
+        return stackTiles;
+    }
+
+    /**
+     * Sets the current player.
+     * @param currentPlayer the player to set as the current player.
+     */
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     /**
