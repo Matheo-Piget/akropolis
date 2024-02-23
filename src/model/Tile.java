@@ -44,4 +44,8 @@ public class Tile {
         hexagons.set(index1, hexagon2);
         hexagons.set(index2, hexagon1);
     }
+
+    public ArrayList<Hexagon> getHexagons() {
+        return hexagons;
+    }
 }
