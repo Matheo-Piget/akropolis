@@ -2,72 +2,93 @@ package view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 import java.awt.TexturePaint;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import javax.swing.JComponent;
 import util.Point3D;
 
 /**
  * Represents an hexagon on the game grid.
  */
-public abstract class HexagonView extends Polygon {
+public abstract class HexagonView extends JComponent {
 
+    public static int size = 80; // Size of the hexagons
+    protected boolean isHovered = false;
     protected TexturePaint texture;
     protected Point3D position;
+    protected Polygon hexagon = new Polygon();
 
-    public HexagonView(int x, int y, int side) {
+    public HexagonView(int x, int y, int z) {
+        this.setSize(size, size);
+        this.setFocusable(true);
         // Calculate the coordinates of the six points of the hexagon
+        this.position = new Point3D(x, y, z);
+        int center = size / 2;
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (x + side * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (y + side * Math.sin(i * 2 * Math.PI / 6));
-            this.addPoint(xval, yval);
+            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
+            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
+            hexagon.addPoint(xval, yval);
         }
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                isHovered = true;
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                isHovered = false;
+                repaint();
+            }
+        });
     }
 
-    public HexagonView(int x, int y, int z, int side) {
-        // Calculate the coordinates of the six points of the hexagon
+    public HexagonView(int x, int y, int z, BufferedImage img){
+        this.setSize(size, size);
+        this.setFocusable(true);
+        this.position = new Point3D(x, y, z);
+        int center = size / 2;
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (x + side * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (y + side * Math.sin(i * 2 * Math.PI / 6));
-            this.addPoint(xval, yval);
+            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
+            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
+            hexagon.addPoint(xval, yval);
         }
+        this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
+        // Add the mouse motion listener to change the color of the hexagon when hovered
+        this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                isHovered = contains(e.getX(), e.getY());
+                repaint();
+            }
+        });
     }
 
-    public HexagonView(int x, int y, int side, BufferedImage img) {
-        // Calculate the coordinates of the six points of the hexagon
+    public HexagonView(int x, int y, int z, Color color) {
+        this.setSize(size, size);
+        this.setFocusable(true);
+        this.position = new Point3D(x, y, z);
+        int center = (size / 2) - 1;
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (x + side * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (y + side * Math.sin(i * 2 * Math.PI / 6));
-            this.addPoint(xval, yval);
+            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
+            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
+            hexagon.addPoint(xval, yval);
         }
-        this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, side, side));
-    }
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                isHovered = true;
+                repaint();
+            }
 
-    public HexagonView(int x, int y, int side, Color color) {
-        // Calculate the coordinates of the six points of the hexagon
-        for (int i = 0; i < 6; i++) {
-            int xval = (int) (x + side * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (y + side * Math.sin(i * 2 * Math.PI / 6));
-            this.addPoint(xval, yval);
-        }
-
-        // Create a BufferedImage and fill it with the color
-        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        g.setColor(color);
-        g.fillRect(0, 0, 1, 1);
-        g.dispose();
-        this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, side, side));
-    }
-
-    public HexagonView(int x, int y, int z, int side, Color color) {
-        // Calculate the coordinates of the six points of the hexagon
-        for (int i = 0; i < 6; i++) {
-            int xval = (int) (x + side * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (y + side * Math.sin(i * 2 * Math.PI / 6));
-            this.addPoint(xval, yval);
-        }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                isHovered = false;
+                repaint();
+            }
+        });
 
         // Create a BufferedImage and fill it with the color
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -75,10 +96,13 @@ public abstract class HexagonView extends Polygon {
         g.setColor(darken(color, z));
         g.fillRect(0, 0, 1, 1);
         g.dispose();
-        this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, side, side));
+        this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, size, size));
     }
 
-    public abstract void paint(Graphics2D g);
+    @Override
+    public boolean contains(int x, int y) {
+        return hexagon.contains(x, y);
+    }
 
     public void setPosition(Point3D position) {
         this.position = position;

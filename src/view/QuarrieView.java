@@ -1,23 +1,33 @@
 package view;
 
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
+
 public class QuarrieView extends HexagonView {
     
-    public QuarrieView(int x, int y, int side) {
-        super(x, y, side, java.awt.Color.GRAY);
-    }
-
-    public QuarrieView(int x, int y, int z, int side) {
-        super(x, y, z, side, java.awt.Color.GRAY);
+    public QuarrieView(int x, int y, int z) {
+        super(x, y, z, java.awt.Color.GRAY);
     }
 
     @Override
-    public void paint(java.awt.Graphics2D g) {
-        g.setPaint(darkenTexturePaint(this.texture, this.getPosition().getZ()));
-        g.fill(this);
+    public void paintComponent(java.awt.Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setPaint(darkenTexturePaint(texture, getPosition().getZ()));
+        g2d.fill(hexagon);
 
         // Draw the border of the hexagon
-        g.setColor(java.awt.Color.BLACK);
-        g.setStroke(new java.awt.BasicStroke(3));
-        g.draw(this);
+        if (isHovered) {
+            g2d.setColor(java.awt.Color.YELLOW);
+        }
+        else {
+            g2d.setColor(java.awt.Color.BLACK);
+        }
+
+        g2d.setStroke(new BasicStroke(size / 25));
+        g2d.draw(hexagon);
+        g2d.dispose();
     }
 }
