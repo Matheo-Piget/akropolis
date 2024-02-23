@@ -138,4 +138,29 @@ public class Game {
         // Return the next player
         return players.get(nextIndex);
     }
+
+    /**
+     * Checks if the game is over.
+     * @return true if the game is over, false otherwise.
+     */
+    public boolean isGameOver(){
+        return stackTiles.isEmpty() && tableTiles.isEmpty();
+    }
+
+    /**
+     * Returns the winner of the game.
+     * @return The winner of the game.
+     */
+    public Player getWinner(){
+        if(isGameOver()){
+            Player winner = players.get(0);
+            for(Player player : players){
+                if(player.getScore() > winner.getScore()){
+                    winner = player;
+                }
+            }
+            return winner;
+        }
+        return null;
+    }
 }
