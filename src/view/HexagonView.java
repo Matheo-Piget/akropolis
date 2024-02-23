@@ -7,6 +7,8 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import util.Point3D;
+import java.awt.Point;
+import java.util.ArrayList;
 
 /**
  * Represents an hexagon on the game grid.
@@ -21,7 +23,6 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z) {
         this.setSize(size, size);
-        this.setFocusable(true);
         // Calculate the coordinates of the six points of the hexagon
         this.position = new Point3D(x, y, z);
         int center = size / 2;
@@ -47,7 +48,6 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, BufferedImage img){
         this.setSize(size, size);
-        this.setFocusable(true);
         this.position = new Point3D(x, y, z);
         int center = size / 2;
         for (int i = 0; i < 6; i++) {
@@ -68,7 +68,6 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, Color color) {
         this.setSize(size, size);
-        this.setFocusable(true);
         this.position = new Point3D(x, y, z);
         int center = (size / 2) - 1;
         for (int i = 0; i < 6; i++) {
@@ -99,6 +98,26 @@ public abstract class HexagonView extends JComponent {
         this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, size, size));
     }
 
+    public Polygon getPolygon() {
+        return hexagon;
+    }
+
+    public TexturePaint getTexture() {
+        return texture;
+    }
+
+    public ArrayList<Point> getPoints() {
+        ArrayList<Point> points = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            points.add(new Point(hexagon.xpoints[i], hexagon.ypoints[i]));
+        }
+        return points;
+    }
+
+    public Polygon setPolygon(Polygon hexagon) {
+        return this.hexagon = hexagon;
+    }
+
     @Override
     public boolean contains(int x, int y) {
         return hexagon.contains(x, y);
@@ -113,13 +132,10 @@ public abstract class HexagonView extends JComponent {
     }
 
     private Color darken(Color c, int z){
-
         for(int i = 0; i < z; i++){
             c = c.darker();
         }
-
         return c;
-
     }
 
     public TexturePaint darkenTexturePaint(TexturePaint texture, int floor) {
