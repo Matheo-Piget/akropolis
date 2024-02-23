@@ -11,6 +11,7 @@ public class Game {
     private final StackTiles stackTiles; // The stack of tiles in the game
     private final List<Tile> tableTiles; // The tiles on the table
     private Player currentPlayer; // The current player
+    private final Board board; // Instance of the game board
 
     /**
      * Constructs a new game with an empty list of players.
@@ -19,6 +20,7 @@ public class Game {
         players = new ArrayList<>();
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         tableTiles = new ArrayList<>(3); // Assuming 3 tiles on the table
+        board = new Board();
         // Initialize the list with the first three tiles from the stack
         for (int i = 0; i < 3; i++) {
             if (!stackTiles.isEmpty()) {
@@ -55,7 +57,14 @@ public class Game {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
-        currentPlayer = player;
+        // Assuming each player takes a turn by choosing a tile from the table
+        // and adding it to their owned tiles
+        player.setSelectedTile(tableTiles.get(0)); // For simplicity, let's say the player chooses the first tile on the table
+        tableTiles.remove(0); // Remove the chosen tile from the table
+        player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
+        board.addTile(player.getSelectedTile()); // Add the chosen tile to the board
+        // Other turn logic can be added here, such as scoring, checking for game end conditions, etc.
+        endTurn(player);
     }
 
     /**
