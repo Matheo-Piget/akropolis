@@ -186,11 +186,11 @@ public class MainMenuView extends JPanel {
         JPanel creditsPanel = new JPanel();
         creditsPanel.setLayout(new GridLayout(0, 1)); // Disposition en colonne pour les noms
         // Ajoutez ici les noms des membres de l'équipe
-        creditsPanel.add(new JLabel("    Développeur 1: CHETOUANI bilal "));
+        creditsPanel.add(new JLabel("    Développeur 1: CHETOUANI Bilal "));
         creditsPanel.add(new JLabel("    Développeur 2: BENZERDJEB Rayene"));
-        creditsPanel.add(new JLabel("    Développeur 3: MOUSSA nidhal"));
-        creditsPanel.add(new JLabel("    Développeur 4: PIGET matheo "));
-        creditsPanel.add(new JLabel("    Développeur 5: GBAGUIDI nerval "));
+        creditsPanel.add(new JLabel("    Développeur 3: MOUSSA Nidhal"));
+        creditsPanel.add(new JLabel("    Développeur 4: PIGET Matheo "));
+        creditsPanel.add(new JLabel("    Développeur 5: GBAGUIDI Nerval "));
         
         // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre équipe
     
