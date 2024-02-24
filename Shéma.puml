@@ -286,6 +286,20 @@ package view <<Node>>{
         + paintComponent(Graphics g): void
     }
 
+    class TileView extends JComponent {
+        - Boolean isHovered
+        - Boolean isClicked
+        - boolean increasing
+        - float glow
+        - Timer glowTimer
+        ==
+        + TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3)
+        ==
+        + setHexagon(HexagonView hex1, HexagonView hex2, HexagonView hex3): void
+        ==
+        + paintComponent(Graphics g): void
+    }
+
     class RockLabel extends JLabel {
         + RockLabel()
         ==
@@ -341,6 +355,11 @@ package view.main <<Node>>{
         + run(): void
     }
 
+}
+
+package controller <<Node>>{
+    class BoardController {
+    }
 }
 
 Grid o-- Hexagon
