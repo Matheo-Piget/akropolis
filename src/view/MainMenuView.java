@@ -1,9 +1,17 @@
 package view;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -52,6 +60,11 @@ public class MainMenuView extends JPanel {
         startButton.setPreferredSize(new Dimension(150, 50));
         startButton.addActionListener((ActionEvent e) -> startNewGame());
 
+        //bouton regles
+        JButton rulesButton = new JButton("Regles du jeu");
+        rulesButton.setPreferredSize(new Dimension(150,50));
+        rulesButton.addActionListener(e -> showRulesPanel());
+
         // Bouton quitter
         JButton quitButton = new JButton("Quitter");
         quitButton.setPreferredSize(new Dimension(150, 50));
@@ -59,6 +72,7 @@ public class MainMenuView extends JPanel {
 
         // Ajouter les boutons au panneau de boutons
         buttonPanel.add(startButton);
+        buttonPanel.add(rulesButton);
         buttonPanel.add(quitButton);
 
         // Contraintes pour centrer le panneau de boutons dans l'arrière-plan
@@ -83,5 +97,69 @@ public class MainMenuView extends JPanel {
     private void startNewGame() {
         System.out.println("Nouvelle partie démarrée");
         // Logique pour démarrer le jeu
+    }
+
+    private void showRulesPanel(){
+        // Création d'un nouveau dialogue 
+        JDialog rulesDialog = new JDialog();
+        rulesDialog.setTitle("Régles du jeu");
+        rulesDialog.setSize(910 , 700 );
+        rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.
+        // Crée un panel principal utilisant BorderLayout 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        //liste pour stocker les images des règles du jeu.
+        List<ImageIcon> rulesImages= new ArrayList<>();
+        for(int i = 7; i >= 1; i--) {
+            try {
+                BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/regles" + i + ".png"));
+                ImageIcon icon = new ImageIcon(img);
+                rulesImages.add(icon);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("Erreur lors du chargement de l'image /res/regles" + i + ".png");
+            }
+        }
+        JLabel imagLabel = new JLabel();
+        if (!rulesImages.isEmpty()) {
+            imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
+        }
+        // Utilise un JScrollPane pour permettre le défilement si l'image est plus grande que le panel.
+        JScrollPane scrollPane = new JScrollPane(imagLabel);
+        mainPanel.add(scrollPane , BorderLayout.CENTER);
+
+        JButton prevButton = new JButton("<");
+        JButton nexButton = new JButton(">");
+
+        final int[] currentIndex = {0};
+        prevButton.addActionListener(e ->{
+            // Décrémente l'index et met à jour l'image affichée quand le bouton précédent est cliqué.
+            if(currentIndex[0]>0){
+                currentIndex[0]--;
+                imagLabel.setIcon(rulesImages.get(currentIndex[0]));
+            }
+        });
+
+        nexButton.addActionListener(e -> {
+            // incrémente l'index et met à jour l'image affichée quand le bouton précédent est cliqué.
+            if(currentIndex[0] < rulesImages.size() - 1) {
+                currentIndex[0]++;
+                imagLabel.setIcon(rulesImages.get(currentIndex[0]));
+            }
+        });
+
+
+    // Panels pour positionner les boutons sur les côtés de l'image
+    JPanel leftButtonPanel = new JPanel(new BorderLayout());
+    leftButtonPanel.add(prevButton, BorderLayout.CENTER);
+
+    JPanel rightButtonPanel = new JPanel(new BorderLayout());
+    rightButtonPanel.add(nexButton, BorderLayout.CENTER);
+
+    // Ajoute les boutons de navigation à gauche et à droite de l'image
+    mainPanel.add(leftButtonPanel, BorderLayout.WEST);
+    mainPanel.add(rightButtonPanel, BorderLayout.EAST);
+
+    rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
+    rulesDialog.setVisible(true);
     }
 }
