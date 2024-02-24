@@ -70,9 +70,15 @@ public class MainMenuView extends JPanel {
         quitButton.setPreferredSize(new Dimension(150, 50));
         quitButton.addActionListener((ActionEvent e) -> System.exit(0));
 
+        JButton creditsButton = new JButton("Crédits");
+        creditsButton.addActionListener(e -> showCreditsPanel());
+    
+
+
         // Ajouter les boutons au panneau de boutons
         buttonPanel.add(startButton);
         buttonPanel.add(rulesButton);
+        buttonPanel.add(creditsButton); 
         buttonPanel.add(quitButton);
 
         // Contraintes pour centrer le panneau de boutons dans l'arrière-plan
@@ -162,4 +168,38 @@ public class MainMenuView extends JPanel {
     rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
     rulesDialog.setVisible(true);
     }
+
+    private void showCreditsPanel() {
+        // Création du dialogue pour les crédits
+        JDialog creditsDialog = new JDialog();
+        creditsDialog.setTitle("Crédits");
+        creditsDialog.setSize(400, 300); // Taille ajustable selon vos besoins
+        creditsDialog.setLocationRelativeTo(this); // Centre par rapport à MainMenuView
+        creditsDialog.setLayout(new BorderLayout());
+    
+        // Panel semi-transparent qui assombrit l'arrière-plan
+        JPanel overlayPanel = new JPanel();
+        overlayPanel.setLayout(new BorderLayout());
+        overlayPanel.setBackground(new Color(0, 0, 0, 150)); // Couleur semi-transparente
+    
+        // Panel pour les noms des développeurs
+        JPanel creditsPanel = new JPanel();
+        creditsPanel.setLayout(new GridLayout(0, 1)); // Disposition en colonne pour les noms
+        // Ajoutez ici les noms des membres de l'équipe
+        creditsPanel.add(new JLabel("    Développeur 1: CHETOUANI bilal "));
+        creditsPanel.add(new JLabel("    Développeur 2: BENZERDJEB Rayene"));
+        creditsPanel.add(new JLabel("    Développeur 3: MOUSSA nidhal"));
+        creditsPanel.add(new JLabel("    Développeur 4: PIGET matheo "));
+        creditsPanel.add(new JLabel("    Développeur 5: GBAGUIDI nerval "));
+        
+        // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre équipe
+    
+        // Ajout des panels au dialogue
+        overlayPanel.add(creditsPanel, BorderLayout.CENTER);
+        creditsDialog.add(overlayPanel);
+    
+        creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
+        creditsDialog.setVisible(true); // Affiche le dialogue des crédits
+    }
+    
 }
