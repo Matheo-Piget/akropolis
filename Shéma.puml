@@ -247,7 +247,7 @@ package util <<Node>>{
 
 package view <<Node>>{
 
-    class MainMenuView extends JPanel{
+    class MainMenuView{
         - backgroundImage: BufferedImage
         ==
         + MainMenuView()
@@ -256,7 +256,7 @@ package view <<Node>>{
         + startNewGame()
     }
 
-    class HexagonView extends JComponent {
+    class HexagonView{
         - size: int
         - isHovered: boolean
         - texture: TexturePaint
@@ -286,7 +286,7 @@ package view <<Node>>{
         + paintComponent(Graphics g): void
     }
 
-    class TileView extends JComponent {
+    class TileView{
         - Boolean isHovered
         - Boolean isClicked
         - boolean increasing
@@ -300,7 +300,7 @@ package view <<Node>>{
         + paintComponent(Graphics g): void
     }
 
-    class RockLabel extends JLabel {
+    class RockLabel{
         + RockLabel()
         ==
         + setRock(int rock): void
@@ -310,7 +310,7 @@ package view <<Node>>{
         + getTexture(String img): TexturePaint
     }
 
-    class ScrollableGridView extends JScrollPane {
+    class ScrollableGridView {
         + ScrollableGridView(Grid grid)
     }
 
@@ -370,6 +370,7 @@ Player o-- Tile
 Hexagon o-- Grid
 Board o-- Grid
 Game o-- Tile
+TileView o-- HexagonView
 
 Hexagon o-- Hexagon
 Hexagon o-- Tile
