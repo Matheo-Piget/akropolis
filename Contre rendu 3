@@ -4,8 +4,9 @@ Semaine du [date de début] au [date de fin]
 
 Tâches Accomplies:
 1. Mathéo - Ajoute d'un fonction qui assombrit la texture sur chaque hexagone en fonction de sa hauteur.
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
-3. ...
+2. Nidhal - calcul du score pour les differents District et en prenant en compte la multiplication des places 
+3. Bilal - Ajout classes de bases pour la gui et affichage d'une grille déplacable avec ces tuiles
+4. Nerval - Finaliser la logique en rapport a la classe Player
 
 Avancements Individuels:
 1. Mathéo:
@@ -13,17 +14,22 @@ Avancements Individuels:
    - Problèmes rencontrés : difficulté pour créer une fonction qui assombrit la texture + difficulté pour trouver les bonnes valeurs.
    - Suggestions pour l'amélioration : ajouter plus de détail sur les héxagones selon leurs nature
 
-2. [Nom du membre de l'équipe]:
-   - Tâche accomplie : [Description brève]
-   - Problèmes rencontrés : [le cas échéant]
-   - Suggestions pour l'amélioration : [le cas échéant]
+2. Nidhal:
+   - Tâche accomplie : calcul du score pour les differents District et en prenant en compte la multiplication des places
+   - Problèmes rencontrés : difficulté pour le calcul de score des habitations car si on parcours à chaque fois les voisins et les voisins des voisins on peut tomber sur une bouvle à l'infini 
+   - Suggestions pour l'amélioration : rajouter un attribut visited pour marquer les hexagones si ils ont été visités
 
-3. ...
-
+3. Bilal:
+   - Tâche accomplie : affichage du jeu et conversion des coordonnées de jeu en position pixel pour le faire. La grille est aussi déplacable à la souris.
+   - Problèmes rencontrés : apprendre à utiliser scrollPane et savoir quel approche pour réaliser cet effet. 
+   - Suggestions pour l'amélioration : pouvoir poser les tuiles sur le plateau de jeu
+4. Nerval
+    -Tâche accomplie: la logique en rapport avec l'obtention de cube: ecrit les fonctions que nous utisseront dans la gestion du jeu global pour que les joueurs recoivent des cubes en fonction de leurs placement ainsi que en fonction du temps de jeu
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - Faire des spéciation pour chaque type d'héxagones.
-2. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
-3. ...
+2. Nidhal - implementer les mouselistener et si ils ont terminer la vue , faire la vue du tableau des tuiles et l'ajoute graphique des tuiles sur la map .
+3. Bilal - terminer l'affichage de la grille de jeu
+4. Nerval - Creation de la vue du chantier(la pioche)
 
 Problèmes Rencontrés:
 1. [Problème 1] - Description brève.

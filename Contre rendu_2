@@ -1,4 +1,4 @@
-Compte Rendu Hebdomadaire - Projet Akropolis en Java
+.Compte Rendu Hebdomadaire - Projet Akropolis en Java
 
 Semaine du 11/02/2024
 
@@ -8,6 +8,7 @@ Tâches Accomplies:
 3. Bilal - Ajout de JUnit avec quelques tests unitaires. Fin de la méthode addTile avec tests fournis. Simplification et réecriture de logique de Grid.
 4. Nerval - Debut de l'implementation de la logique concernant la gestion du chantier.
 Avancements Individuels:
+5.rayene - creation du menu et configuration des boutons start et quitter 
 1. Mathéo:
    - Tâche accomplie : Début de la vue du Board, création de la classe BoardView, MainView etc, map d'héxagones, début d'idée pour la 3d.
    - Problèmes rencontrés : simulation de la 3d assez compliquée, qql test mais pas très concluant.
@@ -26,12 +27,14 @@ Avancements Individuels:
     - Problèmes rencontrés : La supperposition était galère avec la référence et trouver la bonne manière de gérer la bonne représentation.
 4. Nerval :
     - Tâche accomplie : Ajout d'une methode qui perrmet de gerer le choix de tuile d'un joueur dans le chantier
+5.Rayene :
+    -Tache accomplie: creation d'un menu pour le jeu avec deux bouton start et quitter qui permette de commencer la partie ou fermer la fenetre 
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - continuer la vue du Board, finir la 3d, commencer la vue des joueurs, et des ressources.
 2. Moussa - terminer la logique des tours , terminer le calcul de score avec le bonus, implementer les mouselistner 
 3. Bilal - s'occuper d'avoir une logique d'affichage solide pour afficher chaque tuiles (création de classes séparés)
 4. Nerval - creer le chnatier et implementer le renouvelement le cube.
-
+5.rayene : réparer son ordinateur portable le plus tot possible et puis continuer a travailler sur le menu pour ajouter d'autre option telle mettre les regles du jeux 
 Problèmes Rencontrés:
 1. Mathéo - Difficulté pour bien dessiner la map d'hexagone, mais grâce à l'aide de l'équipe, j'ai pu trouver une solution.
 2. Nidhal - comprendre les directions axiales.
