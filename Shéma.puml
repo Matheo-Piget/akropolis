@@ -341,7 +341,7 @@ package view.main.states <<Node>>{
 }
 
 package view.main <<Node>>{
-    class App extends JFrame{
+    class App {
         - int width
         - int height
         - JPanel screen
