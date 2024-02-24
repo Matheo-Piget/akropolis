@@ -52,7 +52,9 @@ package model <<Node>>{
         + getTableTiles(): List<Tile>
         + getCurrentPlayer(): Player
         + getStackTiles(): StackTiles
+        ==
         + setCurrentPlayer(Player currentPlayer): void
+        ==
         + addPlayer(Player player): void
         - getNumberOfPlayers(): int
         - switchSizePlayers(): int

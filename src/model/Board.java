@@ -32,6 +32,10 @@ public class Board {
         return grid.addTile(tiles);
     }
 
+    /**
+     * Returns the score of the game.
+     * @return the score of the game.
+     */
     public int getScore() {
         return grid.calculateScore();
     }

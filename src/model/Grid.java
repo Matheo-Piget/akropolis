@@ -390,6 +390,11 @@ public class Grid {
         return tophexagons;
     }
 
+    /**
+     * Get the top Place hexagons of the grid
+     * @param s
+     * @return the top Place hexagons of the grid
+     */
     public ArrayList<Place> placeDeTypeS(String s){
         ArrayList<Place> topPlaceTypeS = new ArrayList<>();
         for (Hexagon hexagon : getTopHexagons()) {
@@ -401,6 +406,12 @@ public class Grid {
         }
         return topPlaceTypeS;
     }
+
+    /**
+     * Get the number of stars of the places
+     * @param place the places to get the number of stars
+     * @return the number of stars of the places
+     */
     public int nbetoile(ArrayList<Place> place){
         int nb =0;
         for (Place p : place) {
@@ -409,6 +420,10 @@ public class Grid {
         return nb;
     }
 
+    /**
+     * Calculate the score of the grid
+     * @return the score of the grid
+     */
     public int calculateScore( ) {
         int totalScore = 0;
         int buildingscore=0;
@@ -441,11 +456,21 @@ public class Grid {
         return totalScore+lastbuildingS;
     }
 
+    /**
+     * Calculate the score of the garden
+     * @param hexagon the hexagon to calculate the score
+     * @return the score of the garden
+     */
     private int calculateGardenScore(Hexagon hexagon) {
         int nb = nbetoile(placeDeTypeS("Garden Place"));
         return hexagon.getElevation()*nb;
     }
 
+    /**
+     * Calculate the score of the barrack
+     * @param hexagon the hexagon to calculate the score
+     * @return the score of the barrack
+     */
     private int calculateBarrackScore(Hexagon hexagon) {
         int nb = nbetoile(placeDeTypeS("Barrack Place"));
         return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation()*nb: 0;
@@ -460,6 +485,12 @@ public class Grid {
         }
         return adjacentBuildingScore;
     }*/
+
+    /**
+     * Get the building neighbors of the hexagon
+     * @param hexagon the hexagon to get the building neighbors
+     * @return the building neighbors of the hexagon
+     */
     private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon){
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
         for (Hexagon neighbor : hexagon.getNeighbors()) {
@@ -469,7 +500,12 @@ public class Grid {
         }
         return buildingNeighbors;
     }
-    
+
+    /**
+     * Calculate the score of the building
+     * @param hexagon the hexagon to calculate the score
+     * @return the score of the building
+     */
     private int calculateBuildingScore(Hexagon hexagon) {
         ArrayList<Hexagon> buildingNeighbors = BuildingNeighbors(hexagon);
         boolean visited = false;
@@ -479,11 +515,21 @@ public class Grid {
         return 0;
     }
 
+    /**
+     * Calculate the score of the temple
+     * @param hexagon the hexagon to calculate the score
+     * @return the score of the temple
+     */
     private int calculateTempleScore(Hexagon hexagon) {
         int nb = nbetoile(placeDeTypeS("Temple Place"));
         return hexagonIsSurrounded(hexagon) ? hexagon.getElevation()*nb : 0;
     }
 
+    /**
+     * Calculate the score of the market
+     * @param hexagon the hexagon to calculate the score
+     * @return the score of the market
+     */
     private int calculateMarketScore(Hexagon hexagon) {
         int nb = nbetoile(placeDeTypeS("Market Place"));
         for (Hexagon neighbor : hexagon.getNeighbors()) {
@@ -494,6 +540,11 @@ public class Grid {
         return 1*nb;
     }
 
+    /**
+     * Calculate the score of the place
+     * @param place the place to calculate the score
+     * @return the score of the place
+     */
     private int calculatePlaceScore(Place place) {
         return place.getStars() * place.getElevation();
     }
