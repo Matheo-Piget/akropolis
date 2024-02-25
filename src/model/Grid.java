@@ -476,25 +476,16 @@ public class Grid {
         return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation()*nb: 0;
     }
 
-    /*private int calculateBuildingScore(Hexagon hexagon) {
-        int adjacentBuildingScore = 0;
-        for (Hexagon neighbor : hexagon.getNeighbors()) {
-            if (neighbor.getType().equals("Building")) {
-                adjacentBuildingScore = Math.max(adjacentBuildingScore, neighbor.getElevation());
-            }
-        }
-        return adjacentBuildingScore;
-    }*/
-
+    
     /**
      * Get the building neighbors of the hexagon
      * @param hexagon the hexagon to get the building neighbors
      * @return the building neighbors of the hexagon
      */
-    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon){
+    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ //pour avoir les voisins de type building quin'ont pas été visité
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
         for (Hexagon neighbor : hexagon.getNeighbors()) {
-            if (neighbor.getType().equals("Building")) {
+            if (neighbor.getType().equals("Building")&&!visitedHexagons.contains(neighbor)) {
                 buildingNeighbors.add(neighbor);
             }
         }
@@ -507,13 +498,19 @@ public class Grid {
      * @return the score of the building
      */
     private int calculateBuildingScore(Hexagon hexagon) {
-        ArrayList<Hexagon> buildingNeighbors = BuildingNeighbors(hexagon);
-        boolean visited = false;
-        while (visited) {
-            // à faire Ce soir ; systeme de marquage pour calculer le score du plus grand nombre d'habitation collé
-        }
-        return 0;
+        return visitBuildingHex(hexagon , new ArrayList<Hexagon>());
     }
+    public int visitBuildingHex(Hexagon hexagone , ArrayList<Hexagon> visitedHexagone){
+        if (hexagone.getType().equals("Building")&& !visitedHexagone.contains(hexagone)) {
+            visitedHexagone.add(hexagone); // on ajoute cette hexagone aux hexagones parcourus
+            int score =1; // on compte 1 point de cette hexagone et pour chaque hexagone 
+            for (Hexagon neighbor : BuildingNeighbors(hexagone ,visitedHexagone)) { // on parcours ses voisins qui n'ont pas été visité
+                score += visitBuildingHex(neighbor ,visitedHexagone); // on appel recursivement la fonction pour qu'elle parcours les voisins des voisins de cette hexagone en ajoutant le nombre des points qui ont été ajouté 
+            }
+            return score;// retourn le socre 
+        }
+        return 0 ; // on retourn 0 si ca été deja visité ou c'est pas du type buildings
+    } 
 
     /**
      * Calculate the score of the temple
@@ -545,7 +542,5 @@ public class Grid {
      * @param place the place to calculate the score
      * @return the score of the place
      */
-    private int calculatePlaceScore(Place place) {
-        return place.getStars() * place.getElevation();
-    }
+    
 }
