@@ -1,13 +1,13 @@
 package view;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
 
 public class ScrollableGridView extends JScrollPane {
 
@@ -20,49 +20,43 @@ public class ScrollableGridView extends JScrollPane {
         // Remove the border of the scroll pane
         setBorder(null);
         // And the bar
-        setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Customize the bar appearance
-        getVerticalScrollBar().setUnitIncrement(16);
-        getHorizontalScrollBar().setUnitIncrement(16);
-        // Create a custom UI that doesn't paint the track and buttons
-        BasicScrollBarUI customUI = new BasicScrollBarUI() {
+        // Add a mouse adapter to handle right-click dragging
+        MouseAdapter ma = new MouseAdapter() {
+            private Point origin;
+
             @Override
-            protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-                // Don't paint anything
+            public void mousePressed(MouseEvent e) {
+                origin = new Point(e.getPoint());
             }
 
             @Override
-            protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-                // Paint the thumb as usual
-                super.paintThumb(g, c, thumbBounds);
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    origin = null;
+                }
             }
 
             @Override
-            protected JButton createDecreaseButton(int orientation) {
-                // Create an invisible button
-                return createInvisibleButton();
-            }
+            public void mouseDragged(MouseEvent e) {
+                if (origin != null && SwingUtilities.isRightMouseButton(e)) {
+                    JScrollBar horizontalScrollBar = getHorizontalScrollBar();
+                    JScrollBar verticalScrollBar = getVerticalScrollBar();
 
-            @Override
-            protected JButton createIncreaseButton(int orientation) {
-                // Create an invisible button
-                return createInvisibleButton();
-            }
+                    int deltaX = origin.x - e.getX();
+                    int deltaY = origin.y - e.getY();
 
-            private JButton createInvisibleButton() {
-                JButton button = new JButton();
-                button.setPreferredSize(new Dimension(0, 0));
-                button.setMinimumSize(new Dimension(0, 0));
-                button.setMaximumSize(new Dimension(0, 0));
-                return button;
+                    horizontalScrollBar.setValue(horizontalScrollBar.getValue() + deltaX);
+                    verticalScrollBar.setValue(verticalScrollBar.getValue() + deltaY);
+
+                }
             }
         };
 
-        // Set the custom UI to the scroll bars
-        getVerticalScrollBar().setUI(customUI);
-        getHorizontalScrollBar().setUI(customUI);
+        grid.addMouseListener(ma);
+        grid.addMouseMotionListener(ma);
 
         // Set the preferred size of the scrollable area
         setPreferredSize(new Dimension(1500, 844));
