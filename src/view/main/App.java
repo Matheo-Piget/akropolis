@@ -7,7 +7,7 @@ import view.main.states.AppState;
 
 public class App extends JFrame{
     private final int WIDTH = 1500;
-    private final int HEIGHT = 800;
+    private final int HEIGHT = 844;
 
     private JPanel screen = new JPanel();
     private static final App INSTANCE = new App();

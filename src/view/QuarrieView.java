@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 
 public class QuarrieView extends HexagonView {
+    private BasicStroke stroke = new BasicStroke(size / 25);
     
     public QuarrieView(int x, int y, int z) {
         super(x, y, z, java.awt.Color.GRAY);
@@ -26,7 +27,7 @@ public class QuarrieView extends HexagonView {
             g2d.setColor(java.awt.Color.BLACK);
         }
 
-        g2d.setStroke(new BasicStroke(size / 25));
+        g2d.setStroke(stroke);
         g2d.draw(hexagon);
         g2d.dispose();
     }

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
+import java.awt.Dimension;
 
 /**
  * Represents a single tile in the game.
@@ -23,9 +24,10 @@ public class TileView extends JComponent {
     private Timer glowTimer;
 
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
+        setOpaque(false);
         int hexWidth = HexagonView.size;
         int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
-        this.setSize(3 * hexWidth, hexHeight * 2);
+        this.setPreferredSize(new Dimension(3 * hexWidth, hexHeight * 2));
         // Position the first hexagon at the top
         hex1.setLocation(hexWidth, 0);
         // Position the second and third hexagons at the bottom left and right corners
