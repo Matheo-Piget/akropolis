@@ -12,11 +12,17 @@ Mathéo :
         7. Finalement, elle retourne une nouvelle texture qui utilise `darkImg` comme image et qui a le même rectangle d'ancrage que la texture originale.
 
         En résumé, cette méthode assombrit chaque pixel d'une texture donnée un certain nombre de fois, puis retourne la nouvelle texture assombrie.
-        
+Nidhal :
     -Terminer le score pour chaque type de district :
-        1.ajoute de la fonction placeDeTypeS pour avoir les places de chaque type de district
+        1.ajoute de la fonction placeDeTypeS pour avoir  tout les places (qui sont vivsibles ) de chaque type de district
         2.ajoute de la fonction nbetoile pour savoir le nombre des etoiles des ces places et les multiplier par le score de chaque hexagone de type district(en respecant les regles) qui sera ajouté au score totale (qui sera calculer plus tard en parcourant chaque hexagone)
-        
+    - par exemple le calcul du score le plus dure en détail: 
+        Début du processus : Pour chaque hexagone de type "Building", on démarre le calcul du score de connectivité.
+            Appel de méthode : calculateBuildingScore est appelé avec l'hexagone actuel, lançant la procédure.
+            Marquage des visités : À l'intérieur de visitBuildingHex, si l'hexagone n'a pas encore été visité, il est ajouté à la liste de marquage pour prévenir des revisites.
+            Calcul récursif : Le score est incrémenté pour l'hexagone actuel. Ensuite, visitBuildingHex est appelée récursivement pour tous ses voisins de type "Building", qui ne sont pas encore visités, incluant les voisins des voisins, et ainsi de suite.
+            Comparaison et conservation du score : Après avoir calculé le score pour un cluster, si ce score est supérieur au score le plus élevé précédemment enregistré (lastbuildingS), il devient le nouveau score le plus élevé.
+            Résultat final : Le score du plus grand groupe connecté de bâtiments est ajouté au score total à la fin du parcours de la grille final on garde et rajoute le plus grand à la fin 
 Bilal :
     Création des classes GridView, HexagoneView avec ces sous composantes. QuarrieView, PlaceView et DistrictView héritent tous de la classe abstraite HexagonView.
     HexagonView extend de Polygon et permet simplement de tracer les hexagons en définissant ces points. La méthode abstraite paint que toutes les classes enfants devront...
