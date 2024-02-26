@@ -19,12 +19,12 @@ public class GridView extends JPanel {
     private ArrayList<HexagonView> hexagons = new ArrayList<HexagonView>(); // List of hexagons to be displayed
 
     public GridView(int maxHexagons) {
-        setPreferredSize(new Dimension(maxHexagons * HexagonView.size, maxHexagons * HexagonView.size));
+        setPreferredSize(new Dimension(maxHexagons * HexagonView.size * 2, maxHexagons * HexagonView.size * 2));
         this.setLayout(null); // We will manually set the position of the hexagons
-        xOffset = (int) (maxHexagons * HexagonView.size / 2 - HexagonView.size); // Offset for centering the (0, 0)
-                                                                                 // coordinate
-        yOffset = (int) (maxHexagons * HexagonView.size / 2 - HexagonView.size); // Offset for centering the (0, 0)
-                                                                                 // coordinate
+        xOffset = (int) (maxHexagons * HexagonView.size - HexagonView.size); // Offset for centering the (0, 0)
+                                                                             // coordinate
+        yOffset = (int) (maxHexagons * HexagonView.size - HexagonView.size); // Offset for centering the (0, 0)
+                                                                             // coordinate
     }
 
     public Point2D convertGridPositionToPixelPosition(Point3D gridPosition) {
@@ -53,10 +53,9 @@ public class GridView extends JPanel {
             System.setProperty("sun.java2d.opengl", "true");
             ScrollableGridView scrollableGridView = new ScrollableGridView(gridView);
             // Add some hexagons to the grid view
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    scrollableGridView.addHexagon(new QuarrieView(i, j, 1));
-                }
+            for (int i = 0; i < 60; i++) {
+                // Testing the limits of the grid
+                gridView.addHexagon(new QuarrieView(i, 0, 1));
             }
             JFrame frame = new JFrame();
             frame.getContentPane().setBackground(java.awt.Color.BLACK);
