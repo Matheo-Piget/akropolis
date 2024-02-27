@@ -19,12 +19,12 @@ public class GridView extends JPanel {
     private ArrayList<HexagonView> hexagons = new ArrayList<HexagonView>(); // List of hexagons to be displayed
 
     public GridView(int maxHexagons) {
-        setPreferredSize(new Dimension(maxHexagons * HexagonView.size * 2, maxHexagons * HexagonView.size * 2));
+        int panelWidth = (int) (maxHexagons * 3.0 / 2 * HexagonView.size);
+        int panelHeight = (int) (maxHexagons * Math.sqrt(3) * HexagonView.size);
+        setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setLayout(null); // We will manually set the position of the hexagons
-        xOffset = (int) (maxHexagons * HexagonView.size - HexagonView.size); // Offset for centering the (0, 0)
-                                                                             // coordinate
-        yOffset = (int) (maxHexagons * HexagonView.size - HexagonView.size); // Offset for centering the (0, 0)
-                                                                             // coordinate
+        xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
+        yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
     }
 
     public Point2D convertGridPositionToPixelPosition(Point3D gridPosition) {

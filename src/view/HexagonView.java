@@ -27,7 +27,7 @@ public abstract class HexagonView extends JComponent {
         this.setSize(size, size);
         // Calculate the coordinates of the six points of the hexagon
         this.position = new Point3D(x, y, z);
-        int center = size / 2;
+        int center = size / 2 - 1; // Fuck you
         for (int i = 0; i < 6; i++) {
             int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
             int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
@@ -45,14 +45,28 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+
         };
         this.addMouseListener(ma);
+        this.addMouseMotionListener(ma);
     }
 
     public HexagonView(int x, int y, int z, BufferedImage img){
         this.setSize(size, size);
         this.position = new Point3D(x, y, z);
-        int center = size / 2;
+        int center = size / 2 - 1; // Dumb rounding
         for (int i = 0; i < 6; i++) {
             int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
             int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
@@ -71,14 +85,28 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+
         };
         this.addMouseListener(ma);
+        this.addMouseMotionListener(ma);
     }
 
     public HexagonView(int x, int y, int z, Color color) {
         this.setSize(size, size);
         this.position = new Point3D(x, y, z);
-        int center = (size / 2) - 1;
+        int center = size / 2 - 1; // Ligma balls
         for (int i = 0; i < 6; i++) {
             int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
             int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
