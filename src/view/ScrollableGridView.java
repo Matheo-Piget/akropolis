@@ -61,6 +61,7 @@ public class ScrollableGridView extends JScrollPane {
         // Set the preferred size of the scrollable area
         setPreferredSize(new Dimension(1500, 844));
     }
+    
 
     @Override
     public void addNotify() {

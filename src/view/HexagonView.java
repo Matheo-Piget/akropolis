@@ -9,7 +9,9 @@ import javax.swing.JComponent;
 import util.Point3D;
 import java.awt.Point;
 import java.util.ArrayList;
-
+import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
+import java.awt.event.MouseAdapter;
 /**
  * Represents an hexagon on the game grid.
  */
@@ -31,7 +33,7 @@ public abstract class HexagonView extends JComponent {
             int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
             hexagon.addPoint(xval, yval);
         }
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
+        MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 isHovered = true;
@@ -43,7 +45,8 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
-        });
+        };
+        this.addMouseListener(ma);
     }
 
     public HexagonView(int x, int y, int z, BufferedImage img){
@@ -56,26 +59,7 @@ public abstract class HexagonView extends JComponent {
             hexagon.addPoint(xval, yval);
         }
         this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
-        // Add the mouse motion listener to change the color of the hexagon when hovered
-        this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            @Override
-            public void mouseMoved(java.awt.event.MouseEvent e) {
-                isHovered = contains(e.getX(), e.getY());
-                repaint();
-            }
-        });
-    }
-
-    public HexagonView(int x, int y, int z, Color color) {
-        this.setSize(size, size);
-        this.position = new Point3D(x, y, z);
-        int center = (size / 2) - 1;
-        for (int i = 0; i < 6; i++) {
-            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
-            hexagon.addPoint(xval, yval);
-        }
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
+        MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 isHovered = true;
@@ -87,7 +71,47 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
-        });
+        };
+        this.addMouseListener(ma);
+    }
+
+    public HexagonView(int x, int y, int z, Color color) {
+        this.setSize(size, size);
+        this.position = new Point3D(x, y, z);
+        int center = (size / 2) - 1;
+        for (int i = 0; i < 6; i++) {
+            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
+            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
+            hexagon.addPoint(xval, yval);
+        }
+        MouseAdapter ma = new MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                isHovered = true;
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                isHovered = false;
+                repaint();
+            }
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent e) {
+                // Do nothing
+            }
+
+        };
+        this.addMouseListener(ma);
+        this.addMouseMotionListener(ma);
 
         // Create a BufferedImage and fill it with the color
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -96,6 +120,18 @@ public abstract class HexagonView extends JComponent {
         g.fillRect(0, 0, 1, 1);
         g.dispose();
         this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, size, size));
+    }
+
+    @Override
+    protected void processMouseEvent(MouseEvent e) {
+        super.processMouseEvent(e);
+        getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
+    }
+
+    @Override
+    protected void processMouseMotionEvent(MouseEvent e) {
+        super.processMouseMotionEvent(e);
+        getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
     }
 
     public Polygon getPolygon() {
