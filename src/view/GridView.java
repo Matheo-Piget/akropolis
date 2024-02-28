@@ -55,7 +55,9 @@ public class GridView extends JPanel {
             // Add some hexagons to the grid view
             for (int i = 0; i < 60; i++) {
                 // Testing the limits of the grid
-                gridView.addHexagon(new QuarrieView(i, 0, 1));
+                for(int j = 0; j < 60; j++) {
+                    gridView.addHexagon(new QuarrieView(i, j, 1));
+                }
             }
             JFrame frame = new JFrame();
             frame.getContentPane().setBackground(java.awt.Color.BLACK);

@@ -25,6 +25,7 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z) {
         this.setSize(size, size);
+        setOpaque(false);
         // Calculate the coordinates of the six points of the hexagon
         this.position = new Point3D(x, y, z);
         int center = size / 2 - 1; // Fuck you
@@ -176,6 +177,10 @@ public abstract class HexagonView extends JComponent {
             points.add(new Point(hexagon.xpoints[i], hexagon.ypoints[i]));
         }
         return points;
+    }
+
+    public void setHovered(boolean hovered) {
+        isHovered = hovered;
     }
 
     public Polygon setPolygon(Polygon hexagon) {

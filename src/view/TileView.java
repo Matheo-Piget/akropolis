@@ -18,6 +18,7 @@ import java.awt.Dimension;
 public class TileView extends JComponent {
 
     private boolean isHovered = false;
+    private HexagonView hex1, hex2, hex3;
     private boolean isClicked = false;
     private float glow = 0.0f;
     private boolean increasing = true;
@@ -25,20 +26,16 @@ public class TileView extends JComponent {
 
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         setOpaque(false);
+        this.hex1 = hex1;
+        this.hex2 = hex2;
+        this.hex3 = hex3;
         int hexWidth = HexagonView.size;
         int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
-        this.setPreferredSize(new Dimension(3 * hexWidth, hexHeight * 2));
-        // Position the first hexagon at the top
-        hex1.setLocation(hexWidth, 0);
-        // Position the second and third hexagons at the bottom left and right corners
-        // of the first hexagon
-        hex2.setLocation((int) (hexWidth * 2 - Math.sqrt(3) * hexWidth), hexHeight / 2);
-        hex3.setLocation((int) (Math.sqrt(3) * hexWidth), hexHeight / 2);
+        this.setPreferredSize(new Dimension((int) (Math.sqrt(3) * hexWidth), hexHeight));
         add(hex1);
         add(hex2);
         add(hex3);
-        // Remove the listeners from the hexagons so that they don't interfere with the
-        // tile
+        // Remove the mouse listener from the hexagons
         hex1.removeMouseListener(hex1.getMouseListeners()[0]);
         hex2.removeMouseListener(hex2.getMouseListeners()[0]);
         hex3.removeMouseListener(hex3.getMouseListeners()[0]);
@@ -83,6 +80,34 @@ public class TileView extends JComponent {
         this.repaint();
     }
 
+    @Override
+    public void doLayout() {
+        super.doLayout();
+
+        int hexWidth = HexagonView.size;
+        int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
+
+        // Calculate the total width and height of the hexagons
+        int totalWidth = 3 * hexWidth;
+        int totalHeight = hexHeight * 2;
+
+        // Calculate the center of the TileView
+        int centerX = this.getWidth() / 2;
+        int centerY = this.getHeight() / 2;
+
+        // Calculate the top left corner of the area where the hexagons should be placed
+        int startX = centerX - totalWidth / 2;
+        int startY = centerY - totalHeight / 2;
+
+        // Position the first hexagon at the top
+        hex1.setLocation(startX + hexWidth, startY);
+
+        // Position the second and third hexagons at the bottom left and right corners
+        // of the first hexagon
+        hex2.setLocation(startX + (int) (hexWidth * 2 - Math.sqrt(3) * hexWidth), startY + hexHeight / 2);
+        hex3.setLocation(startX + (int) (Math.sqrt(3) * hexWidth), startY + hexHeight / 2);
+    }
+
     public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         removeAll();
         add(hex1);
@@ -102,11 +127,11 @@ public class TileView extends JComponent {
             g2.setStroke(new BasicStroke(1));
 
             // Draw a dark border around this component which is a rectangle
-            g2.setColor(new Color(73,216,230));
+            g2.setColor(new Color(73, 216, 230));
             g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
             // Draw the glow
-            g2.setColor(new Color(73/255f, 216/255f, 230/255f, glow));
+            g2.setColor(new Color(73 / 255f, 216 / 255f, 230 / 255f, glow));
             g2.setStroke(new BasicStroke(10));
             g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
             g2.dispose();

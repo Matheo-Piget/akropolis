@@ -1,15 +1,17 @@
 package view;
 
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import javax.swing.JFrame;
+
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 
 /**
  * Panel for displaying the game board.
  * It takes care of diplaying the scrolling board and the site to make the game playable.
  */
-public class BoardView extends JPanel {
+public class BoardView extends JPanel
+{
 
     private ScrollableGridView gridView;
     private SiteView siteView;
@@ -21,10 +23,12 @@ public class BoardView extends JPanel {
      */
     public BoardView(int maxHexagons, int capacity) {
         setLayout(new BorderLayout());
+        setOpaque(true);
         gridView = new ScrollableGridView(maxHexagons);
+        setSize(gridView.getPreferredSize());
         siteView = new SiteView(capacity);
         add(gridView, BorderLayout.CENTER);
-        add(siteView, BorderLayout.LINE_START);
+        add(siteView, BorderLayout.WEST);
     }
 
     public ScrollableGridView getGridView() {
@@ -37,9 +41,10 @@ public class BoardView extends JPanel {
 
     // For testing purposes
     public static void main(String[] args) {
-        BoardView boardView = new BoardView(40, 4);
+        System.setProperty("sun.java2d.opengl", "true");
+        BoardView boardView = new BoardView(40, 5);
         ArrayList<TileView> tiles = new ArrayList<TileView>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             tiles.add(new TileView(new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1)));
         }
         boardView.getSiteView().setTilesInSite(tiles);
@@ -52,7 +57,7 @@ public class BoardView extends JPanel {
         boardView.setVisible(true);
         JFrame frame = new JFrame();
         frame.add(boardView);
-        frame.pack();
+        frame.setSize(boardView.getSize());
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

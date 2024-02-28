@@ -3,9 +3,6 @@ package view;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import java.awt.Graphics;
 
 /**
@@ -15,22 +12,14 @@ import java.awt.Graphics;
  */
 public class SiteView extends JPanel {
     private int capacity;
-    private BufferedImage background;
 
     public SiteView(int capacity) {
+        setOpaque(true);
         setLayout(new GridLayout(capacity, 1));
         // It needs to take slighly less space than the grid view which is 1500x844
         // To have a nice padding on the top and bottom
-        setPreferredSize(new java.awt.Dimension(HexagonView.WIDTH * 2, 800));
-        setOpaque(false);
+        setPreferredSize(new java.awt.Dimension(200, 800));
         this.capacity = capacity;
-        // Load the background image
-        try {
-            background = ImageIO.read(getClass().getResourceAsStream("/siteBackground.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void setTilesInSite(ArrayList<TileView> tiles) {
@@ -49,21 +38,14 @@ public class SiteView extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        double componentRatio = (double) getWidth() / getHeight();
-        double imageRatio = (double) background.getWidth() / background.getHeight();
-        int newWidth, newHeight;
-
-        if (componentRatio > imageRatio) {
-            newHeight = getHeight();
-            newWidth = (int) (newHeight * imageRatio);
-        } else {
-            newWidth = getWidth();
-            newHeight = (int) (newWidth / imageRatio);
-        }
-
-        int x = (getWidth() - newWidth) / 2;
-        int y = (getHeight() - newHeight) / 2;
-
-        g.drawImage(background, x, y, newWidth, newHeight, this);
+        // Fill the panel with a gray color
+        g.setColor(new java.awt.Color(0, 0, 0, 100));
+        g.fillRect(0, 0, getWidth(), getHeight());
+        // Then draw the border
+        g.setColor(new java.awt.Color(255, 255, 255, 100));
+        System.out.println(getWidth());
+        System.out.println(getHeight());
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        System.out.println("Painted site");
     }
 }

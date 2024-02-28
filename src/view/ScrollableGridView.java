@@ -59,7 +59,7 @@ public class ScrollableGridView extends JScrollPane {
         grid.addMouseMotionListener(ma);
 
         // Set the preferred size of the scrollable area
-        setPreferredSize(new Dimension(1500, 844));
+        setPreferredSize(new Dimension(1300, 844));
     }
     
 
