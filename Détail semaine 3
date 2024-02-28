@@ -25,4 +25,20 @@ Nidhal :
             Résultat final : Le score du plus grand groupe connecté de bâtiments est ajouté au score total à la fin du parcours de la grille final on garde et rajoute le plus grand à la fin 
 Bilal :
     Création des classes GridView, HexagoneView avec ces sous composantes. QuarrieView, PlaceView et DistrictView héritent tous de la classe abstraite HexagonView.
-    HexagonView extend de Polygon et permet simplement de tracer les hexagons en définissant ces points. La méthode abstraite paint que toutes les classes enfants devront...
+    HexagonView extend de Polygon et permet simplement de tracer les hexagons en définissant ces points. La méthode abstraite paint que toutes les classes enfants devront implémenter pour
+    créer l'objet graphique et l'afficher (la méthode fill de java Graphics aide beaucoup). Il y a aussi un antialiasing même si pas incroyable (les bords des hexagons sont toujours un peu "jaggy").
+    GridView itère pour paint sur chaque poly stocké dans une ArrayList et les dessinent en reliant donc les points prédéfinis. 
+    Notons que le passage à des coordonnées axiale est EXTREMENT pratique puisque l'on a besoin simplement d'une petite formule pour convertir les positions de la grille de jeu en pixel.
+    La formule est la suivante pour des hexagones plat en haut (la formule varie pour l'autre forme) :
+    int pixelX = (int) (size * 3.0 / 2 * q) + xOffset;
+    int pixelY = (int) (size * Math.sqrt(3) * (r + q / 2.0)) + yOffset;
+    L'offset est simplement le centre de la grille de jeu (on divise par 2 la taille du Panel pour l'obtenir).
+    Le tracage de l'hexagone se fait en faisant un peu de maths graĉe à cette boucle :
+    for (int i = 0; i < 6; i++) {
+            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
+            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
+            hexagon.addPoint(xval, yval);
+        }
+    Remarquons qu'on utilise la formule de conversion des coordonnées polaires en coordonnées cartésiennes : x = r * cos(theta) et y = r * sin(theta). 
+    Ici, r est le rayon (la distance du centre de l'hexagone au point), qui est égal à center, et theta est l'angle, qui est i * 2 * Math.PI / 6. 
+    Comme il y a 2*PI radians dans un cercle complet et que l'hexagone a six points, chaque point est à 2 * Math.PI / 6 radians du précédent.
