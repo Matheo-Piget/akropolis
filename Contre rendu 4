@@ -21,7 +21,7 @@ Avancements Individuels:
     Tache accomplie : creation et configurations des boutons regles et credits pour faire en sorte d'afficher les regles du jeu et le credit 
     creation d'un JOptionPane avec des options personnalisées pour la sélection du nombre de joueurs 1,2,3,4 jouers apres avoir cliqué sur le bouton  demarer 
     Problèmes rencontrés: problème pour ajuster la taille de la fenetre par rapport a l'image des regles du jeu.
-2. Bilal :
+3. Bilal :
    - Tâche accomplie : Classe BoardView, correction performance rendu du JViewPort et différent problème de rendu en général merci Swing, les hexagones s'illuminent au passage de la souris...
    - Problèmes rencontrés : Swing avec l'horrible système d'évènement qui cause une latence astronimique. Le JViewPort qui fait n'importe quoi sur le rendu et aussi divers erreurs
                             d'inattentions de ma part.
