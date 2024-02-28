@@ -27,7 +27,7 @@ Avancements Individuels:
 4. Nerval
     -Tâche accomplie: la logique en rapport avec l'obtention de cube: ecrit les fonctions que nous utisseront dans la gestion du jeu global pour que les joueurs recoivent des cubes en fonction de leurs placement ainsi que en fonction du temps de jeu
 5.Rayene
-    - Tâche accomplie: creation d'un bouton regles pour afficher un JDialog ou il ya des images de regles du jeux 
+    - Tâche accomplie: creation d'un bouton regles pour afficher un JDialog ou il ya des images de regles du jeux , ajout du crédtis 
 Objectifs pour la Semaine Prochaine:
 1. Mathéo - Faire des spéciation pour chaque type d'héxagones.
 2. Nidhal - implementer les mouselistener et si ils ont terminer la vue , faire la vue du tableau des tuiles et l'ajoute graphique des tuiles sur la map .
