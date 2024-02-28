@@ -5,8 +5,8 @@ Semaine du [date de début] au [date de fin]
 Tâches Accomplies:
 1. Mathéo - Modification de la classe Game + début de logique + diagramme du projet ulm.
 2. Rayene - amelioration du menu et faire un sous menu players
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
-3. ...
+3. Bilal  - Avancement sur la classe pour l'affichage du board avec corrections de divers bugs.
+4. ...
 
 Avancements Individuels:
 1. Mathéo:
@@ -21,6 +21,11 @@ Avancements Individuels:
     Tache accomplie : creation et configurations des boutons regles et credits pour faire en sorte d'afficher les regles du jeu et le credit 
     creation d'un JOptionPane avec des options personnalisées pour la sélection du nombre de joueurs 1,2,3,4 jouers apres avoir cliqué sur le bouton  demarer 
     Problèmes rencontrés: problème pour ajuster la taille de la fenetre par rapport a l'image des regles du jeu.
+2. Bilal :
+   - Tâche accomplie : Classe BoardView, correction performance rendu du JViewPort et différent problème de rendu en général merci Swing, les hexagones s'illuminent au passage de la souris...
+   - Problèmes rencontrés : Swing avec l'horrible système d'évènement qui cause une latence astronimique. Le JViewPort qui fait n'importe quoi sur le rendu et aussi divers erreurs
+                            d'inattentions de ma part.
+   - Suggestions pour l'amélioration : Faire que le rendu d'illumination ne lag pas (plus facile à dire que à faire)
 3. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
@@ -34,7 +39,13 @@ Objectifs pour la Semaine Prochaine:
 3. ...
 
 Problèmes Rencontrés:
-1. [Problème 1] - Description brève.
+1. Plus jamais Swing de ma vie svp y a AUCUNE ressources recentes en ligne, que des forums de 2010 à tout casser sur des problèmes de GUI triviaux.
+Exemple concret : Je voulais faire en sorte que sur le JViewPort du ScrollPane il y ait le JPanel accrochée à sa gauche tout en laissant de l'espace et en étant semi transparent. 
+Lorsque j'ai essayé d'utiliser un JLayeredPane pour faire chevaucher mes éléments le JViewPort lag et alors carrément mon panel pour la pioche des tuiles ne s'affiche juste pas...
+J'ai juste abandonné l'idée car trop difficile visiblement pour Swing de gérer surtout la transparence c'est calamiteux. Il y avait aussi le fait que je voulais remplir la grille avec des
+contours des hexagons pour pas juste avoir un fond blanc qui brûle la retine. Tout va bien quand la grille est de petite taille mais plus la limite de taille augmente plus son temps de création aussi...
+Ainsi pour une grille qui admet 200 hexagons max sur la droite le nombre d'hexagon à créer dans le panel juste EXPLOSE surtout que Swing est excessivement lent en terme de création de JComponents.
+Le panel pouvait facilement prendre 3 MINUTES A CHARGER... Je n'avais pas envie de gérer le tout sur plusieurs threads pour la création (peut-être le ferais je).
 2. [Problème 2] - Description brève.
 3. ...
 
