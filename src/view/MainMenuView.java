@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -103,6 +104,33 @@ public class MainMenuView extends JPanel {
     private void startNewGame() {
         System.out.println("Nouvelle partie démarrée");
         // Logique pour démarrer le jeu
+        Object[] options = {"1 Joueur" , "2 Joueur" , "3 Joueur" , "4 Joueur"};
+        int choice = JOptionPane.showOptionDialog(this,
+                "Choisissez le nombre de joeurs pour la partie", 
+                "Nombre de Joueurs",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+            null,
+                options,
+                options[0]);
+
+        switch (choice){
+            case 0:
+                System.out.println("Partie démarrée avec 1 joueur");
+                break;
+            case 1:
+                System.out.println("Partie démarrée avec 2 joueur");
+                break;
+            case 2:
+                System.out.println("Partie démarrée avec 3 joueur");
+                break;
+            case 3:
+                System.out.println("Partie démarrée avec 4 joueur");
+                break;
+            default:
+                System.out.println("Aucun choix fait, partie non démarrée");
+                break;
+        }
     }
 
     private void showRulesPanel(){
