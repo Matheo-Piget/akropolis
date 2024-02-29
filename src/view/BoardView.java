@@ -41,7 +41,6 @@ public class BoardView extends JPanel
 
     // For testing purposes
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
         BoardView boardView = new BoardView(40, 5);
         ArrayList<TileView> tiles = new ArrayList<TileView>();
         for (int i = 0; i < 5; i++) {

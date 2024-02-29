@@ -47,10 +47,6 @@ public class GridView extends JPanel {
         return pixelPosition; 
     }
    
-    
-    
-    
-
     public void addHexagon(HexagonView hexagon) {
         // Find the position of the hexagon in pixels
         Point2D position = convertGridPositionToPixelPosition(hexagon.getPosition());
@@ -64,8 +60,6 @@ public class GridView extends JPanel {
         SwingUtilities.invokeLater(() -> {
             // This is just a test to see if the grid view works
             GridView gridView = new GridView(60);
-            // Activate hardware acceleration
-            System.setProperty("sun.java2d.opengl", "true");
             ScrollableGridView scrollableGridView = new ScrollableGridView(gridView);
             // Add some hexagons to the grid view
             for (int i = 0; i < 60; i++) {
