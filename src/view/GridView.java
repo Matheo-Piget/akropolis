@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import controller.GridMouseListener;
+
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import util.Point3D;
@@ -25,6 +28,8 @@ public class GridView extends JPanel {
         this.setLayout(null); // We will manually set the position of the hexagons
         xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
         yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
+
+        this.addMouseListener(new GridMouseListener(this));
     }
 
     public Point2D convertGridPositionToPixelPosition(Point3D gridPosition) {
@@ -35,6 +40,16 @@ public class GridView extends JPanel {
         int pixelY = (int) (size * Math.sqrt(3) * (r + q / 2.0)) + yOffset;
         return new Point2D.Double(pixelX, pixelY);
     }
+    
+    
+    public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
+        // 
+        return pixelPosition; 
+    }
+   
+    
+    
+    
 
     public void addHexagon(HexagonView hexagon) {
         // Find the position of the hexagon in pixels
