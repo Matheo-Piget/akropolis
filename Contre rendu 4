@@ -6,7 +6,7 @@ Tâches Accomplies:
 1. Mathéo - Modification de la classe Game + début de logique + diagramme du projet ulm.
 2. Rayene - amelioration du menu et faire un sous menu players
 3. Bilal  - Avancement sur la classe pour l'affichage du board avec corrections de divers bugs.
-4. ...
+4. Nidhal - Ajoute de la classe GridMouselistener pour avoir les coordonnés de la souris
 
 Avancements Individuels:
 1. Mathéo:
@@ -26,6 +26,11 @@ Avancements Individuels:
    - Problèmes rencontrés : Swing avec l'horrible système d'évènement qui cause une latence astronimique. Le JViewPort qui fait n'importe quoi sur le rendu et aussi divers erreurs
                             d'inattentions de ma part.
    - Suggestions pour l'amélioration : Faire que le rendu d'illumination ne lag pas (plus facile à dire que à faire)
+4. Nidhal :
+    - Tâche accomplie :avancement sur la logique de conversion des coordonnés de souris en pixel en coordonné de la grid
+    - Problèmes rencontrés : puisque on travaillais pas sur la meme tache , j'ai du revoir le code de la vue qui a été implementé pour comprendre la conversion vers le sens inverse
+    
+
 3. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
