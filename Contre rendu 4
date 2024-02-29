@@ -7,6 +7,7 @@ Tâches Accomplies:
 2. Rayene - amelioration du menu et faire un sous menu players
 3. Bilal  - Avancement sur la classe pour l'affichage du board avec corrections de divers bugs.
 4. Nidhal - Ajoute de la classe GridMouselistener pour avoir les coordonnés de la souris
+5- Nerval - Ajout de la view de la pioche.
 
 Avancements Individuels:
 1. Mathéo:
@@ -29,7 +30,8 @@ Avancements Individuels:
 4. Nidhal :
     - Tâche accomplie :avancement sur la logique de conversion des coordonnés de souris en pixel en coordonné de la grid
     - Problèmes rencontrés : puisque on travaillais pas sur la meme tache , j'ai du revoir le code de la vue qui a été implementé pour comprendre la conversion vers le sens inverse
-    
+5- Nerval
+ -Tâche accomplie: creation de la classe SiteView qui permet de creer la view de la pioche en fonction des tuile etatnt dans la liste des tuiles a afficher.
 
 3. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
