@@ -16,7 +16,8 @@ public class GridMouseListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         Point2D pixelPosition = new Point2D.Double(e.getX(), e.getY());
-        Point2D gridPosition = gridView.convertPixelPositionToGridPosition(pixelPosition);
+        System.out.println("Clic en coordonnées de pixel : " + pixelPosition);
+        //Point2D gridPosition = gridView.convertPixelPositionToGridPosition(pixelPosition);
         //System.out.println("Clic en coordonnées de grille : " + gridPosition);
     }
 }
