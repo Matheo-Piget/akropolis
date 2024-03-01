@@ -58,8 +58,10 @@ public class Board {
             }
         }
 
+        if (player.getResources() == 0) {
+            player.setSelectedTile(tableTiles.getFirst());
+        }
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
-        player.setSelectedTile(tableTiles.getFirst()); // For simplicity, let's say the player chooses the first tile on the table
         tableTiles.removeFirst(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
@@ -187,7 +189,6 @@ public class Board {
 
     /**
      * Checks if the player can choose a tile from the provided list based on their resources.
-     * @param site The list of tiles to choose from.
      * @param chosen The tile chosen by the player.
      * @return True if the player can choose the tile, false otherwise.
      */
