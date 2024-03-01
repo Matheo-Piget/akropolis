@@ -85,11 +85,14 @@ public class Grid {
             addHexagonsToGrid(tile, bellowHexagons);
         }
 
-        for (Hexagon hexagon : tile.hexagons) {
-            if(hexagon.getBelow() instanceof Quarrie){
-                player.setResources(player.getResources()+1);
+        if (canBePlaced && hasNeighbor && samehexagon <= 1){
+            for (Hexagon hexagon : tile.hexagons) {
+                if(hexagon.getBelow() instanceof Quarrie){
+                    player.setResources(player.getResources()+1);
+                }
             }
         }
+
 
         display();
         System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", samehexagon: " + samehexagon);
