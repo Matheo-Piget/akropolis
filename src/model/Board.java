@@ -13,7 +13,7 @@ import java.beans.PropertyChangeSupport;
 public class Board extends Model {
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
-    private final ArrayList<Tile> tableTiles; // The tiles on the table
+    private final Site site; // The tiles on the table
     private Player currentPlayer; // The current player
     private int manche = 0;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
@@ -28,11 +28,11 @@ public class Board extends Model {
             playerGridList.add(new Tuple<>(player, new Grid(player)));
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
-        tableTiles = new ArrayList<>(switchSizePlayers()); // Assuming 3 tiles on the table
+        site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
         // Initialize the list with the first three tiles from the stack
         for (int i = 0; i < switchSizePlayers(); i++) {
             if (!stackTiles.isEmpty()) {
-                tableTiles.add(stackTiles.pop());
+                site.add(stackTiles.pop());
             }
         }
         currentPlayer = players.get(0); // Set the current player to the first player
@@ -61,17 +61,17 @@ public class Board extends Model {
     public void startTurn(Player player) {
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
-            for (int i = tableTiles.size(); i < switchSizePlayers(); i++) {
+            for (int i = site.size(); i < switchSizePlayers(); i++) {
                 if (!stackTiles.isEmpty()) {
-                    tableTiles.add(stackTiles.pop());
+                    site.add(stackTiles.pop());
                 }
             }
         }
         if (player.getResources() == 0) {
-            player.setSelectedTile(tableTiles.get(0));
+            player.setSelectedTile(site.get(0));
         }
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
-        //tableTiles.remove(); // Remove the chosen tile from the table
+        //site.remove(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
             endTurn(player);
@@ -103,8 +103,8 @@ public class Board extends Model {
         return playerGridList.get(nextIndex).x;
     }
 
-    public List<Tile> getTableTiles() {
-        return tableTiles;
+    public Site getSite() {
+        return site;
     }
 
     public StackTiles getStackTiles() {
@@ -176,7 +176,7 @@ public class Board extends Model {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && tableTiles.isEmpty();
+        return stackTiles.isEmpty() && site.isEmpty();
     }
 
     /**
@@ -203,7 +203,7 @@ public class Board extends Model {
      */
     public boolean canChooseTile(Tile chosen) {
         int price = 0;
-        for (Tile tile : tableTiles) {
+        for (Tile tile : site.getTiles()) {
             if (tile != chosen) {
                 price++;
             } else {
