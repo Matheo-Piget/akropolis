@@ -23,7 +23,7 @@ public class Board {
     public Board(List<Player> players) {
         playerGridList = new ArrayList<>();
         for (Player player : players) {
-            playerGridList.add(new Tuple<>(player, new Grid()));
+            playerGridList.add(new Tuple<>(player, new Grid(player)));
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         tableTiles = new ArrayList<>(switchSizePlayers()); // Assuming 3 tiles on the table
@@ -58,7 +58,7 @@ public class Board {
             }
         }
 
-        // TODO: Implement the turn logic when we have the controller
+        // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
         player.setSelectedTile(tableTiles.getFirst()); // For simplicity, let's say the player chooses the first tile on the table
         tableTiles.removeFirst(); // Remove the chosen tile from the table
         player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
@@ -175,12 +175,30 @@ public class Board {
         if (isGameOver()) {
             Player winner = playerGridList.getFirst().x;
             for (Tuple<Player, Grid> tuple : playerGridList) {
-                if (tuple.x.getScore() > winner.getScore()) {
+                if (getScore(tuple.x) > getScore(winner)) {
                     winner = tuple.x;
                 }
             }
             return winner;
         }
         return null;
+    }
+
+    /**
+     * Checks if the player can choose a tile from the provided list based on their resources.
+     * @param site The list of tiles to choose from.
+     * @param chosen The tile chosen by the player.
+     * @return True if the player can choose the tile, false otherwise.
+     */
+    public boolean canChooseTile(Tile chosen) {
+        int price = 0;
+        for (Tile tile : tableTiles) {
+            if (tile != chosen) {
+                price++;
+            } else {
+                break;
+            }
+        }
+        return currentPlayer.getResources() >= price;
     }
 }

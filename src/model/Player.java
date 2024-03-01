@@ -68,24 +68,6 @@ public class Player {
     }
 
     /**
-     * Checks if the player can choose a tile from the provided list based on their resources.
-     * @param site The list of tiles to choose from.
-     * @param chosen The tile chosen by the player.
-     * @return True if the player can choose the tile, false otherwise.
-     */
-    public boolean canChooseTile(List<Tile> site, Tile chosen) {
-        int price = 0;
-        for (Tile tile : site) {
-            if (tile != chosen) {
-                price++;
-            } else {
-                break;
-            }
-        }
-        return this.resources >= price;
-    }
-
-    /**
      * Gets the number of resources (rocks) owned by the player.
      * @return The number of resources (rocks) owned by the player.
      */
@@ -99,21 +81,5 @@ public class Player {
      */
     public void setResources(int resources) {
         this.resources = resources;
-    }
-
-    /**
-     * Calculates and returns the number of resources (rocks) owned by the player based on the tiles they own.
-     * @return The number of resources (rocks) owned by the player.
-     */
-    public int calculateResources() {
-        int resources = 0;
-        for (Tile tile : ownedTiles) {
-            for (Hexagon hexagon : tile.getHexagons()) {
-                if (hexagon instanceof Quarrie) {
-                    resources++;
-                }
-            }
-        }
-        return resources;
     }
 }

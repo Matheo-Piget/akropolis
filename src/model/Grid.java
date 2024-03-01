@@ -11,12 +11,13 @@ import util.Point3D;
 public class Grid {
     // Map to store hexagons based on their positions
     private Map<Point3D, Hexagon> hexagons;
+    private Player player;
 
     /**
      * Constructor to initialize the grid and add the starting hexagons at the
      * beginning of the game.
      */
-    public Grid() {
+    public Grid(Player player) {
         hexagons = new HashMap<>();
         // Creating starting hexagons
         Point3D p1 = new Point3D(0, 0);
@@ -31,6 +32,7 @@ public class Grid {
         hexagons.put(p2, hexagon2);
         hexagons.put(p3, hexagon3);
         hexagons.put(p4, hexagon4);
+        this.player = player;
     }
 
 
@@ -81,6 +83,12 @@ public class Grid {
 
         if (canBePlaced && hasNeighbor && samehexagon <= 1) {
             addHexagonsToGrid(tile, bellowHexagons);
+        }
+
+        for (Hexagon hexagon : tile.hexagons) {
+            if(hexagon.getBelow() instanceof Quarrie){
+                player.setResources(player.getResources()+1);
+            }
         }
 
         display();
