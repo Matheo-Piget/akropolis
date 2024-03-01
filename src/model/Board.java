@@ -1,20 +1,22 @@
 package model;
 
 import util.Tuple;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Represents the game board and manages the game.
  */
-public class Board {
+public class Board extends Model {
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
-    private final List<Tile> tableTiles; // The tiles on the table
+    private final ArrayList<Tile> tableTiles; // The tiles on the table
     private Player currentPlayer; // The current player
     private int manche = 0;
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
      * Constructs a new board and initializes the game.
@@ -33,8 +35,16 @@ public class Board {
                 tableTiles.add(stackTiles.pop());
             }
         }
-        currentPlayer = players.getFirst(); // Set the current player to the first player
+        currentPlayer = players.get(0); // Set the current player to the first player
         stackTiles.shuffle(); // Shuffle the stack of tiles
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        propertyChangeSupport.addPropertyChangeListener(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        propertyChangeSupport.removePropertyChangeListener(pcl);
     }
 
     /**
@@ -57,12 +67,11 @@ public class Board {
                 }
             }
         }
-
         if (player.getResources() == 0) {
-            player.setSelectedTile(tableTiles.getFirst());
+            player.setSelectedTile(tableTiles.get(0));
         }
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
-        tableTiles.removeFirst(); // Remove the chosen tile from the table
+        //tableTiles.remove(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
             endTurn(player);
@@ -87,7 +96,7 @@ public class Board {
      */
     private Player getNextPlayer() {
         // Get the index of the current player
-        int currentIndex = playerGridList.indexOf(playerGridList.stream().filter(t -> t.x.equals(currentPlayer)).findFirst().orElse(null));
+        int currentIndex = manche % playerGridList.size();
         // Increment the index to get the next player (circular list)
         int nextIndex = (currentIndex + 1) % playerGridList.size();
         // Return the next player
@@ -176,7 +185,7 @@ public class Board {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerGridList.getFirst().x;
+            Player winner = playerGridList.get(0).x;
             for (Tuple<Player, Grid> tuple : playerGridList) {
                 if (getScore(tuple.x) > getScore(winner)) {
                     winner = tuple.x;

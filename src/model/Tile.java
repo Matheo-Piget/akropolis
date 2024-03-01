@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * This class represents a tile that the player can set onto the board.
  */
-public class Tile {
+public class Tile extends Model{
     // An array to store the three hexagons that make up the tile
     public ArrayList<Hexagon> hexagons = new ArrayList<>();
 
