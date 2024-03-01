@@ -90,6 +90,22 @@ public class Board {
         return playerGridList.get(nextIndex).x;
     }
 
+    public List<Tile> getTableTiles() {
+        return tableTiles;
+    }
+
+    public StackTiles getStackTiles() {
+        return stackTiles;
+    }
+
+    public int getManche() {
+        return manche;
+    }
+
+    public Tuple<Player, Grid> getPlayerGrid(Player player) {
+        return playerGridList.stream().filter(t -> t.x.equals(player)).findFirst().orElse(null);
+    }
+
     /**
      * Returns the number of players in the game.
      * @return The number of players in the game.
@@ -108,6 +124,18 @@ public class Board {
             case 4 -> 6;
             default -> 5;
         };
+    }
+
+    public boolean addTile(Tile tile) {
+        return getCurrentGrid().addTile(tile);
+    }
+
+    public Hexagon getHexagon(int x, int y) {
+        return getCurrentGrid().getHexagon(x, y);
+    }
+
+    public int getScore(Player player) {
+        return getPlayerGrid(player).y.calculateScore();
     }
 
     /**

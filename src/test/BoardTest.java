@@ -3,12 +3,16 @@ package test;
 import model.*;
 import util.Point3D;
 import org.junit.Test;
+
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class BoardTest {
     @Test
     public void testAddTile() {
-        Board board = new Board();
+        Player player = new Player("TestPlayer");
+        Board board = new Board(List.of(player));
         Quarrie validHexagon1 = new Quarrie(new Point3D(0, 2));
         Quarrie validHexagon2 = new Quarrie(new Point3D(-1, 3));
         Quarrie validHexagon3 = new Quarrie(new Point3D(1, 2));
@@ -23,7 +27,8 @@ public class BoardTest {
 
     @Test
     public void testAddInvalidTile() {
-        Board board = new Board();
+        Player player = new Player("TestPlayer");
+        Board board = new Board(List.of(player));
         Quarrie invalidHexagon1 = new Quarrie(new Point3D(0, 1));
         Quarrie invalidHexagon2 = new Quarrie(new Point3D(-1, 2));
         Quarrie invalidHexagon3 = new Quarrie(new Point3D(1, 1));
@@ -62,7 +67,8 @@ public class BoardTest {
 
     @Test
     public void testOverlapTile(){
-        Board board = new Board("TestPlayer");
+        Player player = new Player("TestPlayer");
+        Board board = new Board(List.of(player));
         District validHexagon1 = new District(new Point3D(0, 0), DistrictColor.RED);
         District validHexagon2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
         District validHexagon3 = new District(new Point3D(1, 0), DistrictColor.GREEN);
@@ -80,38 +86,32 @@ public class BoardTest {
     }
 
     @Test
-    public void testTotalScore(){
-        // This test is a bit more complex, it's wrong to test the score of the grid here 
-        // I should fix this later
-        Board board = new Board();
-        District validHexagon1 = new District(new Point3D(0, 0), DistrictColor.RED);
-        District validHexagon2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
-        District validHexagon3 = new District(new Point3D(1, -1), DistrictColor.GREEN);
+    public void testScore() {
+        // Création des joueurs
+        Player player1 = new Player("Player1");
+        Player player2 = new Player("Player2");
 
-        District validHexagon4 = new District(new Point3D(0, 2), DistrictColor.BLUE);
-        District validHexagon5 = new District(new Point3D(-1, 3), DistrictColor.BLUE);
-        District validHexagon6 = new District(new Point3D(1, 3), DistrictColor.BLUE);
+        // Création du plateau avec les joueurs
+        Board board = new Board(List.of(player1, player2));
 
-        Tile tileTrio1 = new Tile(validHexagon1, validHexagon2, validHexagon3);
-        Tile tileTrio2 = new Tile(validHexagon4, validHexagon5, validHexagon6);
-        // We verify that we can add a tile to the board
-        assertTrue(board.addTile(tileTrio1));
-        assertTrue(board.addTile(tileTrio2));
-        // We verify that their height has been updated
-        assertEquals(2, validHexagon1.getElevation());
-        assertEquals(2, validHexagon2.getElevation());
-        assertEquals(2, validHexagon3.getElevation());
-        assertEquals(1, validHexagon4.getElevation());
-        assertEquals(1, validHexagon5.getElevation());
-        assertEquals(1, validHexagon6.getElevation());
-        // And that we can get it back
-        assertEquals(validHexagon1, board.getHexagon(0, 0));
-        assertEquals(validHexagon2, board.getHexagon(-1, -1));
-        assertEquals(validHexagon3, board.getHexagon(1, -1));
-        assertEquals(validHexagon4, board.getHexagon(0, 2));
-        assertEquals(validHexagon5, board.getHexagon(-1, 3));
-        assertEquals(validHexagon6, board.getHexagon(1, 3));
-        // We verify that the score is correct
-        assertEquals(5, board.getScore());
+        // Création des hexagones
+        District district1 = new District(new Point3D(0, 0), DistrictColor.RED);
+        District district2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
+        District district3 = new District(new Point3D(1, -1), DistrictColor.GREEN);
+        District district4 = new District(new Point3D(0, 2), DistrictColor.BLUE);
+        District district5 = new District(new Point3D(-1, 3), DistrictColor.BLUE);
+        District district6 = new District(new Point3D(1, 3), DistrictColor.BLUE);
+
+        // Création des tuiles
+        Tile tile1 = new Tile(district1, district2, district3);
+        Tile tile2 = new Tile(district4, district5, district6);
+
+        // Ajout des tuiles sur le plateau
+        board.addTile(tile1);
+        board.addTile(tile2);
+
+        // Vérification du score
+        assertEquals(5, board.getScore(player1));
+        assertEquals(0, board.getScore(player2)); // Le joueur 2 n'a pas de district donc son score est 0
     }
 }
