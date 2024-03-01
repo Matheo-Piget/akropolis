@@ -61,7 +61,6 @@ public class Board {
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
         player.setSelectedTile(tableTiles.getFirst()); // For simplicity, let's say the player chooses the first tile on the table
         tableTiles.removeFirst(); // Remove the chosen tile from the table
-        player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
         getCurrentGrid().addTile(player.getSelectedTile()); // Add the chosen tile to the player's grid
         // Other turn logic can be added here, such as scoring, checking for game end conditions, etc.
         manche++;

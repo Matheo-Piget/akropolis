@@ -9,7 +9,6 @@ import java.util.List;
 public class Player {
     private String name; // The name of the player
     private int score; // The score of the player
-    private List<Tile> ownedTiles; // The tiles owned by the player
     private Tile selectedTile; // The tile selected by the player during their turn
     private int resources; // The resources (rocks) owned by the player
 
@@ -20,7 +19,6 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.score = 0;
-        this.ownedTiles = new ArrayList<>();
         this.selectedTile = null;
         this.resources = 0;
     }
@@ -41,14 +39,6 @@ public class Player {
      */
     public int getScore() {
         return score;
-    }
-
-    /**
-     * Gets the list of tiles owned by the player.
-     * @return The list of tiles owned by the player.
-     */
-    public List<Tile> getOwnedTiles() {
-        return ownedTiles;
     }
 
     /**
