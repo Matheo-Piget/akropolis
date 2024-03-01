@@ -7,6 +7,7 @@ import controller.GridMouseListener;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+
 import util.Point3D;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -41,12 +42,38 @@ public class GridView extends JPanel {
         return new Point2D.Double(pixelX, pixelY);
     }
     
+    //on obtient les coordonne qui peuveut etre sur n'importe quel partie de l'hexagone mais faut savoir à quel hexagone appartient 
+    public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) { 
+        int size = HexagonView.size / 2;
+        double x = (pixelPosition.getX() - xOffset) / size;
+        double y = (pixelPosition.getY() - yOffset) / size;
+
+        double q = (2.0 / 3 * x);
+        double r = (-1.0 / 3 * x + Math.sqrt(3) / 3 * y);
+
+        return axialRound(q, r);//determiner dans quel hexagone se trouve un point donné et renvoyer les coordonné de cette hexagone
     
-    public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
-        // 
-        return pixelPosition; 
     }
-   
+    //determiner dans quel hexagone se trouve un point donné et renvoyer les coordonné de cette hexagone
+    private Point3D axialRound(double q, double r) {
+        double s = -q - r;
+        double rq = Math.round(q);
+        double rr = Math.round(r);
+        double rs = Math.round(s);
+
+        double qDiff = Math.abs(rq - q);
+        double rDiff = Math.abs(rr - r);
+        double sDiff = Math.abs(rs - s);
+
+        if (qDiff > rDiff && qDiff > sDiff) {
+            rq = -rr - rs;
+        } else if (rDiff > sDiff) {
+            rr = -rq - rs;
+        }
+        System.out.println("Coordonnées de grille calculées: q=" + q + ", r=" + r);
+        return new Point3D((int)rq, (int)rr, 0);
+    }
+    
     public void addHexagon(HexagonView hexagon) {
         // Find the position of the hexagon in pixels
         Point2D position = convertGridPositionToPixelPosition(hexagon.getPosition());
