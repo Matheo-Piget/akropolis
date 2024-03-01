@@ -130,6 +130,10 @@ public class Board {
         return getCurrentGrid().addTile(tile);
     }
 
+    public boolean addTile(Tile tile, Player player) {
+        return getPlayerGrid(player).y.addTile(tile);
+    }
+
     public Hexagon getHexagon(int x, int y) {
         return getCurrentGrid().getHexagon(x, y);
     }
