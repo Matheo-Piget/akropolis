@@ -4,6 +4,7 @@ import util.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the game board and manages the game.
@@ -32,7 +33,7 @@ public class Board {
                 tableTiles.add(stackTiles.pop());
             }
         }
-        currentPlayer = players.get(0); // Set the current player to the first player
+        currentPlayer = players.getFirst(); // Set the current player to the first player
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
 
@@ -58,8 +59,8 @@ public class Board {
         }
 
         // TODO: Implement the turn logic when we have the controller
-        player.setSelectedTile(tableTiles.get(0)); // For simplicity, let's say the player chooses the first tile on the table
-        tableTiles.remove(0); // Remove the chosen tile from the table
+        player.setSelectedTile(tableTiles.getFirst()); // For simplicity, let's say the player chooses the first tile on the table
+        tableTiles.removeFirst(); // Remove the chosen tile from the table
         player.getOwnedTiles().add(player.getSelectedTile()); // Add the chosen tile to the player's owned tiles
         getCurrentGrid().addTile(player.getSelectedTile()); // Add the chosen tile to the player's grid
         // Other turn logic can be added here, such as scoring, checking for game end conditions, etc.
@@ -155,7 +156,7 @@ public class Board {
      * @return The current player's grid.
      */
     public Grid getCurrentGrid() {
-        return playerGridList.stream().filter(t -> t.x.equals(currentPlayer)).findFirst().orElse(null).y;
+        return Objects.requireNonNull(playerGridList.stream().filter(t -> t.x.equals(currentPlayer)).findFirst().orElse(null)).y;
     }
 
     /**
@@ -172,7 +173,7 @@ public class Board {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerGridList.get(0).x;
+            Player winner = playerGridList.getFirst().x;
             for (Tuple<Player, Grid> tuple : playerGridList) {
                 if (tuple.x.getScore() > winner.getScore()) {
                     winner = tuple.x;
