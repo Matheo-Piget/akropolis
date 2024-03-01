@@ -2,7 +2,6 @@ package view;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import java.awt.Rectangle;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
@@ -12,10 +11,17 @@ import javax.swing.SwingUtilities;
 public class ScrollableGridView extends JScrollPane {
 
     private GridView grid;
+    private JScrollBar horizontalScrollBar;
+    private JScrollBar verticalScrollBar;
 
     public ScrollableGridView(GridView grid) {
         super(grid); // Set the grid as the viewport view
         this.grid = grid;
+
+        getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
+
+        this.horizontalScrollBar = getHorizontalScrollBar();
+        this.verticalScrollBar = getVerticalScrollBar();
 
         // Remove the border of the scroll pane
         setBorder(null);
@@ -42,9 +48,6 @@ public class ScrollableGridView extends JScrollPane {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (origin != null && SwingUtilities.isRightMouseButton(e)) {
-                    JScrollBar horizontalScrollBar = getHorizontalScrollBar();
-                    JScrollBar verticalScrollBar = getVerticalScrollBar();
-
                     int deltaX = origin.x - e.getX();
                     int deltaY = origin.y - e.getY();
 
@@ -61,7 +64,6 @@ public class ScrollableGridView extends JScrollPane {
         // Set the preferred size of the scrollable area
         setPreferredSize(new Dimension(1300, 844));
     }
-    
 
     @Override
     public void addNotify() {
@@ -81,8 +83,5 @@ public class ScrollableGridView extends JScrollPane {
 
     public void addHexagon(HexagonView hexagon) {
         grid.addHexagon(hexagon);
-        // Repaint only the viewport
-        Rectangle r = getViewport().getViewRect();
-        getViewport().scrollRectToVisible(r);
     }
 }

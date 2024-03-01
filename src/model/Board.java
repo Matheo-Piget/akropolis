@@ -1,20 +1,22 @@
 package model;
 
 import util.Tuple;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Represents the game board and manages the game.
  */
-public class Board {
+public class Board extends Model {
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
-    private final List<Tile> tableTiles; // The tiles on the table
+    private final Site site; // The tiles on the table
     private Player currentPlayer; // The current player
     private int manche = 0;
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
      * Constructs a new board and initializes the game.
@@ -26,15 +28,23 @@ public class Board {
             playerGridList.add(new Tuple<>(player, new Grid(player)));
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
-        tableTiles = new ArrayList<>(switchSizePlayers()); // Assuming 3 tiles on the table
+        site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
         // Initialize the list with the first three tiles from the stack
         for (int i = 0; i < switchSizePlayers(); i++) {
             if (!stackTiles.isEmpty()) {
-                tableTiles.add(stackTiles.pop());
+                site.add(stackTiles.pop());
             }
         }
-        currentPlayer = players.getFirst(); // Set the current player to the first player
+        currentPlayer = players.get(0); // Set the current player to the first player
         stackTiles.shuffle(); // Shuffle the stack of tiles
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        propertyChangeSupport.addPropertyChangeListener(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        propertyChangeSupport.removePropertyChangeListener(pcl);
     }
 
     /**
@@ -51,18 +61,17 @@ public class Board {
     public void startTurn(Player player) {
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
-            for (int i = tableTiles.size(); i < switchSizePlayers(); i++) {
+            for (int i = site.size(); i < switchSizePlayers(); i++) {
                 if (!stackTiles.isEmpty()) {
-                    tableTiles.add(stackTiles.pop());
+                    site.add(stackTiles.pop());
                 }
             }
         }
-
         if (player.getResources() == 0) {
-            player.setSelectedTile(tableTiles.getFirst());
+            player.setSelectedTile(site.get(0));
         }
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
-        tableTiles.removeFirst(); // Remove the chosen tile from the table
+        //site.remove(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
             endTurn(player);
@@ -87,15 +96,15 @@ public class Board {
      */
     private Player getNextPlayer() {
         // Get the index of the current player
-        int currentIndex = playerGridList.indexOf(playerGridList.stream().filter(t -> t.x.equals(currentPlayer)).findFirst().orElse(null));
+        int currentIndex = manche % playerGridList.size();
         // Increment the index to get the next player (circular list)
         int nextIndex = (currentIndex + 1) % playerGridList.size();
         // Return the next player
         return playerGridList.get(nextIndex).x;
     }
 
-    public List<Tile> getTableTiles() {
-        return tableTiles;
+    public Site getSite() {
+        return site;
     }
 
     public StackTiles getStackTiles() {
@@ -167,7 +176,7 @@ public class Board {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && tableTiles.isEmpty();
+        return stackTiles.isEmpty() && site.isEmpty();
     }
 
     /**
@@ -176,7 +185,7 @@ public class Board {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerGridList.getFirst().x;
+            Player winner = playerGridList.get(0).x;
             for (Tuple<Player, Grid> tuple : playerGridList) {
                 if (getScore(tuple.x) > getScore(winner)) {
                     winner = tuple.x;
@@ -194,7 +203,7 @@ public class Board {
      */
     public boolean canChooseTile(Tile chosen) {
         int price = 0;
-        for (Tile tile : tableTiles) {
+        for (Tile tile : site.getTiles()) {
             if (tile != chosen) {
                 price++;
             } else {

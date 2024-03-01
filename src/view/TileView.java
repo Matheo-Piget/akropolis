@@ -15,7 +15,7 @@ import java.awt.Dimension;
  * Represents a single tile in the game.
  * A tile is three hexagons that form a triangle.
  */
-public class TileView extends JComponent {
+public class TileView extends JComponent implements View {
 
     private boolean isHovered = false;
     private HexagonView hex1, hex2, hex3;
@@ -36,9 +36,23 @@ public class TileView extends JComponent {
         add(hex2);
         add(hex3);
         // Remove the mouse listener from the hexagons
-        hex1.removeMouseListener(hex1.getMouseListeners()[0]);
-        hex2.removeMouseListener(hex2.getMouseListeners()[0]);
-        hex3.removeMouseListener(hex3.getMouseListeners()[0]);
+        for (HexagonView hex : new HexagonView[]{hex1, hex2, hex3}) {
+            hex.removeMouseListener(hex.getMouseListeners()[0]);
+        }
+        // Add an empty mouse event listener to the hexagons to send the mouse events to the parent
+        for(HexagonView hex : new HexagonView[]{hex1, hex2, hex3}) {
+            hex.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Do nothing
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Do nothing
+                }
+            });
+        }
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

@@ -2,10 +2,9 @@ package view;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import controller.GridMouseListener;
-
+import java.awt.event.MouseEvent;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
 
 import util.Point3D;
@@ -30,7 +29,18 @@ public class GridView extends JPanel {
         xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
         yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
 
-        this.addMouseListener(new GridMouseListener(this));
+        MouseAdapter ms = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) { // Check if left button was clicked
+                    Point2D pixelPosition = new Point2D.Double(e.getX(), e.getY());
+                    System.out.println("Clic en coordonnées de pixel : " + pixelPosition);
+                    Point2D gridPosition = convertPixelPositionToGridPosition(pixelPosition);
+                    System.out.println("Clic en coordonnées de grille : " + gridPosition);
+                }
+            }
+        };
+        addMouseListener(ms);
     }
 
     public Point2D convertGridPositionToPixelPosition(Point3D gridPosition) {
@@ -91,7 +101,7 @@ public class GridView extends JPanel {
             // Add some hexagons to the grid view
             for (int i = 0; i < 60; i++) {
                 // Testing the limits of the grid
-                for(int j = 0; j < 60; j++) {
+                for (int j = 0; j < 60; j++) {
                     gridView.addHexagon(new QuarrieView(i, j, 1));
                 }
             }
