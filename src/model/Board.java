@@ -138,8 +138,8 @@ public class Board extends Model implements PropertyChangeListener{
      */
     public int switchSizePlayers() {
         return switch (getNumberOfPlayers()) {
-            case 2 -> 4;
-            case 4 -> 6;
+            case 2 -> 3;
+            case 4 -> 5;
             default -> 5;
         };
     }

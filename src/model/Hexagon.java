@@ -56,6 +56,26 @@ public abstract class Hexagon {
         this.grid = grid;
     }
 
+    public static Hexagon generateRandomHexagon(){
+        int random = (int) (Math.random() * 6);
+        switch (random){
+            case 0:
+                return new Quarrie(0,0);
+            case 1:
+                return new District(0, 0, DistrictColor.RED);
+            case 2:
+                return new District(0, 0, DistrictColor.BLUE);
+            case 3:
+                return new District(0, 0, DistrictColor.GREEN);
+            case 4:
+                return new District(0, 0, DistrictColor.YELLOW);
+            case 5:
+                return new District(0, 0, DistrictColor.PURPLE);
+            default:
+                return new Quarrie(0,0);
+        }
+    }
+
     /**
      * Gets the elevation of the tile.
      *

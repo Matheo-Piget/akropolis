@@ -4,6 +4,8 @@ import util.Point3D;
 
 import java.util.Collections;
 import java.util.Stack;
+import java.util.Random;
+
 /**
  * Représente la pile de tuiles dans le jeu Akropolis. Cette pile contient toutes les tuiles qui peuvent être tirées par les joueurs pendant le jeu.
  */
@@ -11,6 +13,7 @@ import java.util.Stack;
 public class StackTiles extends Stack<Tile>{
 
     int remainingTiles;
+    Random random = new Random();
 
      /**
      * Construit une pile de tuiles vide prête à être remplie avec des tuiles.
@@ -19,7 +22,7 @@ public class StackTiles extends Stack<Tile>{
         super();
         // We lock the size of the stack to avoid any modification
         remainingTiles = size;
-        this.setSize(size);
+        System.out.println("Size of the stack: " + size);
         generateTiles();
 
     }
@@ -39,9 +42,9 @@ public class StackTiles extends Stack<Tile>{
             addPlaceWithStars(DistrictColor.values()[(int) (Math.random() * 5)]);
             remainingTiles--;
         }
-
         // Generate the rest of the tiles randomly
         generateRandomTiles();
+        System.out.println("Size of the stack: " + this.size());
     }
 
     /**
@@ -50,20 +53,20 @@ public class StackTiles extends Stack<Tile>{
      * @param color The color of the place.
      **/
     private void addPlaceWithStars(DistrictColor color) {
-        // Determine the number of stars for each type of place
-        int stars = switch (color) {
-            case RED -> 2;
-            case BLUE, GREEN, YELLOW -> 3;
-            case PURPLE -> 4;
-        };
+        // Determine a random number of stars between 1 and 5
+        int stars = random.nextInt(5) + 1;
 
         // Create a place with stars of the specified color
         Point3D position = new Point3D(0, 0, 0); // Example position, can be adjusted
         Place place = new Place(position, stars, color);
 
+        // Then the other two hexagons are random
+        Hexagon t2 = Hexagon.generateRandomHexagon();
+        Hexagon t3 = Hexagon.generateRandomHexagon();
+
         // Add the place to a tile and add the tile to the stack
-        Tile tile = new Tile(place, null, null);
-        add(tile);
+        Tile tile = new Tile(place, t2, t3);
+        push(tile);
     }
 
     /**
@@ -71,35 +74,16 @@ public class StackTiles extends Stack<Tile>{
      */
     private void generateRandomTiles() {
         // Generate the rest of the tiles randomly
+        System.out.println("Remaining tiles: " + remainingTiles);
         for (int i = 0; i < remainingTiles; i++) {
             // Create a tile with three random districts
-            Tile tile = new Tile(getRandomDistrict(), getRandomDistrict(), getRandomDistrict());
-            add(tile);
+            Hexagon h1 = Hexagon.generateRandomHexagon();
+            Hexagon h2 = Hexagon.generateRandomHexagon();
+            Hexagon h3 = Hexagon.generateRandomHexagon();
+            Tile tile = new Tile(h1, h2, h3);
+            push(tile);
         }
 
-    }
-
-    /**
-     * Returns a random district.
-     *
-     * @return a random district.
-     */
-    private Hexagon getRandomDistrict() {
-        // Create a district with a random color
-        Point3D position = new Point3D(0, 0, 0); // Example position, can be adjusted
-        return new District(position, getRandomColor());
-    }
-
-    /**
-     * Returns a random color.
-     *
-     * @return a random color.
-     */
-    private DistrictColor getRandomColor() {
-        // Get a random color from the DistrictColor enum
-        DistrictColor[] colors = DistrictColor.values();
-        int randomIndex = (int) (Math.random() * colors.length);
-        return colors[randomIndex];
     }
 
     /**

@@ -17,6 +17,7 @@ public class Site extends Model {
     public void updateSite(StackTiles stackTiles, int numberToDraw) {
         for (int i = tiles.size(); i < numberToDraw; i++) {
             if (!stackTiles.isEmpty()) {
+                System.out.println("Drawing a tile from the stack" + stackTiles.peek());
                 tiles.add(stackTiles.pop());
             }
         }

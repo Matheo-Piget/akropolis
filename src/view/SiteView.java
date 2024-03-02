@@ -54,6 +54,7 @@ public class SiteView extends JPanel implements View {
         TileView tileView;
         HexagonView [] hexs = new HexagonView[3];
         int i = 0;
+        System.out.println("Tile: " + tile);
         for(Hexagon h : tile.getHexagons()){
             // Then we convert the hexagon to a hexagon view
             if(h instanceof model.Quarrie){

@@ -38,6 +38,7 @@ public class SiteController extends Controller {
         if (evt.getPropertyName().equals("tileUpdated")) {
             // Update the view with the updated tile
             ArrayList<Tile> tiles = ((Site) model).getTiles();
+            System.out.println("Updating the site with the tiles: " + tiles);
             // Then we create the tile controllers
             tileControllers = new ArrayList<TileController>();
             for (Tile tile : tiles) {

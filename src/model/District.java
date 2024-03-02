@@ -11,6 +11,11 @@ public class District extends Hexagon {
         this.color = color;
     }
 
+    public District(int x, int y, DistrictColor color) {
+        super(x, y);
+        this.color = color;
+    }
+
     /**
      * Returns the type of district.
      * @return the type of district.

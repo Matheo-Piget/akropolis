@@ -13,6 +13,12 @@ public class Place extends Hexagon{
         this.color = color;
     }
 
+    public Place(int x, int y, int stars, DistrictColor color) {
+        super(x, y);
+        this.stars = stars;
+        this.color = color;
+    }
+
     /**
      * Constructor to create a place with specified coordinates (used without grid reference).
      *

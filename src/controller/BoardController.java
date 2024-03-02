@@ -5,9 +5,14 @@ import model.Board;
 import view.BoardView;
 
 public class BoardController extends Controller {
+    private SiteController siteController;
 
     public BoardController(Board model, BoardView view) {
         super(model, view);
+        // Create the site controller
+        siteController = new SiteController(model.getSite(), view.getSiteView());
+        // Then we can start the game
+        ((Board)(model)).startGame();
     }
 
     /**
