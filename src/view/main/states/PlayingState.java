@@ -7,14 +7,27 @@ import view.BoardView;
 import view.main.App;
 import model.Player;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayingState extends State {
     // The players of the game by default there are 1 player
-    private ArrayList<Player> players = new ArrayList<Player>() {{
-        add(new Player("Player 1"));
-    }};
+    private ArrayList<Player> players = new ArrayList<Player>(); //{{
+    //  add(new Player("Player 1"));
+    //}};
     private BoardController boardController;
     private static final PlayingState INSTANCE = new PlayingState();
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    // Setter pour la liste des joueurs
+    public void setPlayers(List<String> playerNames) {
+        players.clear(); // Nettoie la liste actuelle
+        for (String name : playerNames) {
+            players.add(new Player(name)); // Crée de nouveaux joueurs et les ajoute à la liste
+        }
+    }
 
     public static PlayingState getInstance() {
         return INSTANCE;
