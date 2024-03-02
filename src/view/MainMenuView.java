@@ -118,24 +118,54 @@ public class MainMenuView extends JPanel {
                 options,
                 options[0]);
 
+        // Liste pour stocker temporairement les noms des joueurs collectés
+        List<String> playerNames = new ArrayList<>();
         switch (choice){
             case 0:
+                playerNames.add(collectPlayerName(1));
                 System.out.println("Partie démarrée avec 1 joueur");
-                App.getInstance().appState.changeState(PlayingState.getInstance());
+                //App.getInstance().appState.changeState(PlayingState.getInstance());
                 break;
             case 1:
+                for (int i = 1; i <= 2; i++) {
+                    playerNames.add(collectPlayerName(i));
+                }
                 System.out.println("Partie démarrée avec 2 joueur");
                 break;
             case 2:
+                for (int i = 1; i <= 3; i++) {
+                    playerNames.add(collectPlayerName(i));
+                }
                 System.out.println("Partie démarrée avec 3 joueur");
                 break;
             case 3:
+                for (int i = 1; i <= 4; i++) {
+                    playerNames.add(collectPlayerName(i));
+                }
                 System.out.println("Partie démarrée avec 4 joueur");
                 break;
             default:
                 System.out.println("Aucun choix fait, partie non démarrée");
-                break;
+                //break;
+                JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return; 
         }
+         // Si des noms ont été collectés, mettre à jour les joueurs dans PlayingState et changer l'état
+        if (!playerNames.isEmpty()) {
+            PlayingState playingState = PlayingState.getInstance();
+            playingState.setPlayers(playerNames); // Met à jour la liste des joueurs dans PlayingState
+            App.getInstance().appState.changeState(playingState); // Change l'état de l'application pour démarrer la partie
+        }
+    }
+    private String collectPlayerName(int playerNumber) {
+        String playerName;
+        do {
+            playerName = JOptionPane.showInputDialog(this, "Entrez le nom du joueur " + playerNumber + " :", "Nom du Joueur", JOptionPane.PLAIN_MESSAGE);
+            if (playerName == null || playerName.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Le nom du joueur ne peut pas être vide.", "Erreur", JOptionPane.WARNING_MESSAGE);
+            }
+        } while (playerName == null || playerName.trim().isEmpty());
+        return playerName.trim();
     }
 
     private void showRulesPanel(){
