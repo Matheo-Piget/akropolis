@@ -2,6 +2,9 @@ package model;
 
 import java.util.ArrayList;
 
+import view.HexagonView;
+import view.TileView;
+
 /**
  * This class represents a tile that the player can set onto the board.
  */

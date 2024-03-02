@@ -26,5 +26,6 @@ public class StartState extends State{
     @Override
     public void exit() {
         System.out.println("Exiting Start State");
+        App.getInstance().getScreen().removeAll();
     }
 }

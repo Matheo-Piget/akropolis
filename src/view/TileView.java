@@ -10,6 +10,8 @@ import javax.swing.Timer;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents a single tile in the game.
@@ -24,6 +26,10 @@ public class TileView extends JComponent implements View {
     private boolean increasing = true;
     private Timer glowTimer;
 
+    public TileView(){
+        // Empty constructor
+    }
+
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         setOpaque(false);
         this.hex1 = hex1;
@@ -35,6 +41,13 @@ public class TileView extends JComponent implements View {
         add(hex1);
         add(hex2);
         add(hex3);
+        setupListener();
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void setupListener(){
+        // Add the mouse listener to the hexagons
         // Remove the mouse listener from the hexagons
         for (HexagonView hex : new HexagonView[]{hex1, hex2, hex3}) {
             hex.removeMouseListener(hex.getMouseListeners()[0]);
@@ -90,8 +103,6 @@ public class TileView extends JComponent implements View {
             }
         });
         this.glowTimer = timer;
-        this.revalidate();
-        this.repaint();
     }
 
     @Override
@@ -124,9 +135,19 @@ public class TileView extends JComponent implements View {
 
     public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         removeAll();
+        this.hex1 = hex1;
+        this.hex2 = hex2;
+        this.hex3 = hex3;
         add(hex1);
         add(hex2);
         add(hex3);
+        setupListener();
+        this.revalidate();
+        this.repaint();
+    }
+
+    public ArrayList<HexagonView> getHexagons() {
+        return new ArrayList<>(Arrays.asList(hex1, hex2, hex3));
     }
 
     protected void paintComponent(java.awt.Graphics g) {

@@ -1,11 +1,9 @@
 package view;
 
-import java.beans.PropertyChangeListener;
-
 /**
  * This class is the template that all views must follow
+ * It just serves as a marker for the view classes
  */
 public interface View {
-    void addPropertyChangeListener(PropertyChangeListener pcl);
-    void removePropertyChangeListener(PropertyChangeListener pcl);
+    
 }

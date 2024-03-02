@@ -2,6 +2,10 @@ package view;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import view.main.App;
+import view.main.states.PlayingState;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -117,6 +121,7 @@ public class MainMenuView extends JPanel {
         switch (choice){
             case 0:
                 System.out.println("Partie démarrée avec 1 joueur");
+                App.getInstance().appState.changeState(PlayingState.getInstance());
                 break;
             case 1:
                 System.out.println("Partie démarrée avec 2 joueur");

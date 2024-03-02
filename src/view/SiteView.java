@@ -3,9 +3,9 @@ package view;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.awt.Component;
 import java.awt.Graphics;
-import java.beans.PropertyChangeSupport;
+import model.Hexagon;
+import model.Tile;
 
 /**
  * Represents the site in the game.
@@ -14,7 +14,6 @@ import java.beans.PropertyChangeSupport;
  */
 public class SiteView extends JPanel implements View {
     private int capacity;
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public SiteView(int capacity) {
         setOpaque(true);
@@ -25,14 +24,51 @@ public class SiteView extends JPanel implements View {
         this.capacity = capacity;
     }
 
-    @Override
-    public void addPropertyChangeListener(java.beans.PropertyChangeListener pcl) {
-        propertyChangeSupport.addPropertyChangeListener(pcl);
+    public TileView getTileClicked(int x, int y) {
+        for (TileView tileView : getTiles()) {
+            if (tileView.contains(x, y)) {
+                return tileView;
+            }
+        }
+        return null;
     }
 
-    @Override
-    public void removePropertyChangeListener(java.beans.PropertyChangeListener pcl) {
-        propertyChangeSupport.removePropertyChangeListener(pcl);
+    public ArrayList<TileView> getTiles() {
+        ArrayList<TileView> tiles = new ArrayList<TileView>();
+        for (java.awt.Component component : getComponents()) {
+            tiles.add((TileView) component);
+        }
+        return tiles;
+    }
+
+
+    public void update(ArrayList<Tile> tiles) {
+        ArrayList<TileView> tileViews = new ArrayList<TileView>();
+        for (Tile tile : tiles) {
+            tileViews.add(obtainCorrespondingView(tile));
+        }
+        setTilesInSite(tileViews);
+    }
+
+    public TileView obtainCorrespondingView(Tile tile){
+        TileView tileView;
+        HexagonView [] hexs = new HexagonView[3];
+        int i = 0;
+        for(Hexagon h : tile.getHexagons()){
+            // Then we convert the hexagon to a hexagon view
+            if(h instanceof model.Quarrie){
+                hexs[i] = new QuarrieView(h.getX(), h.getY(), h.getZ());
+            }
+            else if (h instanceof model.Place){
+                hexs[i] = new PlaceView(h.getX(), h.getY(), h.getZ(), (model.Place) h);
+            }
+            else{
+                hexs[i] = new DistrictView(h.getX(), h.getY(), h.getZ(), (model.District) h);
+            }
+            i++;
+        }
+        tileView = new TileView(hexs[0], hexs[1], hexs[2]);
+        return tileView;
     }
 
     public void setTilesInSite(ArrayList<TileView> tiles) {
@@ -41,26 +77,10 @@ public class SiteView extends JPanel implements View {
         for (int i = 0; i < capacity; i++) {
             if (i < tiles.size()) {
                 add(tiles.get(i));
-                System.out.println("Added tile to site");
             }
         }
         validate();
         repaint();
-    }
-
-    @Override 
-    public Component add(Component c){
-        super.add(c);
-        // Then add a mouse click listener to the tile
-        c.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Notify the controller that a tile has been selected to update the site model
-                propertyChangeSupport.firePropertyChange("tileSelected", null, c);
-                System.out.println("Tile selected");
-            }
-        });
-        return c;
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * Represents the game board and manages the game.
  */
-public class Board extends Model {
+public class Board extends Model implements PropertyChangeListener{
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
     private final Site site; // The tiles on the table
@@ -30,11 +30,7 @@ public class Board extends Model {
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
         // Initialize the list with the first three tiles from the stack
-        for (int i = 0; i < switchSizePlayers(); i++) {
-            if (!stackTiles.isEmpty()) {
-                site.add(stackTiles.pop());
-            }
-        }
+        site.updateSite(stackTiles, getNumberOfPlayers());
         currentPlayer = players.get(0); // Set the current player to the first player
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
@@ -45,6 +41,19 @@ public class Board extends Model {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         propertyChangeSupport.removePropertyChangeListener(pcl);
+    }
+
+    @Override
+    public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("tileSelected")) {
+            Tile tile = (Tile) evt.getNewValue();
+            if (canChooseTile(tile)) {
+                currentPlayer.setSelectedTile(tile);
+                // DONT REMOVE THE RESOURCE YET BECAUSE HE CAN STILL CANCEL HIS CHOICE
+                // We inform the gui to do his stuff
+                propertyChangeSupport.firePropertyChange("tileSelected", null, tile);
+            }
+        }
     }
 
     /**
@@ -61,14 +70,10 @@ public class Board extends Model {
     public void startTurn(Player player) {
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
-            for (int i = site.size(); i < switchSizePlayers(); i++) {
-                if (!stackTiles.isEmpty()) {
-                    site.add(stackTiles.pop());
-                }
-            }
+            site.updateSite(stackTiles, switchSizePlayers());
         }
         if (player.getResources() == 0) {
-            player.setSelectedTile(site.get(0));
+            player.setSelectedTile(site.getTiles().get(0));
         }
         // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
         //site.remove(); // Remove the chosen tile from the table
@@ -131,7 +136,7 @@ public class Board extends Model {
      * Returns the number of tiles to put on the table according to the number of players.
      * @return The number of tiles to put on the table.
      */
-    private int switchSizePlayers() {
+    public int switchSizePlayers() {
         return switch (getNumberOfPlayers()) {
             case 2 -> 4;
             case 4 -> 6;
@@ -176,7 +181,7 @@ public class Board extends Model {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && site.isEmpty();
+        return stackTiles.isEmpty() && site.getTiles().isEmpty();
     }
 
     /**

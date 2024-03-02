@@ -14,7 +14,9 @@ public class BoardController extends Controller {
      * This method is used to react to the signals send by the model
      */
     @Override
-    public void propertyChange(PropertyChangeEvent arg0) {
-        
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName().equals("tileSelected")) {
+            // Draw the selected tile in the view and make it draggable
+        }
     }
 }

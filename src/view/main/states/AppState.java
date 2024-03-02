@@ -10,7 +10,8 @@ import util.StateMachine;
 public enum AppState implements StateMachine {
 
     // Definition of the application states with their initial instances
-    START(StartState.getInstance());
+    START(StartState.getInstance()),
+    PLAYING(PlayingState.getInstance());
 
     // Current instance of the state
     private State currentState;

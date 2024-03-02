@@ -1,42 +1,34 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import util.Point3D;
 
 public class Site extends Model {
-      private ArrayList<Tile> tiles;
+    private ArrayList<Tile> tiles;
 
-      public Site(int nbTiles) {
-            tiles = new ArrayList<Tile>(nbTiles);
-      }
+    public Site(int nbTiles) {
+        tiles = new ArrayList<Tile>(nbTiles);
+    }
 
-      public void add(Tile tile) {
-            tiles.add(tile);
-      }
-      public int size() {
-          return tiles.size();
-      }
+    /**
+     * This method is used to update the site with the tiles from the stack
+     * @param stackTiles
+     * @param numberToDraw
+     */
+    public void updateSite(StackTiles stackTiles, int numberToDraw) {
+        for (int i = tiles.size(); i < numberToDraw; i++) {
+            if (!stackTiles.isEmpty()) {
+                tiles.add(stackTiles.pop());
+            }
+        }
+        firePropertyChange("tileUpdated", null, tiles);
+    }
 
-      public Tile get(int index) {
-          return tiles.get(index);
-      }
-
-      public void remove(int index) {
-          tiles.remove(index);
-      }
-
-      public void remove(Tile tile) {
-          tiles.remove(tile);
-      }
-
-      public boolean isEmpty() {
-          return tiles.isEmpty();
-      }
+    public void selectedTile(Tile tile) {
+        // Infrom the board that a tile has been selected
+        firePropertyChange("tileSelected", null, tile);
+    }
 
     public ArrayList<Tile> getTiles() {
         return tiles;
     }
 }
-

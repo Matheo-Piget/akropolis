@@ -35,6 +35,16 @@ public abstract class Hexagon {
         this.position = p;
     }
 
+    /**
+     * Constructor to create a tile with specified coordinates (used without grid reference).
+     *
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     */
+    public Hexagon(int x, int y) {
+        this.position = new Point3D(x, y, 1);
+    }
+
     public abstract String getType();
 
     /**

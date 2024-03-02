@@ -9,6 +9,10 @@ public class Quarrie extends Hexagon{
         super(p, grid);
     }
 
+    public Quarrie(int x, int y){
+        super(x, y);
+    }
+
     public Quarrie(Point3D p) {
         super(p);
     }

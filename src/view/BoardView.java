@@ -1,7 +1,9 @@
 package view;
 
 import javax.swing.JPanel;
-import javax.swing.JFrame;
+
+import view.main.App;
+import javax.swing.SwingUtilities;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.awt.BorderLayout;
@@ -33,12 +35,16 @@ public class BoardView extends JPanel implements View {
         siteView = new SiteView(capacity);
         add(gridView, BorderLayout.CENTER);
         add(siteView, BorderLayout.WEST);
+        // Add it to the screen
+        System.out.println("Adding board view to screen");
+        App.getInstance().getScreen().add(this, BorderLayout.CENTER);
+        App.getInstance().getScreen().revalidate();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         propertyChangeSupport.addPropertyChangeListener(pcl);
     }
-    
+
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         propertyChangeSupport.removePropertyChangeListener(pcl);
     }
@@ -53,23 +59,21 @@ public class BoardView extends JPanel implements View {
 
     // For testing purposes
     public static void main(String[] args) {
-        BoardView boardView = new BoardView(40, 5);
-        ArrayList<TileView> tiles = new ArrayList<TileView>();
-        for (int i = 0; i < 3; i++) {
-            tiles.add(new TileView(new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1)));
-        }
-        boardView.getSiteView().setTilesInSite(tiles);
-        // Add some hexagons to the grid view
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                boardView.getGridView().addHexagon(new QuarrieView(i, j, 1));
+        SwingUtilities.invokeLater(() -> {
+            BoardView boardView = new BoardView(40, 5);
+            ArrayList<TileView> tiles = new ArrayList<TileView>();
+            for (int i = 0; i < 3; i++) {
+                tiles.add(new TileView(new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1)));
             }
-        }
-        boardView.setVisible(true);
-        JFrame frame = new JFrame();
-        frame.add(boardView);
-        frame.setSize(boardView.getSize());
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            boardView.getSiteView().setTilesInSite(tiles);
+            // Add some hexagons to the grid view
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    boardView.getGridView().addHexagon(new QuarrieView(i, j, 1));
+                }
+            }
+            boardView.setVisible(true);
+            App.getInstance().getScreen().revalidate();
+        });
     }
 }

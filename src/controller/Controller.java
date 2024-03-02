@@ -4,14 +4,17 @@ import model.Model;
 import view.View;
 
 public abstract class Controller implements ControllerInterface {
+    protected Model model;
+    protected View view;
     
     public Controller(Model model, View view) {
         setupListener(model, view);
+        this.model = model;
+        this.view = view;
     }
 
     @Override
     public void setupListener(Model model, View view) {
         model.addPropertyChangeListener(this);
-        view.addPropertyChangeListener(this);
     }
 }

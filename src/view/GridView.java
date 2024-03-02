@@ -92,27 +92,4 @@ public class GridView extends JPanel {
         // Add it to the jpanel
         this.add(hexagon);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // This is just a test to see if the grid view works
-            GridView gridView = new GridView(60);
-            ScrollableGridView scrollableGridView = new ScrollableGridView(gridView);
-            // Add some hexagons to the grid view
-            for (int i = 0; i < 60; i++) {
-                // Testing the limits of the grid
-                for (int j = 0; j < 60; j++) {
-                    gridView.addHexagon(new QuarrieView(i, j, 1));
-                }
-            }
-            JFrame frame = new JFrame();
-            frame.getContentPane().setBackground(java.awt.Color.BLACK);
-            frame.setPreferredSize(new Dimension(1500, 844));
-            frame.setResizable(false);
-            frame.add(scrollableGridView);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-        });
-    }
 }
