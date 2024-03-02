@@ -58,6 +58,7 @@ public abstract class Hexagon {
 
     public static Hexagon generateRandomHexagon(){
         int random = (int) (Math.random() * 6);
+        System.out.println(random);
         switch (random){
             case 0:
                 return new Quarrie(0,0);

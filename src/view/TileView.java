@@ -26,7 +26,7 @@ public class TileView extends JComponent implements View {
     private boolean increasing = true;
     private Timer glowTimer;
 
-    public TileView(){
+    public TileView() {
         // Empty constructor
     }
 
@@ -35,9 +35,9 @@ public class TileView extends JComponent implements View {
         this.hex1 = hex1;
         this.hex2 = hex2;
         this.hex3 = hex3;
-        int hexWidth = HexagonView.size;
+        int hexWidth = 80; // Fixed amount to ensure they will be properly displayed
         int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
-        this.setPreferredSize(new Dimension((int) (Math.sqrt(3) * hexWidth), hexHeight));
+        this.setPreferredSize(new Dimension((int) (Math.sqrt(3) * 80), hexHeight));
         add(hex1);
         add(hex2);
         add(hex3);
@@ -46,14 +46,15 @@ public class TileView extends JComponent implements View {
         this.repaint();
     }
 
-    private void setupListener(){
+    private void setupListener() {
         // Add the mouse listener to the hexagons
         // Remove the mouse listener from the hexagons
-        for (HexagonView hex : new HexagonView[]{hex1, hex2, hex3}) {
+        for (HexagonView hex : new HexagonView[] { hex1, hex2, hex3 }) {
             hex.removeMouseListener(hex.getMouseListeners()[0]);
         }
-        // Add an empty mouse event listener to the hexagons to send the mouse events to the parent
-        for(HexagonView hex : new HexagonView[]{hex1, hex2, hex3}) {
+        // Add an empty mouse event listener to the hexagons to send the mouse events to
+        // the parent
+        for (HexagonView hex : new HexagonView[] { hex1, hex2, hex3 }) {
             hex.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
@@ -112,25 +113,16 @@ public class TileView extends JComponent implements View {
         int hexWidth = HexagonView.size;
         int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
 
-        // Calculate the total width and height of the hexagons
-        int totalWidth = 3 * hexWidth;
-        int totalHeight = hexHeight * 2;
-
         // Calculate the center of the TileView
         int centerX = this.getWidth() / 2;
-        int centerY = this.getHeight() / 2;
+        int centerY = this.getHeight() / 4;
 
-        // Calculate the top left corner of the area where the hexagons should be placed
-        int startX = centerX - totalWidth / 2;
-        int startY = centerY - totalHeight / 2;
+        // Position the first hexagon at the center y and right most x
+        hex1.setLocation(centerX + hexWidth / 4, centerY);
 
-        // Position the first hexagon at the top
-        hex1.setLocation(startX + hexWidth, startY);
-
-        // Position the second and third hexagons at the bottom left and right corners
-        // of the first hexagon
-        hex2.setLocation(startX + (int) (hexWidth * 2 - Math.sqrt(3) * hexWidth), startY + hexHeight / 2);
-        hex3.setLocation(startX + (int) (Math.sqrt(3) * hexWidth), startY + hexHeight / 2);
+        // Position the second and third hexagons at the left of the first hexagon
+        hex2.setLocation(centerX - hexWidth/2, centerY - hexHeight / 2);
+        hex3.setLocation(centerX - hexWidth/2, centerY + hexHeight / 2);
     }
 
     public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {

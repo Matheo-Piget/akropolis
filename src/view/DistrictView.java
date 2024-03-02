@@ -1,10 +1,11 @@
 package view;
 
 import java.awt.Graphics2D;
-
+import java.awt.BasicStroke;
 import model.District;
 
 public class DistrictView extends HexagonView {
+    private BasicStroke stroke = new BasicStroke(size / 25);
 
     public DistrictView(int x, int y, int z, District d) {
         super(x, y, z);
@@ -37,8 +38,13 @@ public class DistrictView extends HexagonView {
         g2d.setPaint(darkenTexturePaint(texture, getPosition().getZ()));
         g2d.fill(hexagon);
         // Draw the border of the hexagon
-        g2d.setColor(java.awt.Color.BLACK);
-        g2d.setStroke(new java.awt.BasicStroke(3));
+        if (isHovered) {
+            g2d.setColor(java.awt.Color.YELLOW);
+        }
+        else {
+            g2d.setColor(java.awt.Color.BLACK);
+        }
+        g2d.setStroke(stroke);
         g2d.draw(hexagon);
         g2d.dispose();
     }

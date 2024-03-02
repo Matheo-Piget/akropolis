@@ -35,6 +35,7 @@ public class BoardView extends JPanel implements View {
         siteView = new SiteView(capacity);
         add(gridView, BorderLayout.CENTER);
         add(siteView, BorderLayout.WEST);
+        // TODO : Add the UI Infos to the board view 
         // Add it to the screen
         System.out.println("Adding board view to screen");
         App.getInstance().getScreen().add(this, BorderLayout.CENTER);

@@ -77,6 +77,7 @@ public class SiteView extends JPanel implements View {
         // Don't add more tiles than the capacity
         for (int i = 0; i < capacity; i++) {
             if (i < tiles.size()) {
+                tiles.get(i).setSize(new java.awt.Dimension(200, 800 / capacity));
                 add(tiles.get(i));
             }
         }

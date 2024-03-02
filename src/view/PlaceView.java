@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import model.Place;
@@ -9,6 +10,7 @@ import model.Place;
  */
 public class PlaceView extends HexagonView {
     private int stars;
+    private BasicStroke stroke = new BasicStroke(size / 25);
 
     public PlaceView(int x, int y, int z, Place place) {
         super(x, y, z);
@@ -41,7 +43,14 @@ public class PlaceView extends HexagonView {
         g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setPaint(this.texture);
         g2d.fill(this.hexagon);
-        g2d.setColor(Color.BLACK);
+        // Draw the border of the hexagon
+        if (isHovered) {
+            g2d.setColor(java.awt.Color.YELLOW);
+        }
+        else {
+            g2d.setColor(java.awt.Color.BLACK);
+        }
+        g2d.setStroke(stroke);
         g2d.draw(this.hexagon);
         g2d.dispose();
     }
