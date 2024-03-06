@@ -23,6 +23,7 @@ public class GridView extends JPanel {
 
     public GridView(int maxHexagons) {
         int panelWidth = (int) (maxHexagons * 3.0 / 2 * HexagonView.size);
+        
         int panelHeight = (int) (maxHexagons * Math.sqrt(3) * HexagonView.size);
         setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setLayout(null); // We will manually set the position of the hexagons

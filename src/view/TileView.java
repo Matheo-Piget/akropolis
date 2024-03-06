@@ -1,6 +1,8 @@
 package view;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
@@ -8,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -44,7 +47,41 @@ public class TileView extends JComponent implements View {
         setupListener();
         this.revalidate();
         this.repaint();
+
+        setupDragging();
     }
+
+
+
+    private void setupDragging() {
+        MouseAdapter ma = new MouseAdapter() {
+            Point initialClick;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                initialClick = e.getPoint();
+                SwingUtilities.convertPointToScreen(initialClick, TileView.this);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point currentScreenLocation = e.getLocationOnScreen();
+                Point parentLocation = TileView.this.getParent().getLocationOnScreen();
+                
+                int x = currentScreenLocation.x - parentLocation.x - initialClick.x;
+                int y = currentScreenLocation.y - parentLocation.y - initialClick.y;
+                
+                TileView.this.setLocation(x, y);
+            }
+        };
+
+        this.addMouseListener(ma);
+        this.addMouseMotionListener(ma);
+    }
+
+
+
+
 
     private void setupListener() {
         // Add the mouse listener to the hexagons
