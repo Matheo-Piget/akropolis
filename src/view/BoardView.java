@@ -18,6 +18,7 @@ public class BoardView extends JPanel implements View {
 
     private ScrollableGridView gridView;
     private SiteView siteView;
+    private BoardUI boardUI;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
@@ -35,8 +36,8 @@ public class BoardView extends JPanel implements View {
         siteView = new SiteView(capacity);
         add(gridView, BorderLayout.CENTER);
         add(siteView, BorderLayout.WEST);
-        // TODO : Add the UI Infos to the board view 
-        // Add it to the screen
+        boardUI = new BoardUI();
+        add(boardUI, BorderLayout.AFTER_LAST_LINE);
         System.out.println("Adding board view to screen");
         App.getInstance().getScreen().add(this, BorderLayout.CENTER);
         App.getInstance().getScreen().revalidate();

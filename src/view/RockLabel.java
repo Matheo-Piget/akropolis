@@ -9,6 +9,8 @@ public class RockLabel extends JLabel {
     
     public RockLabel(){
         super("Rocks: 0");
+        setOpaque(false);
+        setForeground(java.awt.Color.WHITE);
     }
     
     public void setRocks(int rocks){
