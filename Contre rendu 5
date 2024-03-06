@@ -6,7 +6,8 @@ Tâches Accomplies:
 1. Mathéo - Modification de la logique, Grid a maintenant une référence de son joueur pour mieux gérer les ressources.
 2. Rayene -ajout une nouvelle d'une interface qui contient un nouveau dialogue pour permettre à l'utilisateur d'entrer les noms des joueurs en fonction du nombre choisi
         et puis demarer la partie 
-3. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
+3. Bilal - Ajout de l'UI sur la vue en jeu + relier la partie de la logique du tas de tuile à la vue.
+4. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
 
 Avancements Individuels:
 1. Mathéo:
@@ -18,6 +19,21 @@ Avancements Individuels:
     - Tâche accomplie : j'ai ajouter une interface qui permet à l'utilisateur d'entrer les noms des joueurs en fonction du nombre choisi et pour pouvoir lancer la partie
    - Problèmes rencontrés : au debut j'avais du mal a  comprendre comment liée ma methode avec  l'arrayList qui est dans PlayingState pour pouvoir ajouter des nouveau players
    - Suggestions pour l'amélioration : [le cas échéant]
+
+3. Bilal:
+   - Tâche accomplie : J'ai fait le lien entre la GUI et le modèle pour le tas. Pour se faire j'ai créer une classe Controller intitulé SiteController. 
+                       Dans ma vision du MVC (plusieurs facon de le faire de tt facon) c'est le controller qui recoit les signaux du modèle pas la vue directement.
+                       De cette facon on limite tout le code logique dans la vue, on décentralise les tâches ce qui rend le débug beaucoup plus simple. 
+                       Le controller setup un système de listener (Pattern Oberver). J'ai utilisé pour se faire propertyChange (c'est distribué dans les versions de java depuis java 8
+                       de mémoire donc pas de pb de compatibilité à prioris) qui me permet de ne pas avoir à faire mes interfaces ca fait gagner un peu de temps. Pour factoriser le tout
+                       j'ai eu l'idée de faire que les objets du modèle qui sont observés extend d'une classe abstraite Model pour que j'ai pas besoin de définir les fonctions d'évenements à
+                       chaque fois elles sont en protected ca fait réduit la répétition. Pour la vue c'est une interface vide View juste pour reconnaitre ce qu'est une vue et
+                       créer un type controller générique. A chaque fois que la méthode setTiles dans le modèle est call à la fin de l'update j'envoie un signal au controller qui est notifié
+                       et qui update la gui (ca evite de se partager les références et d'avoir une composition ignoble). 
+                       Pour l'UI rien de palpitant à dire c'est classique (faire des classes pr chaques composantes visuels et mettre le tt dans le layout capricieux de swing bon...).
+    - Problème rencontrés : Le layout de swing pue mais je suis encore en vie donc tout va bien (je crois ?)
+    - Suggestions pour l'amélioration : Faut que je continue à tout relier comme un électricien même mon UI. On a la majorité du code logique faut vraiment juste faire les différents controllers
+                                        avec le magnifique système d'évènement mmmmmmmmm.
 
 
 3. [Nom du membre de l'équipe]:
