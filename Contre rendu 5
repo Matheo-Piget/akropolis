@@ -4,8 +4,9 @@ Semaine du [date de début] au [date de fin]
 
 Tâches Accomplies:
 1. Mathéo - Modification de la logique, Grid a maintenant une référence de son joueur pour mieux gérer les ressources.
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
-3. ...
+2. Rayene -ajout une nouvelle d'une interface qui contient un nouveau dialogue pour permettre à l'utilisateur d'entrer les noms des joueurs en fonction du nombre choisi
+        et puis demarer la partie 
+3. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
 
 Avancements Individuels:
 1. Mathéo:
@@ -13,12 +14,16 @@ Avancements Individuels:
    - Problèmes rencontrés : Je ne savais pas comment gérer les ressources, notamment quand le joueur pose une tuile sur une carrière.
    - Suggestions pour l'amélioration : [le cas échéant]
 
-2. [Nom du membre de l'équipe]:
+2. Rayene:
+    - Tâche accomplie : j'ai ajouter une interface qui permet à l'utilisateur d'entrer les noms des joueurs en fonction du nombre choisi et pour pouvoir lancer la partie
+   - Problèmes rencontrés : au debut j'avais du mal a  comprendre comment liée ma methode avec  l'arrayList qui est dans PlayingState pour pouvoir ajouter des nouveau players
+   - Suggestions pour l'amélioration : [le cas échéant]
+
+
+3. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
    - Suggestions pour l'amélioration : [le cas échéant]
-
-3. ...
 
 Objectifs pour la Semaine Prochaine:
 1. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
