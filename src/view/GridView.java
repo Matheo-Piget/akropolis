@@ -7,8 +7,10 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
 
+import model.Hexagon;
 import util.Point3D;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.JFrame;
 
 /**
@@ -92,5 +94,30 @@ public class GridView extends JPanel {
         hexagons.add(hexagon);
         // Add it to the jpanel
         this.add(hexagon);
+    }
+
+    public void updateGrid(Map<Point3D, Hexagon> hexagons) {
+        // Remove all hexagons from the grid
+        this.removeAll();
+        this.hexagons.clear();
+        // Add the new hexagons
+        for (Hexagon hexagon : hexagons.values()) {
+            switch (hexagon.getType()) {
+                case "Quarrie":
+                    addHexagon(new QuarrieView(hexagon.getX(), hexagon.getY(), hexagon.getZ()));
+                    break;
+                case "District":
+                    addHexagon(new DistrictView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), (model.District) hexagon));
+                    break;
+                case "Place":
+                    addHexagon(new PlaceView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), (model.Place) hexagon));
+                    break;
+                default:
+                    System.out.println("Unknown hexagon type: " + hexagon.getClass().getSimpleName());
+            }
+        }
+        // Repaint the grid
+        this.revalidate();
+        this.repaint();
     }
 }

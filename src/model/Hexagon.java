@@ -1,8 +1,8 @@
 package model;
 
+import java.awt.*;
 import java.util.ArrayList;
 import util.Point3D;
-import java.awt.Point;
 
 /**
  * Represents a tile on the game grid.
@@ -60,8 +60,6 @@ public abstract class Hexagon {
         int random = (int) (Math.random() * 6);
         System.out.println(random);
         switch (random){
-            case 0:
-                return new Quarrie(0,0);
             case 1:
                 return new District(0, 0, DistrictColor.RED);
             case 2:

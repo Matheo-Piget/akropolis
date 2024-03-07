@@ -1,14 +1,18 @@
 package view;
 
+import model.Hexagon;
+import util.Point3D;
+
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import javax.swing.SwingUtilities;
 
-public class ScrollableGridView extends JScrollPane {
+public class ScrollableGridView extends JScrollPane implements View {
 
     private GridView grid;
     private JScrollBar horizontalScrollBar;
@@ -83,5 +87,9 @@ public class ScrollableGridView extends JScrollPane {
 
     public void addHexagon(HexagonView hexagon) {
         grid.addHexagon(hexagon);
+    }
+
+    public void updateGrid(Map<Point3D, Hexagon> hexagons) {
+        grid.updateGrid(hexagons);
     }
 }

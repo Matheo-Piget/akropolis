@@ -17,7 +17,7 @@ public class GridController extends Controller {
     }
 
     public void updateCurrentGrid() {
-        //gridView.updateGrid(((Grid)model).getHexagons()); //TODO : updateGrid
+        gridView.updateGrid(((Grid)model).getHexagons()); //TODO : updateGrid
     }
 
 
