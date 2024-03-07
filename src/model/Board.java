@@ -24,8 +24,12 @@ public class Board extends Model implements PropertyChangeListener{
      */
     public Board(List<Player> players) {
         playerGridList = new ArrayList<>();
+        int nb_rocks = 1;
         for (Player player : players) {
+            player.setResources(nb_rocks);
+
             playerGridList.add(new Tuple<>(player, new Grid(player)));
+            nb_rocks++;
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
