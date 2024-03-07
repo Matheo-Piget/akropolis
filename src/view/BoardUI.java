@@ -16,7 +16,7 @@ import javax.swing.Timer;
  * Represents the ui of the game board.
  * Contains both the player name label, the rock label, and the remaining tiles label.
  */
-public class BoardUI extends JPanel {
+public class BoardUI extends JPanel implements View {
     private PlayerLabel playerLabel = new PlayerLabel("Player");
     private RockLabel rockLabel = new RockLabel();
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();

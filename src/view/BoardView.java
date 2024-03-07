@@ -78,4 +78,8 @@ public class BoardView extends JPanel implements View {
             App.getInstance().getScreen().revalidate();
         });
     }
+
+    public BoardUI getBoardUI() {
+        return boardUI;
+    }
 }
