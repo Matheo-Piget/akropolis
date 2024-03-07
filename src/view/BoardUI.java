@@ -35,14 +35,10 @@ public class BoardUI extends JPanel implements View{
         topPanel.add(playerLabel, gbc);
         gbc.gridx = 1;
         topPanel.add(rockLabel, gbc);
+        gbc.gridx = 2;
+        topPanel.add(remainingTilesLabel, gbc);
 
         add(topPanel, BorderLayout.NORTH);
-
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(remainingTilesLabel);
-
-        add(bottomPanel, BorderLayout.SOUTH);
 
         setBackground(bg);
         applyStyle();
