@@ -39,7 +39,7 @@ public class BoardUI extends JPanel implements View {
         gbc.gridx = 0;
         gbc.gridy = 0;
         topPanel.add(playerLabel, gbc);
-        gbc.gridy = 1;
+        gbc.gridx = 1;
         topPanel.add(rockLabel, gbc);
 
         add(topPanel, BorderLayout.NORTH);
