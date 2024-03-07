@@ -30,8 +30,8 @@ public class UIController extends Controller {
     }
 
     private void updateRemainingTilesInfo() {
-        int remainingTiles = ((Board)model).getStackTiles().size();
-        boardUI.setRemainingTiles(remainingTiles);
+        int remainingTiles = (((Board)model).getStackTiles()).size();
+        boardUI.setRemainingTiles(remainingTiles+1);
     }
 }
 
