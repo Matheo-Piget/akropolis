@@ -23,13 +23,13 @@ public class UIController extends Controller {
         }
     }
 
-    private void updatePlayerInfo() {
+    public void updatePlayerInfo() {
         Player currentPlayer = ((Board)model).getCurrentPlayer();
         boardUI.setPlayer(currentPlayer.getName());
         boardUI.setRock(currentPlayer.getResources());
     }
 
-    private void updateRemainingTilesInfo() {
+    public void updateRemainingTilesInfo() {
         int remainingTiles = (((Board)model).getStackTiles()).size();
         boardUI.setRemainingTiles(remainingTiles+1);
     }

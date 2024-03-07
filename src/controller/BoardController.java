@@ -24,6 +24,12 @@ public class BoardController extends Controller {
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getPropertyName().equals("tileSelected")) {
             // Draw the selected tile in the view and make it draggable
+        } else if(evt.getPropertyName().equals("playerUpdated")) {
+            // Update the player info in the view
+            uiController.updatePlayerInfo();
+        } else if(evt.getPropertyName().equals("tilesRemainingUpdated")) {
+            // Update the remaining tiles info in the view
+            uiController.updateRemainingTilesInfo();
         }
     }
 }
