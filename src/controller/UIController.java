@@ -16,7 +16,7 @@ public class UIController extends Controller {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
-        if (propertyName.equals("playerUpdated")) {
+        if (propertyName.equals("playerUpdated ")) {
             updatePlayerInfo();
         } else if (propertyName.equals("tilesRemainingUpdated")) {
             updateRemainingTilesInfo();
