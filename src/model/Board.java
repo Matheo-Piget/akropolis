@@ -83,6 +83,7 @@ public class Board extends Model implements PropertyChangeListener{
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        updateRemainingTilesInfo();
         updatePlayerInfo();
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
