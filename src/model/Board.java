@@ -83,6 +83,7 @@ public class Board extends Model implements PropertyChangeListener{
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        updateRemainingTilesInfo();
         updatePlayerInfo();
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
@@ -95,7 +96,7 @@ public class Board extends Model implements PropertyChangeListener{
         //site.remove(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
-            endTurn(player);
+            endTurn();
         } else {
             //TODO : handle the case where the player can't add the tile to his grid
         }
@@ -103,9 +104,8 @@ public class Board extends Model implements PropertyChangeListener{
 
     /**
      * Ends the turn for the given player, switches to the next player, and starts their turn.
-     * @param player The player for whom the turn is ending.
      */
-    public void endTurn(Player player) {
+    public void endTurn() {
         updateRemainingTilesInfo();
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
@@ -156,10 +156,8 @@ public class Board extends Model implements PropertyChangeListener{
     public int switchSizePlayers() {
         System.out.println(getNumberOfPlayers());
         return switch (getNumberOfPlayers()) {
-            case 1 -> 3;
-            case 2 -> 3;
+            case 1, 2 -> 3;
             case 3 -> 4;
-            case 4 -> 5;
             default -> 5;
         };
     }

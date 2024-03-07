@@ -6,12 +6,13 @@ import view.BoardView;
 
 public class BoardController extends Controller {
     private SiteController siteController;
+    private UIController uiController;
 
     public BoardController(Board model, BoardView view) {
         super(model, view);
         // Create the site controller
         siteController = new SiteController(model.getSite(), view.getSiteView());
-        UIController uiController = new UIController(model, view.getBoardUI());
+        uiController = new UIController(model, view.getBoardUI());
         // Then we can start the game
         ((Board)(model)).startGame();
     }

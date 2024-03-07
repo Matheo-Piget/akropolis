@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class Player extends Model {
     private String name; // The name of the player
-    private int score; // The score of the player
     private Tile selectedTile; // The tile selected by the player during their turn
     private int resources; // The resources (rocks) owned by the player
 
@@ -18,7 +17,6 @@ public class Player extends Model {
      */
     public Player(String name) {
         this.name = name;
-        this.score = 0;
         this.selectedTile = null;
         this.resources = 0;
     }
@@ -31,14 +29,6 @@ public class Player extends Model {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Gets the score of the player.
-     * @return The score of the player.
-     */
-    public int getScore() {
-        return score;
     }
 
     /**

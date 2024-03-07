@@ -16,7 +16,7 @@ public class UIController extends Controller {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
-        if (propertyName.equals("playerUpdated")) {
+        if (propertyName.equals("playerUpdated ")) {
             updatePlayerInfo();
         } else if (propertyName.equals("tilesRemainingUpdated")) {
             updateRemainingTilesInfo();
@@ -30,8 +30,8 @@ public class UIController extends Controller {
     }
 
     private void updateRemainingTilesInfo() {
-        int remainingTiles = ((Board)model).getStackTiles().size();
-        boardUI.setRemainingTiles(remainingTiles);
+        int remainingTiles = (((Board)model).getStackTiles()).size();
+        boardUI.setRemainingTiles(remainingTiles+1);
     }
 }
 
