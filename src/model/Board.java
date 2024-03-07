@@ -96,7 +96,7 @@ public class Board extends Model implements PropertyChangeListener{
         //site.remove(); // Remove the chosen tile from the table
         if(getCurrentGrid().addTile(player.getSelectedTile())){
             manche++;
-            endTurn(player);
+            endTurn();
         } else {
             //TODO : handle the case where the player can't add the tile to his grid
         }
@@ -104,9 +104,8 @@ public class Board extends Model implements PropertyChangeListener{
 
     /**
      * Ends the turn for the given player, switches to the next player, and starts their turn.
-     * @param player The player for whom the turn is ending.
      */
-    public void endTurn(Player player) {
+    public void endTurn() {
         updateRemainingTilesInfo();
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
