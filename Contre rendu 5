@@ -7,7 +7,8 @@ Tâches Accomplies:
 2. Rayene -ajout une nouvelle d'une interface qui contient un nouveau dialogue pour permettre à l'utilisateur d'entrer les noms des joueurs en fonction du nombre choisi
         et puis demarer la partie 
 3. Bilal - Ajout de l'UI sur la vue en jeu + relier la partie de la logique du tas de tuile à la vue.
-4. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
+4. Nidhal - la pioche et le mouvement visuel des tuiles sur le jpanel (pour poser) pas fini
+5. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
 
 Avancements Individuels:
 1. Mathéo:
@@ -36,7 +37,12 @@ Avancements Individuels:
                                         avec le magnifique système d'évènement mmmmmmmmm.
 
 
-3. [Nom du membre de l'équipe]:
+3. Nidhal:
+   - Tâche accomplie : la pioche et le mouvement visuel des tuiles sur le jpanel (pour poser) pas fini
+   - Problèmes rencontrés : un decalage du mouvement et le mouvement se fait seulement sur un jpanel puisque y en plusieurs sur le jframe 
+   - Suggestions pour l'amélioration : régler les problèmes pour la semaine prochaine 
+   
+4. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
    - Suggestions pour l'amélioration : [le cas échéant]
