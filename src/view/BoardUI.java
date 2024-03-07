@@ -1,13 +1,7 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import javax.swing.JPanel;
-import java.awt.Insets;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -16,7 +10,7 @@ import javax.swing.Timer;
  * Represents the ui of the game board.
  * Contains both the player name label, the rock label, and the remaining tiles label.
  */
-public class BoardUI extends JPanel implements View {
+public class BoardUI extends JPanel implements View{
     private PlayerLabel playerLabel = new PlayerLabel("Player");
     private RockLabel rockLabel = new RockLabel();
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
@@ -51,6 +45,7 @@ public class BoardUI extends JPanel implements View {
         add(bottomPanel, BorderLayout.SOUTH);
 
         setBackground(bg);
+        applyStyle();
     }
 
     @Override
@@ -83,5 +78,19 @@ public class BoardUI extends JPanel implements View {
 
     public void setRemainingTiles(int remainingTiles){
         remainingTilesLabel.setRemainingTiles(remainingTiles);
+    }
+
+    private void applyStyle() {
+        // Style pour playerLabel
+        playerLabel.setForeground(Color.BLUE); // Texte en bleu
+        playerLabel.setFont(playerLabel.getFont().deriveFont(Font.BOLD, 16)); // Police en gras de taille 16
+
+        // Style pour rockLabel
+        rockLabel.setForeground(Color.RED); // Texte en rouge
+        rockLabel.setFont(rockLabel.getFont().deriveFont(Font.PLAIN, 14)); // Police de taille 14
+
+        // Style pour remainingTilesLabel
+        remainingTilesLabel.setForeground(Color.GREEN.darker()); // Texte en vert foncé
+        remainingTilesLabel.setFont(remainingTilesLabel.getFont().deriveFont(Font.ITALIC, 12)); // Police italique de taille 12
     }
 }
