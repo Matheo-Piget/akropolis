@@ -70,6 +70,10 @@ public class Board extends Model implements PropertyChangeListener{
         propertyChangeSupport.firePropertyChange("tilesRemainingUpdated", null, stackTiles.size());
     }
 
+    public void updateCurrentGrid(){
+        propertyChangeSupport.firePropertyChange("currentGridUpdated", null, getCurrentGrid());
+    }
+
 
     /**
      * Starts the game by starting the first turn.
