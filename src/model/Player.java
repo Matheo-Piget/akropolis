@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents a player in the Akrapolis game.
  */
-public class Player {
+public class Player extends Model {
     private String name; // The name of the player
     private int score; // The score of the player
     private Tile selectedTile; // The tile selected by the player during their turn

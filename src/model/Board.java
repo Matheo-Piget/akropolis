@@ -24,8 +24,12 @@ public class Board extends Model implements PropertyChangeListener{
      */
     public Board(List<Player> players) {
         playerGridList = new ArrayList<>();
+        int nb_rocks = 1;
         for (Player player : players) {
+            player.setResources(nb_rocks);
+
             playerGridList.add(new Tuple<>(player, new Grid(player)));
+            nb_rocks++;
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
@@ -56,6 +60,17 @@ public class Board extends Model implements PropertyChangeListener{
         }
     }
 
+    // Dans la classe Board
+
+    public void updatePlayerInfo() {
+        propertyChangeSupport.firePropertyChange("playerUpdated", null, currentPlayer);
+    }
+
+    public void updateRemainingTilesInfo() {
+        propertyChangeSupport.firePropertyChange("tilesRemainingUpdated", null, stackTiles.size());
+    }
+
+
     /**
      * Starts the game by starting the first turn.
      */
@@ -68,6 +83,7 @@ public class Board extends Model implements PropertyChangeListener{
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        updatePlayerInfo();
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles, switchSizePlayers());
@@ -90,6 +106,7 @@ public class Board extends Model implements PropertyChangeListener{
      * @param player The player for whom the turn is ending.
      */
     public void endTurn(Player player) {
+        updateRemainingTilesInfo();
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
         startTurn(currentPlayer); // Start the next player's turn

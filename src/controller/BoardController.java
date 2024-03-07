@@ -11,6 +11,7 @@ public class BoardController extends Controller {
         super(model, view);
         // Create the site controller
         siteController = new SiteController(model.getSite(), view.getSiteView());
+        UIController uiController = new UIController(model, view.getBoardUI());
         // Then we can start the game
         ((Board)(model)).startGame();
     }
