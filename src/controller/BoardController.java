@@ -34,7 +34,7 @@ public class BoardController extends Controller {
             uiController.updateRemainingTilesInfo();
         } else if(evt.getPropertyName().equals("currentGridUpdated")) {
             // Update the current grid in the view
-            //updateCurrentGrid();
+            gridController.updateCurrentGrid();
         }
     }
 }

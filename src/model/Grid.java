@@ -8,7 +8,7 @@ import util.Point3D;
  * Represents the grid of the game board, containing hexagons in different
  * positions.
  */
-public class Grid {
+public class Grid extends Model{
     // Map to store hexagons based on their positions
     private Map<Point3D, Hexagon> hexagons;
     private Player player;
