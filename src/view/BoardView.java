@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 
 import view.main.App;
 import javax.swing.SwingUtilities;
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
@@ -16,25 +14,31 @@ import java.util.ArrayList;
  */
 public class BoardView extends JPanel implements View {
 
-    private ScrollableGridView gridView;
+    private ArrayList<ScrollableGridView> gridViews = new ArrayList<ScrollableGridView>();
+    private ScrollableGridView currentGridView;
     private SiteView siteView;
     private BoardUI boardUI;
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private TileView selectedTile;
 
     /**
      * Constructor for the BoardView.
      * 
      * @param maxHexagons The maximum number of hexagons to be displayed on the
      *                    board.
-     * @param capacity    The capacity of the site.
+     * @param numPlayers  The number of players in the game.
+     * 
+     * @param siteCapacity The number of tiles that can be stored in the site.
      */
-    public BoardView(int maxHexagons, int capacity) {
+    public BoardView(int maxHexagons, int numPlayers, int siteCapacity) {
         setLayout(new BorderLayout());
         setOpaque(true);
-        gridView = new ScrollableGridView(maxHexagons);
-        setSize(gridView.getPreferredSize());
-        siteView = new SiteView(capacity);
-        add(gridView, BorderLayout.CENTER);
+        gridViews = new ArrayList<ScrollableGridView>();
+        for (int i = 0; i < numPlayers; i++) {
+            gridViews.add(new ScrollableGridView(maxHexagons));
+        }
+        siteView = new SiteView(siteCapacity);
+        add(gridViews.get(0), BorderLayout.CENTER);
+        currentGridView = gridViews.get(0);
         add(siteView, BorderLayout.WEST);
         boardUI = new BoardUI();
         add(boardUI, BorderLayout.AFTER_LAST_LINE);
@@ -43,16 +47,21 @@ public class BoardView extends JPanel implements View {
         App.getInstance().getScreen().revalidate();
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        propertyChangeSupport.addPropertyChangeListener(pcl);
+    public void setSelectedTile(TileView tile) {
+        selectedTile = tile;
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        propertyChangeSupport.removePropertyChangeListener(pcl);
+    public void nextTurn(){
+        int index = gridViews.indexOf(currentGridView);
+        index = (index + 1) % gridViews.size();
+        currentGridView = gridViews.get(index);
+        remove(0);
+        add(currentGridView, BorderLayout.CENTER);
+        revalidate();
     }
 
     public ScrollableGridView getGridView() {
-        return gridView;
+        return currentGridView;
     }
 
     public SiteView getSiteView() {
@@ -62,7 +71,7 @@ public class BoardView extends JPanel implements View {
     // For testing purposes
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            BoardView boardView = new BoardView(40, 5);
+            BoardView boardView = new BoardView(40, 5, 3);
             ArrayList<TileView> tiles = new ArrayList<TileView>();
             for (int i = 0; i < 3; i++) {
                 tiles.add(new TileView(new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1)));

@@ -58,7 +58,6 @@ public abstract class Hexagon {
 
     public static Hexagon generateRandomHexagon(){
         int random = (int) (Math.random() * 6);
-        System.out.println(random);
         switch (random){
             case 1:
                 return new District(0, 0, DistrictColor.RED);

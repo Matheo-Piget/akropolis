@@ -57,15 +57,7 @@ public class SiteView extends JPanel implements View {
         System.out.println("Tile: " + tile);
         for(Hexagon h : tile.getHexagons()){
             // Then we convert the hexagon to a hexagon view
-            if(h instanceof model.Quarrie){
-                hexs[i] = new QuarrieView(h.getX(), h.getY(), h.getZ());
-            }
-            else if (h instanceof model.Place){
-                hexs[i] = new PlaceView(h.getX(), h.getY(), h.getZ(), (model.Place) h);
-            }
-            else{
-                hexs[i] = new DistrictView(h.getX(), h.getY(), h.getZ(), (model.District) h);
-            }
+            hexs[i] = HexagonViewFactory.createHexagonView(h);
             i++;
         }
         tileView = new TileView(hexs[0], hexs[1], hexs[2]);

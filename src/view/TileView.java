@@ -2,7 +2,8 @@ package view;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-
+import model.Tile;
+import model.Hexagon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
@@ -51,7 +52,14 @@ public class TileView extends JComponent implements View {
         setupDragging();
     }
 
-
+    public TileView(Tile tile) {
+        Hexagon hex1 = tile.getHexagons().get(0);
+        Hexagon hex2 = tile.getHexagons().get(1);
+        Hexagon hex3 = tile.getHexagons().get(2);
+        HexagonView hexView1 = HexagonViewFactory.createHexagonView(hex1);
+        HexagonView hexView2 = HexagonViewFactory.createHexagonView(hex2);
+        HexagonView hexView3 = HexagonViewFactory.createHexagonView(hex3);
+    }
 
     private void setupDragging() {
         MouseAdapter ma = new MouseAdapter() {
@@ -78,10 +86,6 @@ public class TileView extends JComponent implements View {
         this.addMouseListener(ma);
         this.addMouseMotionListener(ma);
     }
-
-
-
-
 
     private void setupListener() {
         // Add the mouse listener to the hexagons

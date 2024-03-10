@@ -10,7 +10,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * Represents the game board and manages the game.
  */
-public class Board extends Model implements PropertyChangeListener{
+public class Board extends Model implements PropertyChangeListener {
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
     private final Site site; // The tiles on the table
@@ -27,7 +27,6 @@ public class Board extends Model implements PropertyChangeListener{
         int nb_rocks = 1;
         for (Player player : players) {
             player.setResources(nb_rocks);
-
             playerGridList.add(new Tuple<>(player, new Grid(player)));
             nb_rocks++;
         }
@@ -93,16 +92,19 @@ public class Board extends Model implements PropertyChangeListener{
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles, switchSizePlayers());
         }
-        if (player.getResources() == 0) {
-            player.setSelectedTile(site.getTiles().get(0));
-        }
-        // TODO: Implement the turn logic when we have the controller, use canChooseTile to check if the player can choose a tile
-        //site.remove(); // Remove the chosen tile from the table
-        if(getCurrentGrid().addTile(player.getSelectedTile())){
-            manche++;
-            endTurn();
-        } else {
-            //TODO : handle the case where the player can't add the tile to his grid
+    }
+
+    /**
+     * Adds a tile to the grid of the current player.
+     * @param tile The tile to add to the grid.
+     */
+    public void addTileToGrid() {
+        Tile tile = currentPlayer.getSelectedTile();
+        if(tile == null) return; // No tile selected
+        if (addTile(tile)) {
+            currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
+            updatePlayerInfo();
+            updateCurrentGrid();
         }
     }
 
@@ -114,6 +116,7 @@ public class Board extends Model implements PropertyChangeListener{
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
         startTurn(currentPlayer); // Start the next player's turn
+        propertyChangeSupport.firePropertyChange("nextTurn", null, currentPlayer);
     }
 
     /**

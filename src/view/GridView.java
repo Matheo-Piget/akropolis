@@ -90,34 +90,17 @@ public class GridView extends JPanel {
     public void addHexagon(HexagonView hexagon) {
         // Find the position of the hexagon in pixels
         Point2D position = convertGridPositionToPixelPosition(hexagon.getPosition());
+        // If there is already a hexagon with the same x and y, remove it
+        for (HexagonView h : hexagons) {
+            if (h.getPosition().x == hexagon.getPosition().x && h.getPosition().y == hexagon.getPosition().y) {
+                hexagons.remove(h);
+                this.remove(h);
+                break;
+            }
+        }
         hexagon.setLocation((int) Math.round(position.getX()), (int) Math.round(position.getY()));
         hexagons.add(hexagon);
         // Add it to the jpanel
         this.add(hexagon);
-    }
-
-    public void updateGrid(Map<Point3D, Hexagon> hexagons) {
-        // Remove all hexagons from the grid
-        this.removeAll();
-        this.hexagons.clear();
-        // Add the new hexagons
-        for (Hexagon hexagon : hexagons.values()) {
-            switch (hexagon.getType()) {
-                case "Quarrie":
-                    addHexagon(new QuarrieView(hexagon.getX(), hexagon.getY(), hexagon.getZ()));
-                    break;
-                case "District":
-                    addHexagon(new DistrictView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), (model.District) hexagon));
-                    break;
-                case "Place":
-                    addHexagon(new PlaceView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), (model.Place) hexagon));
-                    break;
-                default:
-                    System.out.println("Unknown hexagon type: " + hexagon.getClass().getSimpleName());
-            }
-        }
-        // Repaint the grid
-        this.revalidate();
-        this.repaint();
     }
 }

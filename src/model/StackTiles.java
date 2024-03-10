@@ -22,7 +22,6 @@ public class StackTiles extends Stack<Tile>{
         super();
         // We lock the size of the stack to avoid any modification
         remainingTiles = size;
-        System.out.println("Size of the stack: " + size);
         generateTiles();
 
     }
@@ -44,7 +43,6 @@ public class StackTiles extends Stack<Tile>{
         }
         // Generate the rest of the tiles randomly
         generateRandomTiles();
-        System.out.println("Size of the stack: " + this.size());
     }
 
     /**
@@ -74,7 +72,6 @@ public class StackTiles extends Stack<Tile>{
      */
     private void generateRandomTiles() {
         // Generate the rest of the tiles randomly
-        System.out.println("Remaining tiles: " + remainingTiles);
         for (int i = 0; i < remainingTiles; i++) {
             // Create a tile with three random districts
             Hexagon h1 = Hexagon.generateRandomHexagon();

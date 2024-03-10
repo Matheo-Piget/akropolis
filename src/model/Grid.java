@@ -21,8 +21,8 @@ public class Grid extends Model{
         hexagons = new HashMap<>();
         // Creating starting hexagons
         Point3D p1 = new Point3D(0, 0);
-        Point3D p2 = new Point3D(0, 1);
-        Point3D p3 = new Point3D(-1, -1);
+        Point3D p2 = new Point3D(-1, 1);
+        Point3D p3 = new Point3D(0, -1);
         Point3D p4 = new Point3D(1, 0);
         Hexagon hexagon1 = new Place(p1, 1, DistrictColor.BLUE, this);
         Hexagon hexagon2 = new Quarrie(p2, this);
@@ -33,6 +33,16 @@ public class Grid extends Model{
         hexagons.put(p3, hexagon3);
         hexagons.put(p4, hexagon4);
         this.player = player;
+    }
+
+    /**
+     * Just to notify the view that the grid has been initialized
+     */
+    public void gridInitialized() {
+        // Iterate over the hexagons and notify the view
+        for (Hexagon hexagon : hexagons.values()) {
+            propertyChangeSupport.firePropertyChange("hexagonAdded", null, hexagon);
+        }
     }
 
 
@@ -80,11 +90,9 @@ public class Grid extends Model{
         boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
         boolean canBePlaced = checkElevation(tile);
         int samehexagon = countSameHexagons(tile, bellowHexagons);
-
         if (canBePlaced && hasNeighbor && samehexagon <= 1) {
             addHexagonsToGrid(tile, bellowHexagons);
         }
-
         if (canBePlaced && hasNeighbor && samehexagon <= 1){
             for (Hexagon hexagon : tile.hexagons) {
                 if(hexagon.getBelow() instanceof Quarrie){
@@ -92,8 +100,6 @@ public class Grid extends Model{
                 }
             }
         }
-
-
         display();
         System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", samehexagon: " + samehexagon);
         return canBePlaced && hasNeighbor && samehexagon <= 1;
@@ -142,6 +148,8 @@ public class Grid extends Model{
                 bellowHexagons[i].setAbove(newHexagon_i);
             }
             hexagons.put(newHexagon_i.getPosition(), newHexagon_i);
+            // Notify the view that a hexagon has been added
+            propertyChangeSupport.firePropertyChange("hexagonAdded", null, newHexagon_i);
         }
     }
 
@@ -204,47 +212,6 @@ public class Grid extends Model{
         System.out.println("z1: " + h1.getZ() + ", z2: " + h2.getZ() + ", z3: " + h3.getZ());
         return (z1 == z2) && (z2 == z3) && adjacent1_2 && adjacent1_3 && adjacent2_3;
     }
-    /*
-     * public void addhexagon(hexagon hexagon){
-     * boolean hasNeighbor;
-     * boolean isSpported ;
-     * int elevation = hexagon.gethexagon(0).getZ() ;// verifier d'abord si au meme
-     * niveau avant d'ajouter
-     * 
-     * for (int i = 1; i < 3; i++) {
-     * if (hexagon.gethexagon(i).getZ()!= elevation) {
-     * return ;
-     * }
-     * }
-     * 
-     * for (int i = 0; i < 3; i++) {
-     * hexagon hexagonToadd = hexagon.gethexagon(i);
-     * if (!hexagons.containsKey(hexagonToadd.getPosition())) {
-     * hasNeighbor = canAdd(hexagonToadd);
-     * }
-     * else{
-     * isSpported =
-     * }
-     * 
-     * }
-     * }
-     * public boolean isSpported(hexagon t ){
-     * 
-     * }
-     * 
-     * public boolean canAdd(hexagon hexagon){
-     * Point [] axialDirection = {new Point(0, 1), new Point(0, -1),new Point(-1, 1)
-     * ,new Point(1, 1),new Point(1, -1),new Point(-1, -1),};
-     * for (Point point : axialDirection) {
-     * Point3D hexagonneighber = new Point3D(hexagon.getX()+point.x, hexagon.getY()+point.y,
-     * 0);
-     * if (hexagons.containsKey(hexagonneighber)) {
-     * return true;
-     * }
-     * }
-     * return false ;
-     * }
-     */
 
     /**
      * Retrieves the topmost hexagon at the specified position in the grid.
@@ -292,100 +259,6 @@ public class Grid extends Model{
     public void clearGrid() {
         hexagons.clear();
     }
-
-    /**
-     * Calculate the score of each district
-     */
-    /*
-     * public int calculateScore() {
-     * // TODO : This method calculation is not correct, it should be fixed to
-     * calculate the score of each district
-     * // TODO : peut être séparé cette méthode en plusieurs méthode car elle risque
-     * d'être longue
-     * // it gives just an example of how to calculate the score
-     * int gardenScore = 0;
-     * int barrackScore = 0;
-     * int buildingScore = 0;
-     * ArrayList<Integer> buildingScores = new ArrayList<Integer>();
-     * int currentNumberOfBuilding = 0; // We count all the building
-     * int maxNumberOfBuilding = 0; // We only count the maximum adjacent building
-     * int maxBuildingScore = 0;
-     * int templeScore = 0;
-     * int marketScore = 0;
-     * 
-     * int gardenMultiplier = 1;
-     * int barrackMultiplier = 1;
-     * int buildingMultiplier = 1;
-     * int templeMultiplier = 1;
-     * int marketMultiplier = 1;
-     * 
-     * for (hexagon hexagon : hexagons.values()) {
-     * switch (hexagon.getType()) {
-     * case "Garden Place":
-     * gardenMultiplier = ((Place) hexagon).getStars();
-     * break;
-     * case "Barrack Place":
-     * barrackMultiplier = ((Place) hexagon).getStars();
-     * break;
-     * case "Building Place":
-     * buildingMultiplier = ((Place) hexagon).getStars();
-     * break;
-     * case "Temple Place":
-     * templeMultiplier = ((Place) hexagon).getStars();
-     * break;
-     * case "Market Place":
-     * marketMultiplier = ((Place) hexagon).getStars();
-     * break;
-     * 
-     * case "Garden":
-     * gardenScore += hexagon.getElevation(); // It should always increase the score
-     * break;
-     * case "Barrack":
-     * // We only increase the score if the barrack is in the border of the grid
-     * if (hexagon.getNeighbors().size() < 6) {
-     * barrackScore += hexagon.getElevation();
-     * }
-     * break;
-     * case "Building":
-     * // We only increase the score if the building is next to another building
-     * for (hexagon neighbor : hexagon.getNeighbors()) {
-     * if (neighbor.getType().equals("Building")) {
-     * currentNumberOfBuilding++;
-     * buildingScore += hexagon.getElevation();
-     * maxNumberOfBuilding = Math.max(maxNumberOfBuilding, currentNumberOfBuilding);
-     * maxBuildingScore = Math.max(maxBuildingScore, buildingScore);
-     * break;
-     * }
-     * }
-     * break;
-     * case "Temple":
-     * // We only increase the score if the temple is surrounded by 6 hexagons
-     * if (hexagonIsSurrounded(hexagon)) {
-     * templeScore++;
-     * }
-     * break;
-     * case "Market":
-     * // We only increase the score if the market has no adjacent market
-     * boolean hasMarket = false;
-     * for (hexagon neighbor : hexagon.getNeighbors()) {
-     * if (neighbor.getType().equals("Market")) {
-     * hasMarket = true;
-     * break;
-     * }
-     * }
-     * if (!hasMarket) {
-     * marketScore++;
-     * }
-     * break;
-     * }
-     * }
-     * return gardenScore * gardenMultiplier +
-     * barrackScore * barrackMultiplier +
-     * maxBuildingScore * buildingMultiplier +
-     * templeScore * templeMultiplier +
-     * marketScore * marketMultiplier;
-     * }
-     */
 
     /**
      * Get the top hexagons of the grid

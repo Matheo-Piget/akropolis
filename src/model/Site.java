@@ -24,8 +24,18 @@ public class Site extends Model {
         firePropertyChange("tileUpdated", null, tiles);
     }
 
+    public int calculateCost(Tile tile) {
+        int cost = 0;
+        for (Tile t : tiles) {
+            if (t != tile) {
+                cost++;
+            }
+        }
+        return cost;
+    }
+
     public void selectedTile(Tile tile) {
-        // Infrom the board that a tile has been selected
+        // Inform the board that a tile has been selected
         firePropertyChange("tileSelected", null, tile);
     }
 

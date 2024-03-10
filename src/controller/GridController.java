@@ -1,25 +1,19 @@
 package controller;
 
-import model.Board;
 import model.Grid;
-import model.Player;
+import model.Hexagon;
+import view.HexagonView;
+import view.HexagonViewFactory;
 import view.ScrollableGridView;
-
 import java.beans.PropertyChangeEvent;
 
 public class GridController extends Controller {
 
-    private ScrollableGridView gridView;
     public GridController(Grid grid, ScrollableGridView gridView) {
         super(grid, gridView);
-        this.gridView = gridView;
-
+        // Just to make the first hexagon appear
+        ((Grid) model).gridInitialized();
     }
-
-    public void updateCurrentGrid() {
-        gridView.updateGrid(((Grid)model).getHexagons()); //TODO : updateGrid
-    }
-
 
     /**
      * This method gets called when a bound property is changed.
@@ -29,8 +23,12 @@ public class GridController extends Controller {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("currentGridUpdated")) {
-            updateCurrentGrid();
+        if(evt.getPropertyName().equals("hexagonAdded")) {
+            // Convert the hexagon to a view and add it to the grid view
+            System.out.println("Adding a hexagon to the grid view");
+            Hexagon hexagon = (Hexagon) evt.getNewValue();
+            HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon);
+            ((ScrollableGridView) view).addHexagon(hexagonView);
         }
     }
 }
