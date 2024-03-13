@@ -4,8 +4,8 @@ Semaine du [date de début] au [date de fin]
 
 Tâches Accomplies:
 1. Mathéo - ajout d'un controller pour gere les infos du joueur et les tuiles restantes dans la pioches.
-2. [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
-3. ...
+2. Rayene - intégration bouton qui permet d'afficher le menu de pause.
+3.  [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
 
 Avancements Individuels:
 1. Mathéo:
@@ -13,12 +13,15 @@ Avancements Individuels:
    - Problèmes rencontrés : problemes concernant l'affichage des tuiles restantes, ne metais pas le bon nombre de tuiles.
    - Suggestions pour l'amélioration : [le cas échéant]
 
-2. [Nom du membre de l'équipe]:
+2. Rayene :
+    - Tâche accomplie : ajout d'un bouton pour mettre pause a la partie et afficher un menu avec des bouton qui permettent de reprondre ou quitté la partie .
+    - Problèmes rencontrés : au début je voulais faire cela avec le bouton échap au lieu d'ajouter un bouton de pause mais je n'ai pas reussi a faire cela donc
+        j'ai mit un bouton de pause 
+    - Suggestions pour l'amélioration :
+3. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
    - Suggestions pour l'amélioration : [le cas échéant]
-
-3. ...
 
 Objectifs pour la Semaine Prochaine:
 1. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
