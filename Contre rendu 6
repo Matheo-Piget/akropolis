@@ -5,7 +5,7 @@ Semaine du [date de début] au [date de fin]
 Tâches Accomplies:
 1. Mathéo - ajout d'un controller pour gere les infos du joueur et les tuiles restantes dans la pioches.
 2. Rayene - intégration bouton qui permet d'afficher le menu de pause.
-3.  [Nom du membre de l'équipe] - Description brève de la tâche accomplie.
+3. Nerval  -Integration de la possibilité d'effectuer des rotation aux tuiles proposer dans la pioche.
 
 Avancements Individuels:
 1. Mathéo:
@@ -18,10 +18,16 @@ Avancements Individuels:
     - Problèmes rencontrés : au début je voulais faire cela avec le bouton échap au lieu d'ajouter un bouton de pause mais je n'ai pas reussi a faire cela donc
         j'ai mit un bouton de pause 
     - Suggestions pour l'amélioration :
-3. [Nom du membre de l'équipe]:
+3. Nerval:
+   - Tâche accomplie : ajout de la logique de la rotaion des tuiles dans la pioche 
+   - Problèmes rencontrés :la selection de la tuile auquelle on souhaite applique une rotation.
+   - Suggestions pour l'amélioration : [le cas échéant]
+   
+ 4. [Nom du membre de l'équipe]:
    - Tâche accomplie : [Description brève]
    - Problèmes rencontrés : [le cas échéant]
    - Suggestions pour l'amélioration : [le cas échéant]
+   
 
 Objectifs pour la Semaine Prochaine:
 1. [Nom du membre de l'équipe] - Objectif pour la semaine prochaine.
