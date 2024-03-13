@@ -1,11 +1,11 @@
 package view;
 
-import javax.swing.JPanel;
-
 import view.main.App;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
+
 import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Panel for displaying the game board.
@@ -19,6 +19,7 @@ public class BoardView extends JPanel implements View {
     private SiteView siteView;
     private BoardUI boardUI;
     private TileView selectedTile;
+    private JButton pauseButton;
 
     /**
      * Constructor for the BoardView.
@@ -45,6 +46,12 @@ public class BoardView extends JPanel implements View {
         System.out.println("Adding board view to screen");
         App.getInstance().getScreen().add(this, BorderLayout.CENTER);
         App.getInstance().getScreen().revalidate();
+
+        pauseButton = new JButton("⏸"); // Utilisation d'un symbole de pause
+        pauseButton.setPreferredSize(new Dimension(50, 30));
+        pauseButton.addActionListener(e -> showPauseMenu());
+        
+        this.add(pauseButton, BorderLayout.NORTH);
     }
 
     public void setSelectedTile(TileView tile) {
@@ -66,6 +73,27 @@ public class BoardView extends JPanel implements View {
 
     public SiteView getSiteView() {
         return siteView;
+    }
+
+    private void showPauseMenu() {
+        JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true); 
+        pauseMenu.setLayout(new GridLayout(2, 1)); 
+        pauseMenu.setSize(200, 100); 
+        pauseMenu.setLocationRelativeTo(this);
+
+        JButton resumeButton = new JButton("Reprendre");
+        resumeButton.addActionListener(e -> pauseMenu.dispose());
+
+        JButton quitButton = new JButton("Quitter");
+        quitButton.addActionListener(e -> {
+            pauseMenu.dispose();
+            App.getInstance().exitToMainMenu(); 
+        });
+
+        pauseMenu.add(resumeButton);
+        pauseMenu.add(quitButton);
+
+        pauseMenu.setVisible(true);
     }
 
     // For testing purposes
