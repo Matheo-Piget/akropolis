@@ -87,6 +87,10 @@ public abstract class Hexagon {
         this.tile = tile;
     }
 
+    public void setPosition(int x, int y){
+        this.position = new Point3D(x, y, 1);
+    }
+
     /**
      * Gets the x-coordinate of the tile.
      *

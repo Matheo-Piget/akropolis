@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import java.awt.event.MouseAdapter;
+import java.awt.geom.Point2D;
+import java.awt.Rectangle;
+import java.awt.geom.Path2D;
+import java.awt.geom.AffineTransform;
+
 /**
  * Represents an hexagon on the game grid.
  */
@@ -21,7 +26,7 @@ public abstract class HexagonView extends JComponent {
     protected boolean isHovered = false;
     protected TexturePaint texture;
     protected Point3D position;
-    protected Polygon hexagon = new Polygon();
+    protected Path2D.Double hexagon = new Path2D.Double();
 
     public HexagonView(int x, int y, int z) {
         this.setSize(size, size);
@@ -30,10 +35,16 @@ public abstract class HexagonView extends JComponent {
         this.position = new Point3D(x, y, z);
         int center = size / 2 - 1; // Fuck you
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
-            hexagon.addPoint(xval, yval);
+            double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
+            double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
+            if(i == 0){
+                hexagon.moveTo(xval, yval);
+            }
+            else{
+                hexagon.lineTo(xval, yval);
+            }
         }
+        hexagon.closePath();
         MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -46,14 +57,17 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
+
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseDragged(java.awt.event.MouseEvent e) {
                 // Do nothing
@@ -64,15 +78,21 @@ public abstract class HexagonView extends JComponent {
         this.addMouseMotionListener(ma);
     }
 
-    public HexagonView(int x, int y, int z, BufferedImage img){
+    public HexagonView(int x, int y, int z, BufferedImage img) {
         this.setSize(size, size);
         this.position = new Point3D(x, y, z);
         int center = size / 2 - 1; // Dumb rounding
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
-            hexagon.addPoint(xval, yval);
+            double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
+            double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
+            if(i == 0){
+                hexagon.moveTo(xval, yval);
+            }
+            else{
+                hexagon.lineTo(xval, yval);
+            }
         }
+        hexagon.closePath();
         this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
         MouseAdapter ma = new MouseAdapter() {
             @Override
@@ -86,14 +106,17 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
+
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseDragged(java.awt.event.MouseEvent e) {
                 // Do nothing
@@ -109,10 +132,16 @@ public abstract class HexagonView extends JComponent {
         this.position = new Point3D(x, y, z);
         int center = size / 2 - 1; // Ligma balls
         for (int i = 0; i < 6; i++) {
-            int xval = (int) (center + center * Math.cos(i * 2 * Math.PI / 6));
-            int yval = (int) (center + center * Math.sin(i * 2 * Math.PI / 6));
-            hexagon.addPoint(xval, yval);
+            double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
+            double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
+            if(i == 0){
+                hexagon.moveTo(xval, yval);
+            }
+            else{
+                hexagon.lineTo(xval, yval);
+            }
         }
+        hexagon.closePath();
         MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -125,14 +154,17 @@ public abstract class HexagonView extends JComponent {
                 isHovered = false;
                 repaint();
             }
+
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 // Do nothing
             }
+
             @Override
             public void mouseDragged(java.awt.event.MouseEvent e) {
                 // Do nothing
@@ -163,28 +195,29 @@ public abstract class HexagonView extends JComponent {
         getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
     }
 
-    public Polygon getPolygon() {
-        return hexagon;
+    public void rotate() {
+        // Calculate the center of the hexagon
+        Rectangle bounds = hexagon.getBounds();
+        double centerX = bounds.getCenterX();
+        double centerY = bounds.getCenterY();
+    
+        // Create an AffineTransform and rotate it 90 degrees around the center
+        AffineTransform at = new AffineTransform();
+        at.rotate(Math.toRadians(90), centerX, centerY);
+    
+        // Apply the rotation to the hexagon
+        hexagon = (Path2D.Double) at.createTransformedShape(hexagon);
+    
+        // Repaint the component
+        this.repaint();
     }
 
     public TexturePaint getTexture() {
         return texture;
     }
 
-    public ArrayList<Point> getPoints() {
-        ArrayList<Point> points = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            points.add(new Point(hexagon.xpoints[i], hexagon.ypoints[i]));
-        }
-        return points;
-    }
-
     public void setHovered(boolean hovered) {
         isHovered = hovered;
-    }
-
-    public Polygon setPolygon(Polygon hexagon) {
-        return this.hexagon = hexagon;
     }
 
     @Override
@@ -200,8 +233,8 @@ public abstract class HexagonView extends JComponent {
         return this.position;
     }
 
-    private Color darken(Color c, int z){
-        for(int i = 0; i < z; i++){
+    private Color darken(Color c, int z) {
+        for (int i = 0; i < z; i++) {
             c = c.darker();
         }
         return c;

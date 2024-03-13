@@ -1,13 +1,11 @@
 package view;
 
-import model.Hexagon;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
 public class ScrollableGridView extends JScrollPane implements View {

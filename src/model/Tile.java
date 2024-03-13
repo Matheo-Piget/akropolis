@@ -1,9 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-
-import view.HexagonView;
-import view.TileView;
+import java.awt.geom.Point2D;
 
 /**
  * This class represents a tile that the player can set onto the board.
@@ -11,6 +9,7 @@ import view.TileView;
 public class Tile extends Model{
     // An array to store the three hexagons that make up the tile
     public ArrayList<Hexagon> hexagons = new ArrayList<>();
+    private int rotation = 90;
 
     /**
      * Constructor for creating a Tile with three specified hexagons.
@@ -26,16 +25,6 @@ public class Tile extends Model{
     }
 
     /**
-     * Rotates the tile by one position.
-     */
-    public void rotate() {
-        Hexagon temp = hexagons.get(0);
-        hexagons.set(0, hexagons.get(2));
-        hexagons.set(2, hexagons.get(1));
-        hexagons.set(1, temp);
-    }
-
-    /**
      * Exchanges two specified hexagons in the tile.
      *
      * @param hexagon1 The first hexagon to be exchanged.
@@ -46,6 +35,35 @@ public class Tile extends Model{
         int index2 = hexagons.indexOf(hexagon2);
         hexagons.set(index1, hexagon2);
         hexagons.set(index2, hexagon1);
+    }
+
+    public void rotate() {
+        rotation = (rotation + 90) % 360;
+    }
+
+    public void placeNeighbors() {
+        Hexagon frontHex = hexagons.get(0);
+        int x = frontHex.getX();
+        int y = frontHex.getY();
+    
+        switch (rotation) {
+            case 0:
+                hexagons.get(1).setPosition(x + 1, y);
+                hexagons.get(2).setPosition(x + 1, y - 1);
+                break;
+            case 90:
+                hexagons.get(1).setPosition(x, y - 1);
+                hexagons.get(2).setPosition(x - 1, y - 1);
+                break;
+            case 180:
+                hexagons.get(1).setPosition(x - 1, y);
+                hexagons.get(2).setPosition(x - 1, y + 1);
+                break;
+            case 270:
+                hexagons.get(1).setPosition(x, y + 1);
+                hexagons.get(2).setPosition(x + 1, y + 1);
+                break;
+        }
     }
 
     public ArrayList<Hexagon> getHexagons() {

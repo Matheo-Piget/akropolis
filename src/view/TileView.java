@@ -48,7 +48,6 @@ public class TileView extends JComponent implements View {
         setupListener();
         this.revalidate();
         this.repaint();
-
         setupDragging();
     }
 
@@ -59,6 +58,7 @@ public class TileView extends JComponent implements View {
         HexagonView hexView1 = HexagonViewFactory.createHexagonView(hex1);
         HexagonView hexView2 = HexagonViewFactory.createHexagonView(hex2);
         HexagonView hexView3 = HexagonViewFactory.createHexagonView(hex3);
+        setHexagons(hexView1, hexView2, hexView3);
     }
 
     private void setupDragging() {
@@ -68,6 +68,7 @@ public class TileView extends JComponent implements View {
             @Override
             public void mousePressed(MouseEvent e) {
                 initialClick = e.getPoint();
+                rotate();
                 SwingUtilities.convertPointToScreen(initialClick, TileView.this);
             }
 
@@ -75,16 +76,41 @@ public class TileView extends JComponent implements View {
             public void mouseDragged(MouseEvent e) {
                 Point currentScreenLocation = e.getLocationOnScreen();
                 Point parentLocation = TileView.this.getParent().getLocationOnScreen();
-                
+
                 int x = currentScreenLocation.x - parentLocation.x - initialClick.x;
                 int y = currentScreenLocation.y - parentLocation.y - initialClick.y;
-                
+
                 TileView.this.setLocation(x, y);
             }
         };
 
         this.addMouseListener(ma);
         this.addMouseMotionListener(ma);
+    }
+
+    public void rotate() {
+        // Calculate the center of the hexagons
+        double centerX = (hex1.getX() + hex2.getX() + hex3.getX()) / 3.0;
+        double centerY = (hex1.getY() + hex2.getY() + hex3.getY()) / 3.0;
+    
+        rotateHexagon(hex1, (int) Math.round(centerX), (int) Math.round(centerY));
+        rotateHexagon(hex2, (int) Math.round(centerX), (int) Math.round(centerY));
+        rotateHexagon(hex3, (int) Math.round(centerX), (int) Math.round(centerY));
+    
+        this.repaint();
+    }
+
+    private void rotateHexagon(HexagonView hexagon, int centerX, int centerY) {
+        double relativeX = hexagon.getX() - centerX;
+        double relativeY = hexagon.getY() - centerY;
+    
+        double angle = Math.toRadians(90);
+    
+        double rotatedX = relativeX * Math.cos(angle) - relativeY * Math.sin(angle);
+        double rotatedY = relativeX * Math.sin(angle) + relativeY * Math.cos(angle);
+    
+        hexagon.setLocation((int) Math.round(rotatedX + centerX), (int) Math.round(rotatedY + centerY));
+        hexagon.rotate();
     }
 
     private void setupListener() {
@@ -162,8 +188,8 @@ public class TileView extends JComponent implements View {
         hex1.setLocation(centerX + hexWidth / 4, centerY);
 
         // Position the second and third hexagons at the left of the first hexagon
-        hex2.setLocation(centerX - hexWidth/2, centerY - hexHeight / 2);
-        hex3.setLocation(centerX - hexWidth/2, centerY + hexHeight / 2);
+        hex2.setLocation(centerX - hexWidth / 2, centerY - hexHeight / 2);
+        hex3.setLocation(centerX - hexWidth / 2, centerY + hexHeight / 2);
     }
 
     public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
@@ -185,13 +211,12 @@ public class TileView extends JComponent implements View {
 
     protected void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g.create();
         // Change the color of the hexagons if the tile is hovered
         if (isHovered && !isClicked) {
             if (!glowTimer.isRunning()) {
                 glowTimer.start();
             }
-            Graphics2D g2 = (Graphics2D) g.create();
-
             g2.setStroke(new BasicStroke(1));
 
             // Draw a dark border around this component which is a rectangle
@@ -202,12 +227,12 @@ public class TileView extends JComponent implements View {
             g2.setColor(new Color(73 / 255f, 216 / 255f, 230 / 255f, glow));
             g2.setStroke(new BasicStroke(10));
             g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-            g2.dispose();
 
         } else {
             if (glowTimer.isRunning()) {
                 glowTimer.stop();
             }
         }
+        g2.dispose();
     }
 }
