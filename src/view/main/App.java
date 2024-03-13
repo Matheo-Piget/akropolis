@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import view.main.states.AppState;
+import view.main.states.StartState;
 
 public class App extends JFrame{
     private final int WIDTH = 1500;
@@ -40,6 +41,10 @@ public class App extends JFrame{
     public void run() {
         appState = AppState.START;
         appState.getState().enter();
+    }
+    public void exitToMainMenu() {
+        // Logique pour revenir au menu principal
+        appState.changeState(StartState.getInstance());
     }
 
     public static void main(String[] args) {
