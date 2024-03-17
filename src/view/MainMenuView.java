@@ -1,28 +1,16 @@
 package view;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import view.main.App;
 import view.main.states.PlayingState;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 import javax.imageio.ImageIO;
 
 public class MainMenuView extends JPanel {
@@ -61,21 +49,21 @@ public class MainMenuView extends JPanel {
         buttonPanel.setLayout(new GridLayout(1, 2, 20, 0)); // 1 ligne, 2 colonnes, espace horizontal de 20
 
         // Bouton démarrer
-        JButton startButton = new JButton("Démarrer");
+        JButton startButton = createStyledButton("Démarrer");
         startButton.setPreferredSize(new Dimension(150, 50));
         startButton.addActionListener((ActionEvent e) -> startNewGame());
 
         //bouton regles
-        JButton rulesButton = new JButton("Regles du jeu");
+        JButton rulesButton = createStyledButton("Regles du jeu");
         rulesButton.setPreferredSize(new Dimension(150,50));
         rulesButton.addActionListener(e -> showRulesPanel());
 
         // Bouton quitter
-        JButton quitButton = new JButton("Quitter");
+        JButton quitButton = createStyledButton("Quitter");
         quitButton.setPreferredSize(new Dimension(150, 50));
         quitButton.addActionListener((ActionEvent e) -> System.exit(0));
 
-        JButton creditsButton = new JButton("Crédits");
+        JButton creditsButton = createStyledButton("Crédits");
         creditsButton.addActionListener(e -> showCreditsPanel());
     
 
@@ -107,54 +95,41 @@ public class MainMenuView extends JPanel {
 
     private void startNewGame() {
         System.out.println("Nouvelle partie démarrée");
-        // Logique pour démarrer le jeu
-        Object[] options = {"1 Joueur" , "2 Joueur" , "3 Joueur" , "4 Joueur"};
-        int choice = JOptionPane.showOptionDialog(this,
-                "Choisissez le nombre de joeurs pour la partie", 
-                "Nombre de Joueurs",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-            null,
-                options,
-                options[0]);
 
-        // Liste pour stocker temporairement les noms des joueurs collectés
-        List<String> playerNames = new ArrayList<>();
-        switch (choice){
-            case 0:
-                playerNames.add(collectPlayerName(1));
-                System.out.println("Partie démarrée avec 1 joueur");
-                //App.getInstance().appState.changeState(PlayingState.getInstance());
-                break;
-            case 1:
-                for (int i = 1; i <= 2; i++) {
-                    playerNames.add(collectPlayerName(i));
-                }
-                System.out.println("Partie démarrée avec 2 joueur");
-                break;
-            case 2:
-                for (int i = 1; i <= 3; i++) {
-                    playerNames.add(collectPlayerName(i));
-                }
-                System.out.println("Partie démarrée avec 3 joueur");
-                break;
-            case 3:
-                for (int i = 1; i <= 4; i++) {
-                    playerNames.add(collectPlayerName(i));
-                }
-                System.out.println("Partie démarrée avec 4 joueur");
-                break;
-            default:
-                System.out.println("Aucun choix fait, partie non démarrée");
-                //break;
-                JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return; 
-        }
-         // Si des noms ont été collectés, mettre à jour les joueurs dans PlayingState et changer l'état
-        if (!playerNames.isEmpty()) {
-            PlayingState playingState = PlayingState.getInstance();
-            playingState.setPlayers(playerNames); // Met à jour la liste des joueurs dans PlayingState
-            App.getInstance().appState.changeState(playingState); // Change l'état de l'application pour démarrer la partie
+        // Utilisation de JComboBox pour sélectionner le nombre de joueurs
+        JComboBox<Integer> playerNumberComboBox = new JComboBox<>(new Integer[]{1, 2, 3, 4});
+        playerNumberComboBox.setSelectedIndex(0); // Sélectionne la première option par défaut
+
+        JPanel dialogPanel = new JPanel(new BorderLayout());
+        dialogPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        dialogPanel.add(new JLabel("Choisissez le nombre de joueurs pour la partie:"), BorderLayout.NORTH);
+        dialogPanel.add(playerNumberComboBox, BorderLayout.CENTER);
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                dialogPanel,
+                "Nombre de Joueurs",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            int numberOfPlayers = (int) playerNumberComboBox.getSelectedItem();
+            List<String> playerNames = new ArrayList<>();
+
+            for (int i = 1; i <= numberOfPlayers; i++) {
+                playerNames.add(collectPlayerName(i));
+            }
+
+            if (!playerNames.isEmpty()) {
+                PlayingState playingState = PlayingState.getInstance();
+                playingState.setPlayers(playerNames);
+                App.getInstance().appState.changeState(playingState);
+            }
+        } else {
+            System.out.println("Aucun choix fait, partie non démarrée");
+            JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
     private String collectPlayerName(int playerNumber) {
@@ -168,13 +143,13 @@ public class MainMenuView extends JPanel {
         return playerName.trim();
     }
 
-    private void showRulesPanel(){
-        // Création d'un nouveau dialogue 
+    private void showRulesPanel() {
+        // Création d'un nouveau dialogue
         JDialog rulesDialog = new JDialog();
-        rulesDialog.setTitle("Régles du jeu");
-        rulesDialog.setSize(910 , 700 );
+        rulesDialog.setTitle("Règles du jeu");
+        rulesDialog.setSize(910, 700);
         rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.
-        // Crée un panel principal utilisant BorderLayout 
+        // Crée un panel principal utilisant BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
         //liste pour stocker les images des règles du jeu.
         List<ImageIcon> rulesImages= new ArrayList<>();
@@ -194,10 +169,14 @@ public class MainMenuView extends JPanel {
         }
         // Utilise un JScrollPane pour permettre le défilement si l'image est plus grande que le panel.
         JScrollPane scrollPane = new JScrollPane(imagLabel);
+        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); // Couleur de fond de la barre de défilement
+        scrollPane.getVerticalScrollBar().setForeground(new Color(255, 215, 0)); // Couleur de la barre de défilement
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0)); // Taille de la barre de défilement
+
         mainPanel.add(scrollPane , BorderLayout.CENTER);
 
-        JButton prevButton = new JButton("<");
-        JButton nexButton = new JButton(">");
+        JButton prevButton = createStyledNavigationButton("<");
+        JButton nextButton = createStyledNavigationButton(">");
 
         final int[] currentIndex = {0};
         prevButton.addActionListener(e ->{
@@ -208,7 +187,7 @@ public class MainMenuView extends JPanel {
             }
         });
 
-        nexButton.addActionListener(e -> {
+        nextButton.addActionListener(e -> {
             // incrémente l'index et met à jour l'image affichée quand le bouton précédent est cliqué.
             if(currentIndex[0] < rulesImages.size() - 1) {
                 currentIndex[0]++;
@@ -216,20 +195,19 @@ public class MainMenuView extends JPanel {
             }
         });
 
+        // Panels pour positionner les boutons sur les côtés de l'image
+        JPanel leftButtonPanel = new JPanel(new BorderLayout());
+        leftButtonPanel.add(prevButton, BorderLayout.CENTER);
 
-    // Panels pour positionner les boutons sur les côtés de l'image
-    JPanel leftButtonPanel = new JPanel(new BorderLayout());
-    leftButtonPanel.add(prevButton, BorderLayout.CENTER);
+        JPanel rightButtonPanel = new JPanel(new BorderLayout());
+        rightButtonPanel.add(nextButton, BorderLayout.CENTER);
 
-    JPanel rightButtonPanel = new JPanel(new BorderLayout());
-    rightButtonPanel.add(nexButton, BorderLayout.CENTER);
+        // Ajoute les boutons de navigation à gauche et à droite de l'image
+        mainPanel.add(leftButtonPanel, BorderLayout.WEST);
+        mainPanel.add(rightButtonPanel, BorderLayout.EAST);
 
-    // Ajoute les boutons de navigation à gauche et à droite de l'image
-    mainPanel.add(leftButtonPanel, BorderLayout.WEST);
-    mainPanel.add(rightButtonPanel, BorderLayout.EAST);
-
-    rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
-    rulesDialog.setVisible(true);
+        rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
+        rulesDialog.setVisible(true);
     }
 
     private void showCreditsPanel() {
@@ -249,12 +227,12 @@ public class MainMenuView extends JPanel {
         JPanel creditsPanel = new JPanel();
         creditsPanel.setLayout(new GridLayout(0, 1)); // Disposition en colonne pour les noms
         // Ajoutez ici les noms des membres de l'équipe
-        creditsPanel.add(new JLabel("    Développeur 1: CHETOUANI Bilal "));
-        creditsPanel.add(new JLabel("    Développeur 2: BENZERDJEB Rayene"));
-        creditsPanel.add(new JLabel("    Développeur 3: MOUSSA Nidhal"));
-        creditsPanel.add(new JLabel("    Développeur 4: PIGET Matheo "));
-        creditsPanel.add(new JLabel("    Développeur 5: GBAGUIDI Nerval "));
-        
+        creditsPanel.add(createStyledCreditLabel("Développeur 1: CHETOUANI Bilal"));
+        creditsPanel.add(createStyledCreditLabel("Développeur 2: BENZERDJEB Rayene"));
+        creditsPanel.add(createStyledCreditLabel("Développeur 3: MOUSSA Nidhal"));
+        creditsPanel.add(createStyledCreditLabel("Développeur 4: PIGET Matheo"));
+        creditsPanel.add(createStyledCreditLabel("Développeur 5: GBAGUIDI Nerval"));
+
         // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre équipe
     
         // Ajout des panels au dialogue
@@ -263,6 +241,57 @@ public class MainMenuView extends JPanel {
     
         creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(150, 50));
+        button.setBackground(new Color(255, 215, 0));
+        button.setForeground(Color.BLACK);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 235, 59));
+                button.setForeground(Color.BLACK);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 215, 0));
+                button.setForeground(Color.BLACK);
+            }
+        });
+        return button;
+    }
+
+    private JButton createStyledNavigationButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(50, 50));
+        button.setBackground(new Color(255, 215, 0));
+        button.setForeground(Color.BLACK);
+        button.setFont(new Font("Arial", Font.BOLD, 20));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 235, 59));
+                button.setForeground(Color.BLACK);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 215, 0));
+                button.setForeground(Color.BLACK);
+            }
+        });
+        return button;
+    }
+
+    private JLabel createStyledCreditLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setForeground(Color.BLACK);
+        return label;
     }
     
 }
