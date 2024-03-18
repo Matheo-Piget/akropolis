@@ -5,6 +5,7 @@ import model.Board;
 import view.BoardView;
 import view.TileViewFactory;
 import view.TileView;
+import model.Tile;
 
 public class BoardController extends Controller {
     private SiteController siteController;
@@ -15,7 +16,7 @@ public class BoardController extends Controller {
     public BoardController(Board model, BoardView view) {
         super(model, view);
         // Create the site controller
-        siteController = new SiteController(model.getSite(), view.getSiteView());
+        siteController = new SiteController(model.getSite(), view.getSiteView(), this);
         uiController = new UIController(model, view.getBoardUI());
         gridController = new GridController(model.getCurrentGrid(), view.getGridView());
         // Then we can start the game
@@ -27,18 +28,22 @@ public class BoardController extends Controller {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("tileSelected")) {
-            Board board = (Board) model;
-            BoardView boardView = (BoardView) view;
-            TileView tileView = TileViewFactory.createTileView(board.getCurrentPlayer().getSelectedTile());
-            selectedTile = new TileController(board.getCurrentPlayer().getSelectedTile(), tileView);
-            boardView.setSelectedTile((TileView) selectedTile.view);
-        }
         if (evt.getPropertyName().equals("nextTurn")) {
             // Change the current grid to the next player's grid
             ((BoardView) view).nextTurn();
         }
         handleUiUpdates(evt);
+    }
+
+    public void selectedTile(TileController tileController) {
+        Board board = (Board) model;
+        BoardView boardView = (BoardView) view;
+        Tile tile = (Tile) tileController.model;
+        if(board.setSelectedTile(tile)){
+            selectedTile = tileController;
+            boardView.setSelectedTile((TileView) tileController.view);
+            System.out.println("Tile selected");
+        }
     }
 
     private void handleUiUpdates(PropertyChangeEvent evt){

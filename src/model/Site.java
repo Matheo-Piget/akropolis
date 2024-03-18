@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Site extends Model {
     private ArrayList<Tile> tiles;
 
-    public Site(int nbTiles) {
-        tiles = new ArrayList<Tile>(nbTiles);
+    public Site() {
+        tiles = new ArrayList<Tile>();
     }
 
     /**
@@ -15,9 +15,9 @@ public class Site extends Model {
      * @param numberToDraw
      */
     public void updateSite(StackTiles stackTiles, int numberToDraw) {
+        System.out.println("updateSite");
         for (int i = tiles.size(); i < numberToDraw; i++) {
             if (!stackTiles.isEmpty()) {
-                System.out.println("Drawing a tile from the stack" + stackTiles.peek());
                 tiles.add(stackTiles.pop());
             }
         }
@@ -32,11 +32,6 @@ public class Site extends Model {
             }
         }
         return cost;
-    }
-
-    public void selectedTile(Tile tile) {
-        // Inform the board that a tile has been selected
-        firePropertyChange("tileSelected", null, tile);
     }
 
     public ArrayList<Tile> getTiles() {

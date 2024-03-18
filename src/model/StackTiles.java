@@ -55,7 +55,7 @@ public class StackTiles extends Stack<Tile>{
         int stars = random.nextInt(5) + 1;
 
         // Create a place with stars of the specified color
-        Point3D position = new Point3D(0, 0, 0); // Example position, can be adjusted
+        Point3D position = new Point3D(0, 0, 1); 
         Place place = new Place(position, stars, color);
 
         // Then the other two hexagons are random

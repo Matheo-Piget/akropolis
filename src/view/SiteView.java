@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.awt.Graphics;
-import model.Hexagon;
-import model.Tile;
 
 /**
  * Represents the site in the game.
@@ -42,26 +40,8 @@ public class SiteView extends JPanel implements View {
     }
 
 
-    public void update(ArrayList<Tile> tiles) {
-        ArrayList<TileView> tileViews = new ArrayList<TileView>();
-        for (Tile tile : tiles) {
-            tileViews.add(obtainCorrespondingView(tile));
-        }
-        setTilesInSite(tileViews);
-    }
-
-    public TileView obtainCorrespondingView(Tile tile){
-        TileView tileView;
-        HexagonView [] hexs = new HexagonView[3];
-        int i = 0;
-        System.out.println("Tile: " + tile);
-        for(Hexagon h : tile.getHexagons()){
-            // Then we convert the hexagon to a hexagon view
-            hexs[i] = HexagonViewFactory.createHexagonView(h);
-            i++;
-        }
-        tileView = new TileView(hexs[0], hexs[1], hexs[2]);
-        return tileView;
+    public void update(ArrayList<TileView> tiles) { 
+        setTilesInSite(tiles);
     }
 
     public void setTilesInSite(ArrayList<TileView> tiles) {

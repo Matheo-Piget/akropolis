@@ -10,13 +10,12 @@ import java.beans.PropertyChangeSupport;
 /**
  * Represents the game board and manages the game.
  */
-public class Board extends Model implements PropertyChangeListener {
+public class Board extends Model {
     private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
     private final StackTiles stackTiles; // The stack of tiles in the game
     private final Site site; // The tiles on the table
     private Player currentPlayer; // The current player
     private int manche = 0;
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
      * Constructs a new board and initializes the game.
@@ -31,9 +30,7 @@ public class Board extends Model implements PropertyChangeListener {
             nb_rocks++;
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
-        site = new Site(switchSizePlayers()); // Assuming 3 tiles on the table
-        // Initialize the list with the first three tiles from the stack
-        site.updateSite(stackTiles, getNumberOfPlayers());
+        site = new Site();
         currentPlayer = players.get(0); // Set the current player to the first player
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
@@ -46,20 +43,13 @@ public class Board extends Model implements PropertyChangeListener {
         propertyChangeSupport.removePropertyChangeListener(pcl);
     }
 
-    @Override
-    public void propertyChange(java.beans.PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("tileSelected")) {
-            Tile tile = (Tile) evt.getNewValue();
-            if (canChooseTile(tile)) {
-                currentPlayer.setSelectedTile(tile);
-                // DONT REMOVE THE RESOURCE YET BECAUSE HE CAN STILL CANCEL HIS CHOICE
-                // We inform the gui to do his stuff
-                propertyChangeSupport.firePropertyChange("tileSelected", null, tile);
-            }
+    public boolean setSelectedTile(Tile tile) {
+        if(canChooseTile(tile)) {
+            currentPlayer.setSelectedTile(tile);
+            return true;
         }
+        return false;
     }
-
-    // Dans la classe Board
 
     public void updatePlayerInfo() {
         propertyChangeSupport.firePropertyChange("playerUpdated", null, currentPlayer);
@@ -68,11 +58,6 @@ public class Board extends Model implements PropertyChangeListener {
     public void updateRemainingTilesInfo() {
         propertyChangeSupport.firePropertyChange("tilesRemainingUpdated", null, stackTiles.size());
     }
-
-    public void updateCurrentGrid(){
-        propertyChangeSupport.firePropertyChange("currentGridUpdated", null, getCurrentGrid());
-    }
-
 
     /**
      * Starts the game by starting the first turn.
@@ -86,12 +71,12 @@ public class Board extends Model implements PropertyChangeListener {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
-        updateRemainingTilesInfo();
-        updatePlayerInfo();
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles, switchSizePlayers());
         }
+        updateRemainingTilesInfo();
+        updatePlayerInfo();
     }
 
     /**
@@ -103,8 +88,7 @@ public class Board extends Model implements PropertyChangeListener {
         if(tile == null) return; // No tile selected
         if (addTile(tile)) {
             currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
-            updatePlayerInfo();
-            updateCurrentGrid();
+            endTurn();
         }
     }
 
@@ -112,7 +96,6 @@ public class Board extends Model implements PropertyChangeListener {
      * Ends the turn for the given player, switches to the next player, and starts their turn.
      */
     public void endTurn() {
-        updateRemainingTilesInfo();
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
         startTurn(currentPlayer); // Start the next player's turn

@@ -4,33 +4,17 @@ import model.Site;
 import model.Tile;
 import view.SiteView;
 import view.TileView;
-
+import view.TileViewFactory;
 import java.util.ArrayList;
 import java.beans.PropertyChangeEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class SiteController extends Controller {
-    private ArrayList<TileController> tileControllers; // Useful for converting
+    private ArrayList<TileController> tileControllers = new ArrayList<TileController>();
+    private BoardController boardController;
     
-    public SiteController(Site model, SiteView view) {
+    public SiteController(Site model, SiteView view, BoardController boardController) {
         super(model, view);
-        // Then we setup the listener to inform the model when we click on a tile
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // We get the tile that was clicked
-                TileView tile = ((SiteView) view).getTileClicked(e.getX(), e.getY());
-                // We can obtain the model from the tile controller
-                for (TileController tileController : tileControllers) {
-                    if (tileController.view == tile) {
-                        // We inform the model that the tile was clicked
-                        model.selectedTile((Tile) tileController.model);
-                    }
-                }
-            }
-        };
-        ((SiteView) view).addMouseListener(mouseAdapter);
+        this.boardController = boardController;
     }
 
     @Override
@@ -38,15 +22,16 @@ public class SiteController extends Controller {
         if (evt.getPropertyName().equals("tileUpdated")) {
             // Update the view with the updated tile
             ArrayList<Tile> tiles = ((Site) model).getTiles();
-            System.out.println("Updating the site with the tiles: " + tiles);
+            ArrayList<TileView> tileViews = new ArrayList<TileView>();
             // Then we create the tile controllers
             tileControllers = new ArrayList<TileController>();
             for (Tile tile : tiles) {
-                TileController tileController = new TileController(tile, ((SiteView) view).obtainCorrespondingView(tile));
+                TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile), boardController);
                 tileControllers.add(tileController);
+                tileViews.add((TileView) tileController.view);
             }
             // Then we update the view
-            ((SiteView) view).update(tiles);
+            ((SiteView) view).update(tileViews);
         }
     }
 }
