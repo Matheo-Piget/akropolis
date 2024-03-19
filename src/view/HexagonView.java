@@ -191,6 +191,12 @@ public abstract class HexagonView extends JComponent {
         getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
     }
 
+    /**
+     * Copy the hexagon
+     * @return a copy of the hexagon
+     */
+    public abstract HexagonView copy();
+
     public void rotate() {
         // Calculate the center of the hexagon
         Rectangle bounds = hexagon.getBounds();

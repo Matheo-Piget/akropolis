@@ -5,7 +5,6 @@ import view.main.App;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 /**
  * Panel for displaying the game board.
@@ -18,15 +17,14 @@ public class BoardView extends JPanel implements View {
     private ScrollableGridView currentGridView;
     private SiteView siteView;
     private BoardUI boardUI;
-    private TileView selectedTile;
     private JButton pauseButton;
 
     /**
      * Constructor for the BoardView.
      * 
-     * @param maxHexagons The maximum number of hexagons to be displayed on the
-     *                    board.
-     * @param numPlayers  The number of players in the game.
+     * @param maxHexagons  The maximum number of hexagons to be displayed on the
+     *                     board.
+     * @param numPlayers   The number of players in the game.
      * 
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
@@ -50,15 +48,18 @@ public class BoardView extends JPanel implements View {
         pauseButton = new JButton("⏸"); // Utilisation d'un symbole de pause
         pauseButton.setPreferredSize(new Dimension(50, 30));
         pauseButton.addActionListener(e -> showPauseMenu());
-        
+
         this.add(pauseButton, BorderLayout.NORTH);
     }
 
     public void setSelectedTile(TileView tile) {
-        selectedTile = tile;
+        // Convert it to a movable object
+        MovableTileView movableTile = new MovableTileView(tile);
+        currentGridView.setSelectedTile(movableTile);
     }
 
-    public void nextTurn(){
+    public void nextTurn() {
+        getGridView().removeSelectedTile();
         int index = gridViews.indexOf(currentGridView);
         index = (index + 1) % gridViews.size();
         currentGridView = gridViews.get(index);
@@ -76,9 +77,9 @@ public class BoardView extends JPanel implements View {
     }
 
     private void showPauseMenu() {
-        JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true); 
-        pauseMenu.setLayout(new GridLayout(2, 1)); 
-        pauseMenu.setSize(200, 100); 
+        JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true);
+        pauseMenu.setLayout(new GridLayout(2, 1));
+        pauseMenu.setSize(200, 100);
         pauseMenu.setLocationRelativeTo(this);
 
         JButton resumeButton = new JButton("Reprendre");
@@ -87,7 +88,7 @@ public class BoardView extends JPanel implements View {
         JButton quitButton = new JButton("Quitter");
         quitButton.addActionListener(e -> {
             pauseMenu.dispose();
-            App.getInstance().exitToMainMenu(); 
+            App.getInstance().exitToMainMenu();
         });
 
         pauseMenu.add(resumeButton);

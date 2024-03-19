@@ -2,20 +2,27 @@ package view;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+
 import javax.swing.SwingUtilities;
+import javax.swing.JPanel;
 
 public class ScrollableGridView extends JScrollPane implements View {
 
     private GridView grid;
     private JScrollBar horizontalScrollBar;
     private JScrollBar verticalScrollBar;
+    private MovableTileView selectedTile;
 
     public ScrollableGridView(GridView grid) {
-        super(grid); // Set the grid as the viewport view
+        super(grid);
+        setFocusable(true);
         this.grid = grid;
 
         getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
@@ -32,6 +39,18 @@ public class ScrollableGridView extends JScrollPane implements View {
         // Add a mouse adapter to handle right-click dragging
         MouseAdapter ma = new MouseAdapter() {
             private Point origin;
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if(selectedTile != null) {
+                    // Center the mouse position around one hexagon of the tile
+                    Point2D center = selectedTile.getCenter();
+                    int x = e.getX() - (int) center.getX();
+                    int y = e.getY() - (int) center.getY();
+                    selectedTile.setLocation(x, y);
+                    System.out.println("Moved to " + selectedTile.getX() + " " + selectedTile.getY());
+                }
+            }
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -83,5 +102,26 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     public void addHexagon(HexagonView hexagon) {
         grid.addHexagon(hexagon);
+    }
+
+    public void setSelectedTile(MovableTileView tile) {
+        if(selectedTile != null) {
+            grid.remove(selectedTile);
+            // Repaint the area where the tile was
+            grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
+        }
+        selectedTile = tile;
+        grid.add(selectedTile);
+        // Repaint the area where the tile is
+        grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
+    }
+
+    public void removeSelectedTile() {
+        if(selectedTile != null) {
+            grid.remove(selectedTile);
+            // Repaint the area where the tile was
+            grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
+            selectedTile = null;
+        }
     }
 }

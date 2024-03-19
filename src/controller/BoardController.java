@@ -3,7 +3,6 @@ package controller;
 import java.beans.PropertyChangeEvent;
 import model.Board;
 import view.BoardView;
-import view.TileViewFactory;
 import view.TileView;
 import model.Tile;
 

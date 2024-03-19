@@ -11,10 +11,12 @@ import model.Place;
 public class PlaceView extends HexagonView {
     private int stars;
     private BasicStroke stroke = new BasicStroke(size / 25);
+    private Place place;
 
     public PlaceView(int x, int y, int z, Place place) {
         super(x, y, z);
         this.stars = place.getStars();
+        this.place = place;
         switch (place.getType()) {
             case "Barrack Place":
                 this.texture = TextureFactory.getTexture("barrack");
@@ -34,6 +36,11 @@ public class PlaceView extends HexagonView {
             default:
                 break;
         }
+    }
+
+    @Override
+    public PlaceView copy(){
+        return new PlaceView((int) getPosition().getX(), (int) getPosition().getY(), (int) getPosition().getZ(), place);
     }
 
     @Override

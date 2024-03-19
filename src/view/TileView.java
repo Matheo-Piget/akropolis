@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import model.Tile;
 import model.Hexagon;
 import java.awt.event.MouseAdapter;
@@ -11,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -24,8 +22,7 @@ import java.util.Arrays;
 public class TileView extends JComponent implements View {
 
     private boolean isHovered = false;
-    private HexagonView hex1, hex2, hex3;
-    private boolean isClicked = false;
+    protected HexagonView hex1, hex2, hex3;
     private float glow = 0.0f;
     private boolean increasing = true;
     private Timer glowTimer;
@@ -36,11 +33,11 @@ public class TileView extends JComponent implements View {
 
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         setOpaque(false);
+        setFocusable(true);
         this.hex1 = hex1;
         this.hex2 = hex2;
         this.hex3 = hex3;
-        int hexWidth = 80; // Fixed amount to ensure they will be properly displayed
-        int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
+        int hexHeight = (int) (Math.sqrt(3) / 2 * HexagonView.size);
         this.setPreferredSize(new Dimension((int) (Math.sqrt(3) * 80), hexHeight));
         add(hex1);
         add(hex2);
@@ -48,10 +45,11 @@ public class TileView extends JComponent implements View {
         setupListener();
         this.revalidate();
         this.repaint();
-        setupDragging();
     }
 
     public TileView(Tile tile) {
+        setOpaque(false);
+        setFocusable(true);
         Hexagon hex1 = tile.getHexagons().get(0);
         Hexagon hex2 = tile.getHexagons().get(1);
         Hexagon hex3 = tile.getHexagons().get(2);
@@ -61,31 +59,13 @@ public class TileView extends JComponent implements View {
         setHexagons(hexView1, hexView2, hexView3);
     }
 
-    private void setupDragging() {
-        MouseAdapter ma = new MouseAdapter() {
-            Point initialClick;
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                initialClick = e.getPoint();
-                rotate();
-                SwingUtilities.convertPointToScreen(initialClick, TileView.this);
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                Point currentScreenLocation = e.getLocationOnScreen();
-                Point parentLocation = TileView.this.getParent().getLocationOnScreen();
-
-                int x = currentScreenLocation.x - parentLocation.x - initialClick.x;
-                int y = currentScreenLocation.y - parentLocation.y - initialClick.y;
-
-                TileView.this.setLocation(x, y);
-            }
-        };
-
-        this.addMouseListener(ma);
-        this.addMouseMotionListener(ma);
+    /**
+     * Copy constructor
+     * @param t The tile to copy
+     */
+    public TileView(TileView t){
+        this(t.hex1.copy(), t.hex2.copy(), t.hex3.copy());
+        System.out.println("My size is " + this.getPreferredSize());
     }
 
     public void rotate() {
@@ -213,7 +193,7 @@ public class TileView extends JComponent implements View {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
         // Change the color of the hexagons if the tile is hovered
-        if (isHovered && !isClicked) {
+        if (isHovered) {
             if (!glowTimer.isRunning()) {
                 glowTimer.start();
             }
@@ -231,6 +211,12 @@ public class TileView extends JComponent implements View {
         } else {
             if (glowTimer.isRunning()) {
                 glowTimer.stop();
+                // Reset the glow
+                glow = 0.0f;
+                // Redraw the border
+                g2.setColor(new Color(73, 216, 230));
+                g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+                repaint();
             }
         }
         g2.dispose();

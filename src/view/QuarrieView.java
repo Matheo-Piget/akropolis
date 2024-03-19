@@ -11,6 +11,11 @@ public class QuarrieView extends HexagonView {
     }
 
     @Override
+    public QuarrieView copy(){
+        return new QuarrieView((int) getPosition().getX(), (int) getPosition().getY(), (int) getPosition().getZ());
+    }
+
+    @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;

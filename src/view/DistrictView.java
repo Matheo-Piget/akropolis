@@ -6,9 +6,11 @@ import model.District;
 
 public class DistrictView extends HexagonView {
     private BasicStroke stroke = new BasicStroke(size / 25);
+    private District district;
 
     public DistrictView(int x, int y, int z, District d) {
         super(x, y, z);
+        this.district = d;
         switch (d.getType()) {
             case "Barrack":
                 this.texture = TextureFactory.getTexture("barrack");
@@ -28,6 +30,11 @@ public class DistrictView extends HexagonView {
             default:
                 break;
         }
+    }
+
+    @Override
+    public DistrictView copy(){
+        return new DistrictView((int) getPosition().getX(), (int) getPosition().getY(), (int) getPosition().getZ(), district);
     }
 
     @Override 

@@ -24,6 +24,7 @@ public class TileController extends Controller{
             }
         };
         ((TileView) view).addMouseListener(mouseAdapter);
+        ((TileView) view).addMouseMotionListener(mouseAdapter);
     }
 
     @Override

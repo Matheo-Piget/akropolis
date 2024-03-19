@@ -1,17 +1,12 @@
 package view;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
-
-import model.Hexagon;
 import util.Point3D;
 import java.util.ArrayList;
-import java.util.Map;
-import javax.swing.JFrame;
 
 /**
  * Represents the game grid displayed in game.
@@ -42,8 +37,33 @@ public class GridView extends JPanel {
                     System.out.println("Clic en coordonnées de grille : " + gridPosition);
                 }
             }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // Do nothing
+            }
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Do nothing
+            }
         };
         addMouseListener(ms);
+        addMouseMotionListener(ms);
     }
 
     public Point2D convertGridPositionToPixelPosition(Point3D gridPosition) {
