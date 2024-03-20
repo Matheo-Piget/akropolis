@@ -71,14 +71,13 @@ public class Board extends Model {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        firePropertyChange("nextTurn",null, player);
         getCurrentGrid().display();
         System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles, switchSizePlayers());
         }
-        updateRemainingTilesInfo();
-        updatePlayerInfo();
     }
 
     /**

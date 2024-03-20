@@ -46,12 +46,9 @@ public class BoardController extends Controller {
     }
 
     private void handleUiUpdates(PropertyChangeEvent evt){
-        if (evt.getPropertyName().equals("playerUpdated")) {
+        if (evt.getPropertyName().equals("nextTurn")) {
             // Update the player info in the view
             uiController.updatePlayerInfo();
-        }
-        if (evt.getPropertyName().equals("tilesRemainingUpdated")) {
-            // Update the remaining tiles info in the view
             uiController.updateRemainingTilesInfo();
         }
     }
