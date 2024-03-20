@@ -17,11 +17,13 @@ import java.awt.*;
  */
 public class BoardView extends JPanel implements View, KeyListener {
 
-    private ArrayList<ScrollableGridView> gridViews = new ArrayList<ScrollableGridView>();
     private ScrollableGridView currentGridView;
+    private ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private SiteView siteView;
     private BoardUI boardUI;
     private JButton pauseButton;
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cardPanel = new JPanel(cardLayout);
 
     /**
      * Constructor for the BoardView.
@@ -35,13 +37,15 @@ public class BoardView extends JPanel implements View, KeyListener {
     public BoardView(int maxHexagons, int numPlayers, int siteCapacity) {
         setLayout(new BorderLayout());
         setOpaque(true);
-        gridViews = new ArrayList<ScrollableGridView>();
+        setFocusable(true);
         for (int i = 0; i < numPlayers; i++) {
-            gridViews.add(new ScrollableGridView(maxHexagons));
+            ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
+            gridViews.add(gridView);
+            cardPanel.add(gridView, Integer.toString(i));
         }
         siteView = new SiteView(siteCapacity);
-        add(gridViews.get(0), BorderLayout.CENTER);
-        currentGridView = gridViews.get(0);
+        add(cardPanel, BorderLayout.CENTER);
+        currentGridView = (ScrollableGridView) cardPanel.getComponent(0);
         add(siteView, BorderLayout.WEST);
         boardUI = new BoardUI();
         add(boardUI, BorderLayout.AFTER_LAST_LINE);
@@ -120,6 +124,8 @@ public class BoardView extends JPanel implements View, KeyListener {
                 SwingUtilities.invokeLater(() -> {
                     App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
                     App.getInstance().getScreen().revalidate();
+                    BoardView.this.requestFocusInWindow();
+                    BoardView.this.addKeyListener(BoardView.this);
                 });
 
                 return null;
@@ -150,9 +156,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         int index = gridViews.indexOf(currentGridView);
         index = (index + 1) % gridViews.size();
         currentGridView = gridViews.get(index);
-        remove(0);
-        add(currentGridView, BorderLayout.CENTER);
-        revalidate();
+        // Use CardLayout.show to switch to the next gridView
+        cardLayout.show(cardPanel, String.valueOf(index));
+        System.out.println("Next turn");
     }
 
     public ScrollableGridView getGridView() {
@@ -241,6 +247,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             // Pause the game
             showPauseMenu();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            nextTurn();
         }
     }
 
