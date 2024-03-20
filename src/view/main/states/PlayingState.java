@@ -54,4 +54,8 @@ public class PlayingState extends State {
         // Remove everything from the screen
         App.getInstance().getScreen().removeAll();
     }
+
+    public BoardController getBoardController() {
+        return boardController;
+    }
 }

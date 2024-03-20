@@ -1,5 +1,7 @@
 package util;
 
+import controller.BoardController;
+
 public class State implements StatesMethods {
 
     // This is the default state class, it is used to create new states
@@ -23,5 +25,9 @@ public class State implements StatesMethods {
     @Override
     public void transitionTo(State s) {
 
+    }
+
+    public BoardController getBoardController() {
+        return null;
     }
 }

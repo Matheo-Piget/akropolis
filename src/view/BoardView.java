@@ -1,6 +1,8 @@
 package view;
 
 import view.main.App;
+import view.main.states.AppState;
+import view.main.states.PlayingState;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -250,6 +252,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             nextTurn();
+            App.getInstance().appState.getState().getBoardController().nextTurn();
         }
     }
 

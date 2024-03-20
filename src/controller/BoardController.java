@@ -55,4 +55,9 @@ public class BoardController extends Controller {
             uiController.updateRemainingTilesInfo();
         }
     }
+
+    public void nextTurn() {
+        ((Board) model).endTurn();
+
+    }
 }

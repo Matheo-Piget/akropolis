@@ -98,8 +98,8 @@ public class Board extends Model {
     public void endTurn() {
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
-        startTurn(currentPlayer); // Start the next player's turn
         propertyChangeSupport.firePropertyChange("nextTurn", null, currentPlayer);
+        startTurn(currentPlayer); // Start the next player's turn
     }
 
     /**
