@@ -5,7 +5,7 @@ import java.awt.BasicStroke;
 import model.District;
 
 public class DistrictView extends HexagonView {
-    private BasicStroke stroke = new BasicStroke(size / 25);
+    private static BasicStroke stroke = new BasicStroke(size / 25);
     private District district;
 
     public DistrictView(int x, int y, int z, District d) {
@@ -34,7 +34,7 @@ public class DistrictView extends HexagonView {
 
     @Override
     public DistrictView copy(){
-        return new DistrictView((int) getPosition().getX(), (int) getPosition().getY(), (int) getPosition().getZ(), district);
+        return new DistrictView(pos.x, pos.y , z, district);
     }
 
     @Override 
@@ -42,7 +42,7 @@ public class DistrictView extends HexagonView {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setPaint(darkenTexturePaint(texture, getPosition().getZ()));
+        g2d.setPaint(darkenTexturePaint(texture, z));
         g2d.fill(hexagon);
         // Draw the border of the hexagon
         if (isHovered) {

@@ -10,7 +10,7 @@ import model.Place;
  */
 public class PlaceView extends HexagonView {
     private int stars;
-    private BasicStroke stroke = new BasicStroke(size / 25);
+    private static BasicStroke stroke = new BasicStroke(size / 25);
     private Place place;
 
     public PlaceView(int x, int y, int z, Place place) {
@@ -40,7 +40,7 @@ public class PlaceView extends HexagonView {
 
     @Override
     public PlaceView copy(){
-        return new PlaceView((int) getPosition().getX(), (int) getPosition().getY(), (int) getPosition().getZ(), place);
+        return new PlaceView(pos.x, pos.y , z, place);
     }
 
     @Override

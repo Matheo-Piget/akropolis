@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import java.awt.event.MouseAdapter;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 
 /**
@@ -21,14 +22,16 @@ public abstract class HexagonView extends JComponent {
     public static int size = 80; // Size of the hexagons
     protected boolean isHovered = false;
     protected TexturePaint texture;
-    protected Point3D position;
+    protected Point pos = new Point(0, 0);
+    protected int z;
     protected Path2D.Double hexagon = new Path2D.Double();
 
     public HexagonView(int x, int y, int z) {
         this.setSize(size, size);
         setOpaque(false);
         // Calculate the coordinates of the six points of the hexagon
-        this.position = new Point3D(x, y, z);
+        pos = new Point(x, y);
+        this.z = z;
         int center = size / 2 - 1; // Fuck you
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
@@ -76,7 +79,8 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, BufferedImage img) {
         this.setSize(size, size);
-        this.position = new Point3D(x, y, z);
+        pos = new Point(x, y);
+        this.z = z;
         int center = size / 2 - 1; // Dumb rounding
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
@@ -125,7 +129,8 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, Color color) {
         this.setSize(size, size);
-        this.position = new Point3D(x, y, z);
+        pos = new Point(x, y);
+        this.z = z;
         int center = size / 2 - 1; // Ligma balls
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
@@ -227,12 +232,16 @@ public abstract class HexagonView extends JComponent {
         return hexagon.contains(x, y);
     }
 
-    public void setPosition(Point3D position) {
-        this.position = position;
+    public void setPosition(Point position) {
+        this.pos = position;
     }
 
-    public Point3D getPosition() {
-        return this.position;
+    public Point getPosition() {
+        return pos;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     private Color darken(Color c, int z) {

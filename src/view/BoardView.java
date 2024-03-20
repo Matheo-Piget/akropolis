@@ -5,6 +5,8 @@ import view.main.App;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,9 +45,6 @@ public class BoardView extends JPanel implements View, KeyListener {
         add(siteView, BorderLayout.WEST);
         boardUI = new BoardUI();
         add(boardUI, BorderLayout.AFTER_LAST_LINE);
-        System.out.println("Adding board view to screen");
-        App.getInstance().getScreen().add(this, BorderLayout.CENTER);
-        App.getInstance().getScreen().revalidate();
 
         JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pausePanel.setOpaque(false); // Rend le JPanel transparent
@@ -58,6 +57,86 @@ public class BoardView extends JPanel implements View, KeyListener {
 
         // Ajout du JPanel contenant le bouton pause en haut de la fenêtre
         add(pausePanel, BorderLayout.NORTH);
+
+        // Create a CountDownLatch with the number of workers in GridView
+        CountDownLatch latch = new CountDownLatch(gridViews.size());
+
+        // Create a SwingWorker for each GridView
+        for (ScrollableGridView gridView : gridViews) {
+            SwingWorker<Void, HexagonOutline> worker = new SwingWorker<Void, HexagonOutline>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    for (int q = -maxHexagons; q <= maxHexagons; q++) {
+                        for (int r = -maxHexagons; r <= maxHexagons; r++) {
+                            if (Math.abs(q + r) <= maxHexagons) {
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0);
+                                publish(hexagon);
+                            }
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void process(List<HexagonOutline> chunks) {
+                    for (HexagonOutline hexagon : chunks) {
+                        gridView.addHexagon(hexagon);
+                    }
+                }
+
+                @Override
+                protected void done() {
+                    // Cook pizza
+                    // Decrement the latch count
+                    latch.countDown();
+                }
+            };
+
+            // Start the SwingWorker
+            worker.execute();
+        }
+
+        // Create a SwingWorker to add the BoardView in a background thread
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            private JDialog dialog;
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Show the loading dialog
+                SwingUtilities.invokeLater(() -> {
+                    dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(App.getInstance().getScreen()),
+                            "Loading", true);
+                    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+                    dialog.setLayout(new FlowLayout());
+                    dialog.add(new JLabel("Loading..."));
+                    dialog.setModal(true);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(App.getInstance().getScreen());
+                    dialog.setVisible(true);
+                });
+
+                latch.await();
+                // Add the BoardView
+                SwingUtilities.invokeLater(() -> {
+                    App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
+                    App.getInstance().getScreen().revalidate();
+                });
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // Hide the loading dialog
+                SwingUtilities.invokeLater(() -> {
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                });
+            }
+        };
+
+        // Start the SwingWorker
+        worker.execute();
     }
 
     public void setSelectedTile(TileView tile) {
@@ -109,7 +188,6 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Affichage du dialogue de pause
         pauseMenu.setVisible(true);
     }
-
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
