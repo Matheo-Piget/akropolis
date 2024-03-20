@@ -71,6 +71,8 @@ public class Board extends Model {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        getCurrentGrid().display();
+        System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles, switchSizePlayers());
@@ -81,7 +83,6 @@ public class Board extends Model {
 
     /**
      * Adds a tile to the grid of the current player.
-     * @param tile The tile to add to the grid.
      */
     public void addTileToGrid() {
         Tile tile = currentPlayer.getSelectedTile();
@@ -96,9 +97,12 @@ public class Board extends Model {
      * Ends the turn for the given player, switches to the next player, and starts their turn.
      */
     public void endTurn() {
+        System.out.println("End of turn : "+ currentPlayer.getName());
+        System.out.println("Next turn : "+ getNextPlayer().getName());
+
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
-        propertyChangeSupport.firePropertyChange("nextTurn", null, currentPlayer);
+
         startTurn(currentPlayer); // Start the next player's turn
     }
 
@@ -107,12 +111,24 @@ public class Board extends Model {
      * @return The next player in the list.
      */
     private Player getNextPlayer() {
-        // Get the index of the current player
-        int currentIndex = manche % playerGridList.size();
-        // Increment the index to get the next player (circular list)
-        int nextIndex = (currentIndex + 1) % playerGridList.size();
-        // Return the next player
-        return playerGridList.get(nextIndex).x;
+        // Trouver l'index du joueur actuel dans la liste des joueurs
+        int currentIndex = -1;
+        for (int i = 0; i < playerGridList.size(); i++) {
+            if (playerGridList.get(i).x.equals(currentPlayer)) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (currentIndex != -1) {
+            // Incrémenter l'index pour obtenir le prochain joueur (liste circulaire)
+            int nextIndex = (currentIndex + 1) % playerGridList.size();
+            // Retourner le joueur correspondant à l'index suivant
+            return playerGridList.get(nextIndex).x;
+        } else {
+            // Si le joueur actuel n'est pas trouvé dans la liste, retourner null
+            return null;
+        }
     }
 
     public Site getSite() {

@@ -160,7 +160,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView = gridViews.get(index);
         // Use CardLayout.show to switch to the next gridView
         cardLayout.show(cardPanel, String.valueOf(index));
-        System.out.println("Next turn");
+        //System.out.println("Next turn");
     }
 
     public ScrollableGridView getGridView() {
@@ -251,7 +251,6 @@ public class BoardView extends JPanel implements View, KeyListener {
             showPauseMenu();
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            nextTurn();
             App.getInstance().appState.getState().getBoardController().nextTurn();
         }
     }

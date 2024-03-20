@@ -58,6 +58,5 @@ public class BoardController extends Controller {
 
     public void nextTurn() {
         ((Board) model).endTurn();
-
     }
 }
