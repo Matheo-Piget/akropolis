@@ -19,6 +19,9 @@ public class BoardUI extends JPanel implements View{
     private Timer timer;
     private Color bg = new Color(255,229,180);
 
+    /**
+     * created a BoardUI that contains player info and stack infos
+     */
     public BoardUI() {
         setOpaque(true);
         setLayout(new BorderLayout());

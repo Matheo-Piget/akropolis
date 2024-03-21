@@ -51,14 +51,6 @@ public class Board extends Model {
         return false;
     }
 
-    public void updatePlayerInfo() {
-        propertyChangeSupport.firePropertyChange("playerUpdated", null, currentPlayer);
-    }
-
-    public void updateRemainingTilesInfo() {
-        propertyChangeSupport.firePropertyChange("tilesRemainingUpdated", null, stackTiles.size());
-    }
-
     /**
      * Starts the game by starting the first turn.
      */

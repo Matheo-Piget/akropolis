@@ -17,6 +17,11 @@ public class SiteController extends Controller {
         this.boardController = boardController;
     }
 
+    /**
+     * update the siteView from the model
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("tileUpdated")) {

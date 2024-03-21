@@ -21,6 +21,9 @@ public class UIController extends Controller {
         }
     }
 
+    /**
+     * Update the player infos in the view
+     */
     public void updatePlayerInfo() {
         Player currentPlayer = ((Board)model).getCurrentPlayer();
         BoardUI boardUI = (BoardUI)view;
@@ -28,6 +31,9 @@ public class UIController extends Controller {
         boardUI.setRock(currentPlayer.getResources());
     }
 
+    /**
+     * update the remaining tiles in the view
+     */
     public void updateRemainingTilesInfo() {
         BoardUI boardUI = (BoardUI)view;
         int remainingTiles = (((Board)model).getStackTiles()).size();

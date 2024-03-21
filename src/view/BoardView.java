@@ -1,8 +1,6 @@
 package view;
 
 import view.main.App;
-import view.main.states.AppState;
-import view.main.states.PlayingState;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -20,10 +18,9 @@ import java.awt.*;
 public class BoardView extends JPanel implements View, KeyListener {
 
     private ScrollableGridView currentGridView;
-    private ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
+    private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private SiteView siteView;
     private BoardUI boardUI;
-    private JButton pauseButton;
     private CardLayout cardLayout = new CardLayout();
     private JPanel cardPanel = new JPanel(cardLayout);
 
@@ -56,7 +53,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         pausePanel.setOpaque(false); // Rend le JPanel transparent
 
         // Ajout du bouton pause au JPanel
-        pauseButton = createStyledButton("||");
+        JButton pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(50, 50));
         pauseButton.addActionListener(e -> showPauseMenu());
         pausePanel.add(pauseButton);
@@ -69,9 +66,9 @@ public class BoardView extends JPanel implements View, KeyListener {
 
         // Create a SwingWorker for each GridView
         for (ScrollableGridView gridView : gridViews) {
-            SwingWorker<Void, HexagonOutline> worker = new SwingWorker<Void, HexagonOutline>() {
+            SwingWorker<Void, HexagonOutline> worker = new SwingWorker<>() {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
@@ -147,12 +144,19 @@ public class BoardView extends JPanel implements View, KeyListener {
         worker.execute();
     }
 
+    /**
+     * convert a tileView in a MovableTileView
+     * @param tile
+     */
     public void setSelectedTile(TileView tile) {
         // Convert it to a movable object
         MovableTileView movableTile = new MovableTileView(tile);
         currentGridView.setSelectedTile(movableTile);
     }
 
+    /**
+     * show the next GridView, pass turn
+     */
     public void nextTurn() {
         getGridView().removeSelectedTile();
         int index = gridViews.indexOf(currentGridView);
@@ -171,6 +175,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         return siteView;
     }
 
+    /**
+     * show the pause menu
+     */
     private void showPauseMenu() {
         // Création du dialogue de pause
         JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true);
@@ -197,6 +204,11 @@ public class BoardView extends JPanel implements View, KeyListener {
         pauseMenu.setVisible(true);
     }
 
+    /**
+     * created a styled JButton
+     * @param text the text on the button
+     * @return a JButton styled
+     */
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(150, 50));
@@ -217,26 +229,6 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         });
         return button;
-    }
-
-    // For testing purposes
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            BoardView boardView = new BoardView(40, 5, 3);
-            ArrayList<TileView> tiles = new ArrayList<TileView>();
-            for (int i = 0; i < 3; i++) {
-                tiles.add(new TileView(new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1), new QuarrieView(0, 0, 1)));
-            }
-            boardView.getSiteView().setTilesInSite(tiles);
-            // Add some hexagons to the grid view
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    boardView.getGridView().addHexagon(new QuarrieView(i, j, 1));
-                }
-            }
-            boardView.setVisible(true);
-            App.getInstance().getScreen().revalidate();
-        });
     }
 
     public BoardUI getBoardUI() {

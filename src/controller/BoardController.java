@@ -34,6 +34,10 @@ public class BoardController extends Controller {
         handleUiUpdates(evt);
     }
 
+    /**
+     * Controller for the selected current tile
+     * @param tileController
+     */
     public void selectedTile(TileController tileController) {
         Board board = (Board) model;
         BoardView boardView = (BoardView) view;
@@ -45,6 +49,10 @@ public class BoardController extends Controller {
         }
     }
 
+    /**
+     * update the UI infos
+     * @param evt the evt call
+     */
     private void handleUiUpdates(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("nextTurn")) {
             // Update the player info in the view
@@ -53,6 +61,9 @@ public class BoardController extends Controller {
         }
     }
 
+    /**
+     * call next turn in the model
+     */
     public void nextTurn() {
         ((Board) model).endTurn();
     }
