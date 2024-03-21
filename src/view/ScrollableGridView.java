@@ -2,16 +2,12 @@ package view;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-
 import javax.swing.SwingUtilities;
-import javax.swing.JPanel;
 
 public class ScrollableGridView extends JScrollPane implements View {
 

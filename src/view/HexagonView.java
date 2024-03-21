@@ -3,9 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
-import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
-import util.Point3D;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import java.awt.event.MouseAdapter;
@@ -13,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 /**
  * Represents an hexagon on the game grid.
@@ -25,6 +24,7 @@ public abstract class HexagonView extends JComponent {
     protected Point pos = new Point(0, 0);
     protected int z;
     protected Path2D.Double hexagon = new Path2D.Double();
+    protected BufferedImage render;
 
     public HexagonView(int x, int y, int z) {
         this.setSize(size, size);
