@@ -46,20 +46,27 @@ public class BoardView extends JPanel implements View, KeyListener {
         add(cardPanel, BorderLayout.CENTER);
         currentGridView = (ScrollableGridView) cardPanel.getComponent(0);
         add(siteView, BorderLayout.WEST);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setOpaque(false); // Rend le JPanel transparent
+
         boardUI = new BoardUI();
-        add(boardUI, BorderLayout.AFTER_LAST_LINE);
+        bottomPanel.add(boardUI, BorderLayout.CENTER);
+
 
         JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pausePanel.setOpaque(false); // Rend le JPanel transparent
 
         // Ajout du bouton pause au JPanel
         JButton pauseButton = createStyledButton("||");
-        pauseButton.setPreferredSize(new Dimension(50, 50));
+        pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> showPauseMenu());
         pausePanel.add(pauseButton);
 
+        bottomPanel.add(pausePanel, BorderLayout.EAST);
+
         // Ajout du JPanel contenant le bouton pause en haut de la fenêtre
-        add(pausePanel, BorderLayout.NORTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         // Create a CountDownLatch with the number of workers in GridView
         CountDownLatch latch = new CountDownLatch(gridViews.size());
@@ -203,7 +210,6 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Affichage du dialogue de pause
         pauseMenu.setVisible(true);
     }
-
     /**
      * created a styled JButton
      * @param text the text on the button
