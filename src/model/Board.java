@@ -232,4 +232,8 @@ public class Board extends Model {
         }
         return currentPlayer.getResources() >= price;
     }
+
+    public Grid[] getGrids() {
+        return playerGridList.stream().map(t -> t.y).toArray(Grid[]::new);
+    }
 }

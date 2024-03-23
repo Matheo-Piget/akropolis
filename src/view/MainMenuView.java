@@ -1,12 +1,12 @@
 package view;
 
-import javax.swing.*;
-
 import view.main.App;
 import view.main.states.PlayingState;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,56 +22,57 @@ public class MainMenuView extends JPanel {
         // Charger l'image de fond
         try {
             backgroundImage = ImageIO.read(getClass().getResourceAsStream("/akropolisBG.jpg"));
-            // Then we fill the background with the image
-            setBackground(new Color(0, 0, 0, 0)); // Set the background to be transparent to draw the image in the
-                                                  // paintComponent method
+            // Rendre le fond transparent pour afficher l'image
+            setOpaque(false);
         } catch (IOException e) {
             e.printStackTrace();
-            // We fill the background with a solid color if the image is not found
+            // Remplacer l'image manquante par une couleur de fond grise
             setBackground(Color.GRAY);
         }
 
         setLayout(new GridBagLayout());
 
+        addTitleLabel();
+        addButtonsPanel();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Dessiner l'image de fond
+        if (backgroundImage != null)
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    private void addTitleLabel() {
         AkropolisTitleLabel titleLabel = new AkropolisTitleLabel();
         GridBagConstraints titleGbc = new GridBagConstraints();
         titleGbc.gridx = 0;
         titleGbc.gridy = 0;
         titleGbc.weightx = 1;
-        titleGbc.weighty = 0.1; // Adjust this value to position the title higher or lower
+        titleGbc.weighty = 0.1;
         titleGbc.fill = GridBagConstraints.NONE;
-        titleGbc.anchor = GridBagConstraints.NORTH; // This will position the title towards the top
-        this.add(titleLabel, titleGbc);
+        titleGbc.anchor = GridBagConstraints.NORTH;
+        add(titleLabel, titleGbc);
+    }
 
-        // Panneau pour les boutons avec un fond transparent
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new GridLayout(1, 2, 20, 0)); // 1 ligne, 2 colonnes, espace horizontal de 20
+    private void addButtonsPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 20, 20));
+        buttonPanel.setOpaque(false); // Rendre le panneau transparent
 
         // Bouton démarrer
-        JButton startButton = createStyledButton("Démarrer");
-        startButton.setPreferredSize(new Dimension(150, 50));
-        startButton.addActionListener((ActionEvent e) -> startNewGame());
-
-        //bouton regles
-        JButton rulesButton = createStyledButton("Regles du jeu");
-        rulesButton.setPreferredSize(new Dimension(150,50));
-        rulesButton.addActionListener(e -> showRulesPanel());
-
+        JButton startButton = createStyledButton("Démarrer", e -> startNewGame());
+        // Bouton règles
+        JButton rulesButton = createStyledButton("Règles du jeu", e -> showRulesPanel());
+        // Bouton crédits
+        JButton creditsButton = createStyledButton("Crédits", e -> showCreditsPanel());
         // Bouton quitter
-        JButton quitButton = createStyledButton("Quitter");
-        quitButton.setPreferredSize(new Dimension(150, 50));
-        quitButton.addActionListener((ActionEvent e) -> System.exit(0));
-
-        JButton creditsButton = createStyledButton("Crédits");
-        creditsButton.addActionListener(e -> showCreditsPanel());
-    
-
+        JButton quitButton = createStyledButton("Quitter", e -> System.exit(0));
 
         // Ajouter les boutons au panneau de boutons
         buttonPanel.add(startButton);
         buttonPanel.add(rulesButton);
-        buttonPanel.add(creditsButton); 
+        buttonPanel.add(creditsButton);
         buttonPanel.add(quitButton);
 
         // Contraintes pour centrer le panneau de boutons dans l'arrière-plan
@@ -83,16 +84,30 @@ public class MainMenuView extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
 
         // Ajouter le panneau de boutons au panneau d'arrière-plan avec les contraintes
-        this.add(buttonPanel, gbc);
+        add(buttonPanel, gbc);
     }
 
-    @Override
-    protected void paintComponent(java.awt.Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage != null)
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-    }
+    private JButton createStyledButton(String text, ActionListener actionListener) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(150, 50));
+        button.setBackground(new Color(255, 215, 0));
+        button.setForeground(Color.BLACK);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 235, 59));
+            }
 
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(255, 215, 0));
+            }
+        });
+        // Ajouter l'écouteur d'événements
+        button.addActionListener(actionListener);
+        return button;
+    }
     private void startNewGame() {
         System.out.println("Nouvelle partie démarrée");
 
@@ -241,28 +256,6 @@ public class MainMenuView extends JPanel {
     
         creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(150, 50));
-        button.setBackground(new Color(255, 215, 0));
-        button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 235, 59));
-                button.setForeground(Color.BLACK);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 215, 0));
-                button.setForeground(Color.BLACK);
-            }
-        });
-        return button;
     }
 
     private JButton createStyledNavigationButton(String text) {

@@ -1,15 +1,19 @@
 package controller;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Board;
-import view.BoardView;
-import view.TileView;
+import model.Grid;
+import view.*;
 import model.Tile;
 
 public class BoardController extends Controller {
     private SiteController siteController;
     private UIController uiController;
-    private GridController gridController;
+    private List<GridController> gridControllers;
+    private GridController currentGridController;
     private TileController selectedTile;
 
     public BoardController(Board model, BoardView view) {
@@ -17,9 +21,22 @@ public class BoardController extends Controller {
         // Create the site controller
         siteController = new SiteController(model.getSite(), view.getSiteView(), this);
         uiController = new UIController(model, view.getBoardUI());
-        gridController = new GridController(model.getCurrentGrid(), view.getGridView());
+        initializeGridControllers(model, view);
         // Then we can start the game
         ((Board) (model)).startGame();
+    }
+
+    private void initializeGridControllers(Board model, BoardView view) {
+        gridControllers = new ArrayList<>();
+        for (Grid grid : model.getGrids()) {
+            GridController gridController = new GridController(grid, view.getGridView()); // Assurez-vous d'avoir un constructeur approprié dans GridController
+            view.nextTurn();
+            gridControllers.add(gridController);
+        }
+        // Sélectionnez le premier GridController comme currentGridController
+        if (!gridControllers.isEmpty()) {
+            currentGridController = gridControllers.get(0);
+        }
     }
 
     /**
