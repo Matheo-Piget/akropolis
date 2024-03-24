@@ -43,7 +43,7 @@ public class PlayingState extends State {
         // Then we create the board
         Board board = new Board(players);
         // And we create the board view
-        BoardView boardView = new BoardView(board.getStackTiles().size() * 2, players.size(), board.switchSizePlayers());
+        BoardView boardView = new BoardView(board.getStackTiles().size(), players.size(), board.switchSizePlayers());
         // Then we create the board controller
         boardController = new BoardController(board, boardView);
     }

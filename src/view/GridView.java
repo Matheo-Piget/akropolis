@@ -1,21 +1,13 @@
 package view;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
 import java.awt.Point;
 import util.Point3D;
-import java.awt.Frame;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.awt.BorderLayout;
-import java.util.List;
 
 /**
  * Represents the game grid displayed in game.

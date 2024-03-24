@@ -3,7 +3,6 @@ package controller;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Board;
 import model.Grid;
 import view.*;
@@ -29,11 +28,10 @@ public class BoardController extends Controller {
     private void initializeGridControllers(Board model, BoardView view) {
         gridControllers = new ArrayList<>();
         for (Grid grid : model.getGrids()) {
-            GridController gridController = new GridController(grid, view.getGridView()); // Assurez-vous d'avoir un constructeur approprié dans GridController
+            GridController gridController = new GridController(grid, view.getGridView());
             view.nextTurn();
             gridControllers.add(gridController);
         }
-        // Sélectionnez le premier GridController comme currentGridController
         if (!gridControllers.isEmpty()) {
             currentGridController = gridControllers.get(0);
         }

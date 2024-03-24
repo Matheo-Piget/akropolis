@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.awt.geom.Point2D;
 
 /**
  * This class represents a tile that the player can set onto the board.
