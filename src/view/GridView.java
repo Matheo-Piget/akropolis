@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
 import java.awt.Point;
 import util.Point3D;
+import java.awt.Component;
 import java.util.HashMap;
 
 /**
@@ -81,6 +82,21 @@ public class GridView extends JPanel {
         int pixelX = (int) (size * 3.0 / 2 * q) + xOffset;
         int pixelY = (int) (size * Math.sqrt(3) * (r + q / 2.0)) + yOffset;
         return new Point2D.Double(pixelX, pixelY);
+    }
+
+    /**
+     * Get the hexagon at the given pixel position
+     * Be careful, it will return null if there is no hexagon at the given mouse position
+     * @param pixelPosition
+     * @return
+     */
+    public HexagonView getHexagonAt(Point2D pixelPosition) {
+        // We just need to use getComponentAt to get the hexagon at the pixel position
+        Component component = getComponentAt((int) pixelPosition.getX(), (int) pixelPosition.getY());
+        if (component instanceof HexagonView) {
+            return (HexagonView) component;
+        }
+        return null;
     }
 
     // on obtient les coordonne qui peuveut etre sur n'importe quel partie de

@@ -6,11 +6,12 @@ import java.awt.TexturePaint;
 import javax.swing.JComponent;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
-import java.awt.event.MouseAdapter;
 import java.awt.Rectangle;
+import java.awt.BasicStroke;
 import java.awt.geom.Path2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 /**
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 public abstract class HexagonView extends JComponent {
 
     public static int size = 80; // Size of the hexagons
+    private static BasicStroke stroke = new BasicStroke(size / 25);
     protected boolean isHovered = false;
     protected TexturePaint texture;
     protected Point pos = new Point(0, 0);
@@ -36,45 +38,13 @@ public abstract class HexagonView extends JComponent {
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
             double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
-            if(i == 0){
+            if (i == 0) {
                 hexagon.moveTo(xval, yval);
-            }
-            else{
+            } else {
                 hexagon.lineTo(xval, yval);
             }
         }
         hexagon.closePath();
-        MouseAdapter ma = new MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                isHovered = true;
-                repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                isHovered = false;
-                repaint();
-            }
-
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseDragged(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-        };
-        this.addMouseListener(ma);
-        this.addMouseMotionListener(ma);
     }
 
     public HexagonView(int x, int y, int z, BufferedImage img) {
@@ -85,46 +55,14 @@ public abstract class HexagonView extends JComponent {
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
             double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
-            if(i == 0){
+            if (i == 0) {
                 hexagon.moveTo(xval, yval);
-            }
-            else{
+            } else {
                 hexagon.lineTo(xval, yval);
             }
         }
         hexagon.closePath();
         this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
-        MouseAdapter ma = new MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                isHovered = true;
-                repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                isHovered = false;
-                repaint();
-            }
-
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseDragged(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-        };
-        this.addMouseListener(ma);
-        this.addMouseMotionListener(ma);
     }
 
     public HexagonView(int x, int y, int z, Color color) {
@@ -135,45 +73,13 @@ public abstract class HexagonView extends JComponent {
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
             double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
-            if(i == 0){
+            if (i == 0) {
                 hexagon.moveTo(xval, yval);
-            }
-            else{
+            } else {
                 hexagon.lineTo(xval, yval);
             }
         }
         hexagon.closePath();
-        MouseAdapter ma = new MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                isHovered = true;
-                repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                isHovered = false;
-                repaint();
-            }
-
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseDragged(java.awt.event.MouseEvent e) {
-                // Do nothing
-            }
-
-        };
-        this.addMouseListener(ma);
-        this.addMouseMotionListener(ma);
 
         // Create a BufferedImage and fill it with the color
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -196,8 +102,43 @@ public abstract class HexagonView extends JComponent {
         getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
     }
 
+    public void fill(HexagonView hexagon) {
+        this.texture = hexagon.texture;
+        this.repaint();
+    }
+
+    protected void renderHexagon(Color strokeColor) {
+        // Dispose of the old image before creating a new one
+        if (render != null) {
+            render.flush();
+        }
+
+        // Create the new image
+        render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        render.setAccelerationPriority(1);
+        Graphics2D g2d = render.createGraphics();
+
+        // Enable Anti-aliasing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Draw the hexagon
+        g2d.setPaint(texture);
+        g2d.fill(hexagon);
+
+        // Draw the border of the hexagon
+        if (isHovered) {
+            g2d.setColor(Color.YELLOW);
+        } else {
+            g2d.setColor(strokeColor);
+        }
+        g2d.setStroke(stroke);
+        g2d.draw(hexagon);
+        g2d.dispose();
+    }
+
     /**
      * Copy the hexagon
+     * 
      * @return a copy of the hexagon
      */
     public abstract HexagonView copy();
@@ -207,14 +148,14 @@ public abstract class HexagonView extends JComponent {
         Rectangle bounds = hexagon.getBounds();
         double centerX = bounds.getCenterX();
         double centerY = bounds.getCenterY();
-    
+
         // Create an AffineTransform and rotate it 90 degrees around the center
         AffineTransform at = new AffineTransform();
         at.rotate(Math.toRadians(90), centerX, centerY);
-    
+
         // Apply the rotation to the hexagon
         hexagon = (Path2D.Double) at.createTransformedShape(hexagon);
-    
+
         // Repaint the component
         this.repaint();
     }

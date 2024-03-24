@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import javax.swing.SwingUtilities;
 
 public class ScrollableGridView extends JScrollPane implements View {
@@ -15,6 +14,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     private JScrollBar horizontalScrollBar;
     private JScrollBar verticalScrollBar;
     private MovableTileView selectedTile;
+    private HexagonView hoveredHexagon = null;
 
     public ScrollableGridView(GridView grid) {
         super(grid);
@@ -39,12 +39,15 @@ public class ScrollableGridView extends JScrollPane implements View {
             @Override
             public void mouseMoved(MouseEvent e) {
                 if(selectedTile != null) {
-                    // Center the mouse position around one hexagon of the tile
-                    Point2D center = selectedTile.getCenter();
-                    int x = e.getX() - (int) center.getX();
-                    int y = e.getY() - (int) center.getY();
-                    selectedTile.setLocation(x, y);
-                    System.out.println("Moved to " + selectedTile.getX() + " " + selectedTile.getY());
+                    // Get the hexagon under the mouse which is a component of the grid
+                    HexagonView actualHoveredHexagon = grid.getHexagonAt(e.getPoint());
+                    if(actualHoveredHexagon != null && !actualHoveredHexagon.equals(hoveredHexagon)) {
+                        hoveredHexagon = actualHoveredHexagon;
+                    }
+                    else if(actualHoveredHexagon == null && hoveredHexagon != null) {
+                        hoveredHexagon = null;
+                    }
+                    System.out.println("Hovered hexagon : " + hoveredHexagon);
                 }
             }
 
