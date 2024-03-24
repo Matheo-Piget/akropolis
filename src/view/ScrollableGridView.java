@@ -38,16 +38,31 @@ public class ScrollableGridView extends JScrollPane implements View {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if(selectedTile != null) {
+                if (selectedTile != null) {
                     // Get the hexagon under the mouse which is a component of the grid
                     HexagonView actualHoveredHexagon = grid.getHexagonAt(e.getPoint());
-                    if(actualHoveredHexagon != null && !actualHoveredHexagon.equals(hoveredHexagon)) {
-                        hoveredHexagon = actualHoveredHexagon;
+                    if (actualHoveredHexagon != null && hoveredHexagon != null
+                            && actualHoveredHexagon.equals(hoveredHexagon)) {
+                        return;
                     }
-                    else if(actualHoveredHexagon == null && hoveredHexagon != null) {
+                    if (actualHoveredHexagon != null && !actualHoveredHexagon.equals(hoveredHexagon)) {
+                        // Remove the fill from the previous hovered hexagon
+                        if (hoveredHexagon != null) {
+                            hoveredHexagon.unfill();
+                        }
+                        hoveredHexagon = actualHoveredHexagon;
+                        // Fill the new hovered hexagon
+                        hoveredHexagon.fill(selectedTile.hex1);
+                    } else if (actualHoveredHexagon == null && hoveredHexagon != null) {
+                        // Remove the fill from the previous hovered hexagon
+                        hoveredHexagon.unfill();
                         hoveredHexagon = null;
                     }
-                    System.out.println("Hovered hexagon : " + hoveredHexagon);
+                } else {
+                    if (hoveredHexagon != null) {
+                        hoveredHexagon.unfill();
+                        hoveredHexagon = null;
+                    }
                 }
             }
 
@@ -104,7 +119,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     }
 
     public void setSelectedTile(MovableTileView tile) {
-        if(selectedTile != null) {
+        if (selectedTile != null) {
             grid.remove(selectedTile);
             // Repaint the area where the tile was
             grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
@@ -116,7 +131,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     }
 
     public void removeSelectedTile() {
-        if(selectedTile != null) {
+        if (selectedTile != null) {
             grid.remove(selectedTile);
             // Repaint the area where the tile was
             grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());

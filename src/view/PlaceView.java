@@ -45,7 +45,7 @@ public class PlaceView extends HexagonView {
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
         if (render == null) {
-            renderHexagon(strokeColor);
+            renderHexagon(strokeColor, texture);
         }
         g.drawImage(render, 0, 0, null);
     }

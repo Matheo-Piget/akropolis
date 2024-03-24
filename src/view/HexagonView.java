@@ -102,12 +102,29 @@ public abstract class HexagonView extends JComponent {
         getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
     }
 
+    /**
+     * Fill the hexagon based on the hexagon view passed
+     * @param hexagon the hexagon view to fill
+     */
     public void fill(HexagonView hexagon) {
-        this.texture = hexagon.texture;
-        this.repaint();
+        renderHexagon(Color.BLACK, hexagon.getTexture());
+        repaint();
     }
 
-    protected void renderHexagon(Color strokeColor) {
+    /**
+     * Remove the fill from the hexagon view
+     */
+    public void unfill() {
+        renderHexagon(Color.BLACK, texture);
+        repaint();
+    }
+
+    /**
+     * Render the hexagon with the given stroke color and texture
+     * @param strokeColor
+     * @param texture
+     */
+    protected void renderHexagon(Color strokeColor, TexturePaint texture) {
         // Dispose of the old image before creating a new one
         if (render != null) {
             render.flush();

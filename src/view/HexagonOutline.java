@@ -19,10 +19,16 @@ public class HexagonOutline extends HexagonView {
     }
 
     @Override
+    public void unfill() {
+        renderHexagon(Color.BLUE, texture);
+        repaint();
+    }
+
+    @Override
     protected void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
         if (render == null) {
-            renderHexagon(strokeColor);
+            renderHexagon(strokeColor, null);
         }
         g.drawImage(render, 0, 0, null);
     }
