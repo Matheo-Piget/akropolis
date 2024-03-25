@@ -37,11 +37,6 @@ public class PlaceView extends HexagonView {
     }
 
     @Override
-    public PlaceView copy(){
-        return new PlaceView(pos.x, pos.y , z, place);
-    }
-
-    @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
         if (render == null) {

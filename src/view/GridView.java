@@ -90,13 +90,21 @@ public class GridView extends JPanel {
      * @param pixelPosition
      * @return
      */
-    public HexagonView getHexagonAt(Point2D pixelPosition) {
+    public HexagonView getHexagonAtPixelPos(Point2D pixelPosition) {
         // We just need to use getComponentAt to get the hexagon at the pixel position
         Component component = getComponentAt((int) pixelPosition.getX(), (int) pixelPosition.getY());
         if (component instanceof HexagonView) {
             return (HexagonView) component;
         }
         return null;
+    }
+
+    public HexagonView getHexagonAtGridPos(Point gridPosition) {
+        return hexagons.get(new Point(gridPosition.x, gridPosition.y));
+    }
+
+    public HexagonView getHexagonAtGridPos(int x, int y) {
+        return hexagons.get(new Point(x, y));
     }
 
     // on obtient les coordonne qui peuveut etre sur n'importe quel partie de

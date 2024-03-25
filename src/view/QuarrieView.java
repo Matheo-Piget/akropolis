@@ -8,11 +8,6 @@ public class QuarrieView extends HexagonView {
     }
 
     @Override
-    public QuarrieView copy(){
-        return new QuarrieView(pos.x, pos.y, z);
-    }
-
-    @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
         if (render == null) {

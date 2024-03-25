@@ -31,11 +31,6 @@ public class DistrictView extends HexagonView {
         }
     }
 
-    @Override
-    public DistrictView copy(){
-        return new DistrictView(pos.x, pos.y , z, district);
-    }
-
     @Override 
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);

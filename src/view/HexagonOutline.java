@@ -14,11 +14,6 @@ public class HexagonOutline extends HexagonView {
     }
 
     @Override
-    public HexagonOutline copy() {
-        return new HexagonOutline(pos.x, pos.y, z);
-    }
-
-    @Override
     public void unfill() {
         renderHexagon(Color.BLUE, texture);
         repaint();

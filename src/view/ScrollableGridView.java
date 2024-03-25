@@ -13,7 +13,8 @@ public class ScrollableGridView extends JScrollPane implements View {
     private GridView grid;
     private JScrollBar horizontalScrollBar;
     private JScrollBar verticalScrollBar;
-    private MovableTileView selectedTile;
+    private TileView selectedTile;
+    private HexagonView[] filledHexagonViews = new HexagonView[3];
     private HexagonView hoveredHexagon = null;
 
     public ScrollableGridView(GridView grid) {
@@ -40,7 +41,7 @@ public class ScrollableGridView extends JScrollPane implements View {
             public void mouseMoved(MouseEvent e) {
                 if (selectedTile != null) {
                     // Get the hexagon under the mouse which is a component of the grid
-                    HexagonView actualHoveredHexagon = grid.getHexagonAt(e.getPoint());
+                    HexagonView actualHoveredHexagon = grid.getHexagonAtPixelPos(e.getPoint());
                     if (actualHoveredHexagon != null && hoveredHexagon != null
                             && actualHoveredHexagon.equals(hoveredHexagon)) {
                         return;
@@ -48,19 +49,20 @@ public class ScrollableGridView extends JScrollPane implements View {
                     if (actualHoveredHexagon != null && !actualHoveredHexagon.equals(hoveredHexagon)) {
                         // Remove the fill from the previous hovered hexagon
                         if (hoveredHexagon != null) {
-                            hoveredHexagon.unfill();
+                            unfillEachHexagons();
                         }
                         hoveredHexagon = actualHoveredHexagon;
                         // Fill the new hovered hexagon
-                        hoveredHexagon.fill(selectedTile.hex1);
+                        fillEachHexagons(selectedTile, hoveredHexagon);
+                        // Determine which tile to fill based on the tile rotation
                     } else if (actualHoveredHexagon == null && hoveredHexagon != null) {
                         // Remove the fill from the previous hovered hexagon
-                        hoveredHexagon.unfill();
+                        unfillEachHexagons();
                         hoveredHexagon = null;
                     }
                 } else {
                     if (hoveredHexagon != null) {
-                        hoveredHexagon.unfill();
+                        unfillEachHexagons();
                         hoveredHexagon = null;
                     }
                 }
@@ -98,6 +100,55 @@ public class ScrollableGridView extends JScrollPane implements View {
         setPreferredSize(new Dimension(1300, 844));
     }
 
+    public void unfillEachHexagons() {
+        for (HexagonView hexagon : filledHexagonViews) {
+            if (hexagon != null) {
+                hexagon.unfill();
+            }
+        }
+        // Reset the filled hexagons
+        filledHexagonViews = new HexagonView[3];
+    }
+
+    public void fillEachHexagons(TileView tile, HexagonView hoveredHexagon) {
+        int rotation = tile.getRotation();
+        HexagonView hex1 = hoveredHexagon;
+        HexagonView hex2 = null;
+        HexagonView hex3 = null;
+        int x = hex1.getPosition().x;
+        int y = hex1.getPosition().y;
+        switch (rotation) {
+            case 0:
+                hex2 = grid.getHexagonAtGridPos(x - 1, y);
+                hex3 = grid.getHexagonAtGridPos(x - 1, y + 1);
+                break;
+            case 90:
+                hex2 = grid.getHexagonAtGridPos(x, y - 1);
+                hex3 = grid.getHexagonAtGridPos(x + 1, y - 1);
+                break;
+            case 180:
+                hex2 = grid.getHexagonAtGridPos(x + 1, y);
+                hex3 = grid.getHexagonAtGridPos(x + 1, y - 1);
+                break;
+            case 270:
+                hex2 = grid.getHexagonAtGridPos(x, y + 1);
+                hex3 = grid.getHexagonAtGridPos(x - 1, y + 1);
+                break;
+        }
+        if(hex1 !=null){
+            hex1.fill(tile.hex1);
+        }
+        if(hex2 !=null){
+            hex2.fill(tile.hex2);
+        }
+        if(hex3 !=null){
+            hex3.fill(tile.hex3);
+        }
+        filledHexagonViews[0] = hex1;
+        filledHexagonViews[1] = hex2;
+        filledHexagonViews[2] = hex3;
+    }
+
     @Override
     public void addNotify() {
         super.addNotify();
@@ -118,23 +169,19 @@ public class ScrollableGridView extends JScrollPane implements View {
         grid.addHexagon(hexagon);
     }
 
-    public void setSelectedTile(MovableTileView tile) {
+    public void setSelectedTile(TileView tile) {
         if (selectedTile != null) {
-            grid.remove(selectedTile);
-            // Repaint the area where the tile was
-            grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
+            // Unfill the hexagons
+            unfillEachHexagons();
         }
         selectedTile = tile;
-        grid.add(selectedTile);
-        // Repaint the area where the tile is
-        grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
     }
 
     public void removeSelectedTile() {
         if (selectedTile != null) {
-            grid.remove(selectedTile);
-            // Repaint the area where the tile was
-            grid.repaint(selectedTile.getX(), selectedTile.getY(), selectedTile.getWidth(), selectedTile.getHeight());
+            // Unfill the hexagons
+            unfillEachHexagons();
+            hoveredHexagon = null;
             selectedTile = null;
         }
     }

@@ -153,13 +153,6 @@ public abstract class HexagonView extends JComponent {
         g2d.dispose();
     }
 
-    /**
-     * Copy the hexagon
-     * 
-     * @return a copy of the hexagon
-     */
-    public abstract HexagonView copy();
-
     public void rotate() {
         // Calculate the center of the hexagon
         Rectangle bounds = hexagon.getBounds();

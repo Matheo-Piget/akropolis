@@ -26,6 +26,7 @@ public class TileView extends JComponent implements View {
     private float glow = 0.0f;
     private boolean increasing = true;
     private Timer glowTimer;
+    private int rotation = 0;
 
     public TileView() {
         // Empty constructor
@@ -59,38 +60,13 @@ public class TileView extends JComponent implements View {
         setHexagons(hexView1, hexView2, hexView3);
     }
 
-    /**
-     * Copy constructor
-     * @param t The tile to copy
-     */
-    public TileView(TileView t){
-        this(t.hex1.copy(), t.hex2.copy(), t.hex3.copy());
-        System.out.println("My size is " + this.getPreferredSize());
-    }
-
     public void rotate() {
-        // Calculate the center of the hexagons
-        double centerX = (hex1.getX() + hex2.getX() + hex3.getX()) / 3.0;
-        double centerY = (hex1.getY() + hex2.getY() + hex3.getY()) / 3.0;
-    
-        rotateHexagon(hex1, (int) Math.round(centerX), (int) Math.round(centerY));
-        rotateHexagon(hex2, (int) Math.round(centerX), (int) Math.round(centerY));
-        rotateHexagon(hex3, (int) Math.round(centerX), (int) Math.round(centerY));
-    
-        this.repaint();
+        // Rotate the tile by 90 degrees
+        rotation = (rotation + 90) % 360;
     }
 
-    private void rotateHexagon(HexagonView hexagon, int centerX, int centerY) {
-        double relativeX = hexagon.getX() - centerX;
-        double relativeY = hexagon.getY() - centerY;
-    
-        double angle = Math.toRadians(90);
-    
-        double rotatedX = relativeX * Math.cos(angle) - relativeY * Math.sin(angle);
-        double rotatedY = relativeX * Math.sin(angle) + relativeY * Math.cos(angle);
-    
-        hexagon.setLocation((int) Math.round(rotatedX + centerX), (int) Math.round(rotatedY + centerY));
-        hexagon.rotate();
+    public int getRotation() {
+        return rotation;
     }
 
     private void setupListener() {

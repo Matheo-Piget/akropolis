@@ -152,13 +152,12 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     /**
-     * convert a tileView in a MovableTileView
+     * Set the selected tile
      * @param tile
      */
     public void setSelectedTile(TileView tile) {
         // Convert it to a movable object
-        MovableTileView movableTile = new MovableTileView(tile);
-        currentGridView.setSelectedTile(movableTile);
+        currentGridView.setSelectedTile(tile);
     }
 
     /**
