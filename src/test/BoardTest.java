@@ -118,4 +118,139 @@ public class BoardTest {
         // Ensure that the score is calculated correctly
         assertEquals(13, board.getScore(player));
     }
+public void testScoreWithPlaces() {
+    Player player = new Player("TestPlayer");
+    Board board = new Board(List.of(player));
+
+    // Add tiles to cover multiple districts with different heights
+    District district1 = new District(new Point3D(0, 0), DistrictColor.RED);
+    District district2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
+    District district3 = new District(new Point3D(1, -1), DistrictColor.GREEN);
+    District district4 = new District(new Point3D(0, 2), DistrictColor.BLUE);
+    District district5 = new District(new Point3D(-1, 3), DistrictColor.BLUE);
+    District district6 = new District(new Point3D(1, 3), DistrictColor.BLUE);
+    Tile tile1 = new Tile(district1, district2, district3);
+    Tile tile2 = new Tile(district4, district5, district6);
+    board.addTile(tile1);
+    board.addTile(tile2);
+
+    // Add more tiles to create complex overlapping scenarios
+    // Add more complex tile configurations to test scoring
+    District district7 = new District(new Point3D(2, 0), DistrictColor.RED);
+    District district8 = new District(new Point3D(1, -1), DistrictColor.BLUE);
+    District district9 = new District(new Point3D(3, -1), DistrictColor.GREEN);
+    District district10 = new District(new Point3D(2, 2), DistrictColor.BLUE);
+    District district11 = new District(new Point3D(3, 3), DistrictColor.BLUE);
+    District district12 = new District(new Point3D(4, 3), DistrictColor.BLUE);
+    Tile tile3 = new Tile(district7, district8, district9);
+    Tile tile4 = new Tile(district10, district11, district12);
+    board.addTile(tile3);
+    board.addTile(tile4);
+
+    // Add place tiles for scoring
+    Place place1 = new Place(new Point3D(1, 0), 3, DistrictColor.BLUE);
+    Place place2 = new Place(new Point3D(2, 1), 2, DistrictColor.RED);
+    Place place3 = new Place(new Point3D(1, 2), 4, DistrictColor.GREEN);
+    board.addTile(new Tile(place1, place2, place3));
+
+    // Ensure that the score is calculated correctly
+    assertEquals(26, board.getScore(player));
+}
+
+@Test
+public void testScoreWithMultiplePlayers() {
+    Player player1 = new Player("Player1");
+    Player player2 = new Player("Player2");
+    Board board = new Board(List.of(player1, player2));
+
+    // Add tiles to cover multiple districts with different heights for player 1
+    District district1 = new District(new Point3D(0, 0), DistrictColor.RED);
+    District district2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
+    District district3 = new District(new Point3D(1, -1), DistrictColor.GREEN);
+    Tile tile1 = new Tile(district1, district2, district3);
+    board.addTile(tile1);
+
+    // Add tiles to cover multiple districts with different heights for player 2
+    District district4 = new District(new Point3D(0, 2), DistrictColor.BLUE);
+    District district5 = new District(new Point3D(-1, 3), DistrictColor.BLUE);
+    District district6 = new District(new Point3D(1, 3), DistrictColor.BLUE);
+    Tile tile2 = new Tile(district4, district5, district6);
+    board.addTile(tile2);
+
+    // Ensure that the score is calculated correctly for each player
+    assertEquals(6, board.getScore(player1));
+    assertEquals(3, board.getScore(player2));
+}
+
+@Test
+public void testScoreWithEmptyBoard() {
+    Player player = new Player("TestPlayer");
+    Board board = new Board(List.of(player));
+
+    // Ensure that the score is 0 when the board is empty
+    assertEquals(0, board.getScore(player));
+}
+
+@Test
+public void testScoreWithSingleDistrict() {
+    Player player = new Player("TestPlayer");
+    Board board = new Board(List.of(player));
+
+    // Add a single district to the board
+    District district = new District(new Point3D(0, 0), DistrictColor.RED);
+    Tile tile = new Tile(district, new Quarrie(new Point3D(-1, 0)), new Quarrie(new Point3D(1, 0)));
+    board.addTile(tile);
+
+    // Ensure that the score is equal to the district's height
+    assertEquals(1, board.getScore(player));
+}
+
+@Test
+public void testScoreWithSinglePlace() {
+    Player player = new Player("TestPlayer");
+    Board board = new Board(List.of(player));
+
+    // Add a single place to the board
+    Place place = new Place(new Point3D(0, 0), 3, DistrictColor.RED);
+    Tile tile = new Tile(place, new Quarrie(new Point3D(-1, 0)), new Quarrie(new Point3D(1, 0)));
+    board.addTile(tile);
+
+    // Ensure that the score is equal to the place's stars
+    assertEquals(3, board.getScore(player));
+}
+
+@Test
+public void testScoreWithMultipleLevels() {
+    Player player = new Player("TestPlayer");
+    Board board = new Board(List.of(player));
+
+    // Add tiles to cover multiple districts with different heights
+    District district1 = new District(new Point3D(0, 0), DistrictColor.RED);
+    District district2 = new District(new Point3D(-1, -1), DistrictColor.BLUE);
+    District district3 = new District(new Point3D(1, -1), DistrictColor.GREEN);
+    District district4 = new District(new Point3D(0, 1), DistrictColor.RED);
+    District district5 = new District(new Point3D(-1, 0), DistrictColor.BLUE);
+    District district6 = new District(new Point3D(1, 0), DistrictColor.GREEN);
+    Tile tile1 = new Tile(district1, district2, district3);
+    Tile tile2 = new Tile(district4, district5, district6);
+    board.addTile(tile1);
+    board.addTile(tile2);
+
+    // Add more tiles to create complex overlapping scenarios
+    // Add more complex tile configurations to test scoring
+    District district7 = new District(new Point3D(2, 0), DistrictColor.RED);
+    District district8 = new District(new Point3D(1, -1), DistrictColor.BLUE);
+    District district9 = new District(new Point3D(3, -1), DistrictColor.GREEN);
+    District district10 = new District(new Point3D(2, 1), DistrictColor.BLUE);
+    District district11 = new District(new Point3D(3, 0), DistrictColor.BLUE);
+    District district12 = new District(new Point3D(4, 0), DistrictColor.BLUE);
+    Tile tile3 = new Tile(district7, district8, district9);
+    Tile tile4 = new Tile(district10, district11, district12);
+    board.addTile(tile3);
+    board.addTile(tile4);
+
+    // Ensure that the score is calculated correctly considering multiple levels
+    assertEquals(14, board.getScore(player));
+}
+
 }
