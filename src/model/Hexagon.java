@@ -10,7 +10,6 @@ import util.Point3D;
 public abstract class Hexagon {
     private Point3D position; // Coordinates of the tile
     private Grid grid; // Reference to the grid containing the tile
-    private Hexagon above; // Tile above the current tile
     private Hexagon below; // Tile below the current tile
     private Tile tile; // Tile containing the hexagons
     private boolean isVisted ; // for counting the building score
@@ -123,30 +122,12 @@ public abstract class Hexagon {
     }
 
     /**
-     * Gets the tile above the current tile.
-     *
-     * @return The tile above the current tile.
-     */
-    public Hexagon getAbove() {
-        return above;
-    }
-
-    /**
      * Gets the tile below the current tile.
      *
      * @return The tile below the current tile.
      */
     public Hexagon getBelow() {
         return below;
-    }
-
-    /**
-     * Sets the tile above the current tile.
-     *
-     * @param aboveTile The tile above the current tile.
-     */
-    public void setAbove(Hexagon aboveTile) {
-        this.above = aboveTile;
     }
 
     /**
@@ -181,15 +162,6 @@ public abstract class Hexagon {
         }
 
         return neighbors;
-    }
-
-    /**
-     * Checks if the tile has a tile above it.
-     *
-     * @return True if the tile has a tile above it, false otherwise.
-     */
-    public boolean hasAbove() {
-        return above != null;
     }
 
     /**

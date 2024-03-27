@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.awt.Point;
 
 /**
  * This class represents a tile that the player can set onto the board.
@@ -21,6 +22,12 @@ public class Tile extends Model{
         hexagons.add(tile1);
         hexagons.add(tile2);
         hexagons.add(tile3);
+    }
+
+    public void setCoordinates(ArrayList<Point> coordinates) {
+        for (int i = 0; i < hexagons.size(); i++) {
+            hexagons.get(i).setPosition(coordinates.get(i).x, coordinates.get(i).y);
+        }
     }
 
     /**

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 /**
  * Represents the game board and manages the game.
@@ -44,7 +43,7 @@ public class Board extends Model {
     }
 
     public boolean setSelectedTile(Tile tile) {
-        if(canChooseTile(tile)) {
+        if(canChooseTile(tile)) {;
             currentPlayer.setSelectedTile(tile);
             return true;
         }
@@ -93,6 +92,7 @@ public class Board extends Model {
 
         // Logic to end a turn
         currentPlayer = getNextPlayer(); // Switch to the next player
+        currentPlayer.setSelectedTile(null); // Reset the selected tile
 
         startTurn(currentPlayer); // Start the next player's turn
     }
@@ -159,6 +159,11 @@ public class Board extends Model {
         };
     }
 
+    /**
+     * For debug only
+     * @param tile
+     * @return
+     */
     public boolean addTile(Tile tile) {
         return getCurrentGrid().addTile(tile);
     }
@@ -230,6 +235,7 @@ public class Board extends Model {
                 break;
             }
         }
+        System.out.println("Price : "+price);
         return currentPlayer.getResources() >= price;
     }
 

@@ -29,50 +29,6 @@ public class GridView extends JPanel {
         this.setLayout(null); // We will manually set the position of the hexagons
         xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
         yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
-
-        MouseAdapter ms = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) { // Check if left button was clicked
-                    Point2D pixelPosition = new Point2D.Double(e.getX(), e.getY());
-                    System.out.println("Clic en coordonnées de pixel : " + pixelPosition);
-                    Point2D gridPosition = convertPixelPositionToGridPosition(pixelPosition);
-                    System.out.println("Clic en coordonnées de grille : " + gridPosition);
-                }
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                // Do nothing
-            }
-        };
-        addMouseListener(ms);
-        addMouseMotionListener(ms);
     }
 
     public Point2D convertGridPositionToPixelPosition(Point gridPosition) {

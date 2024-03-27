@@ -42,6 +42,7 @@ public class SiteView extends JPanel implements View {
 
     public void update(ArrayList<TileView> tiles) { 
         setTilesInSite(tiles);
+        System.out.println("SiteView updated");
     }
 
     public void setTilesInSite(ArrayList<TileView> tiles) {

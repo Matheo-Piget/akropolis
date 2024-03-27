@@ -125,6 +125,7 @@ public class Grid extends Model{
                     bellowHexagons[i] = topMosthexagon;
                 }
                 newHexagon_i.getPosition().z = topMosthexagon.getZ() + 1;
+                System.out.println("New position: " + newHexagon_i.getPosition());
                 hasNeighbor = true;
             }
         }
@@ -145,7 +146,6 @@ public class Grid extends Model{
             newHexagon_i.setTile(tile);
             if (bellowHexagons[i] != null) {
                 newHexagon_i.setBelow(bellowHexagons[i]);
-                bellowHexagons[i].setAbove(newHexagon_i);
             }
             hexagons.put(newHexagon_i.getPosition(), newHexagon_i);
             // Notify the view that a hexagon has been added
@@ -223,13 +223,13 @@ public class Grid extends Model{
      */
     public Hexagon getHexagon(int x, int y) {
         // Retrieve all hexagons at the specified position
-        Hexagon topMosthexagon = hexagons.get(new Point3D(x,y));
-        if (topMosthexagon == null) {
-            return null;
-        }
-        while (topMosthexagon.hasAbove()) {
-            topMosthexagon = topMosthexagon.getAbove();
-        }
+        Point3D p = new Point3D(x, y);
+        Hexagon topMosthexagon = null;
+        // While we can retrieve from the hash map, keep going up
+        while (hexagons.containsKey(p)){
+            topMosthexagon = hexagons.get(p);
+            p = new Point3D(topMosthexagon.getX(), topMosthexagon.getY(), p.z + 1);
+        } 
         return topMosthexagon;
     }
 
@@ -267,8 +267,13 @@ public class Grid extends Model{
      public ArrayList<Hexagon> getTopHexagons() {
         ArrayList<Hexagon> tophexagons = new ArrayList<>();
         for (Hexagon hexagon : hexagons.values()) {
-            if (!hexagon.hasAbove() && tophexagons.contains(hexagon) == false) {
-                tophexagons.add(hexagon);
+            Point3D p = new Point3D(hexagon.getX(), hexagon.getY(), hexagon.getZ());
+            while (hexagons.containsKey(p)) {
+                p = new Point3D(hexagon.getX(), hexagon.getY(), p.z + 1);
+            }
+            Hexagon he = hexagons.get(new Point3D(hexagon.getX(), hexagon.getY(), p.z - 1));
+            if(!tophexagons.contains(he)){
+                tophexagons.add(he);
             }
         }
         return tophexagons;

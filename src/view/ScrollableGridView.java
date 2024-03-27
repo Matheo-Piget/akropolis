@@ -100,6 +100,10 @@ public class ScrollableGridView extends JScrollPane implements View {
         setPreferredSize(new Dimension(1300, 844));
     }
 
+    public GridView getGrid() {
+        return grid;
+    }
+
     public void unfillEachHexagons() {
         for (HexagonView hexagon : filledHexagonViews) {
             if (hexagon != null) {
@@ -108,6 +112,10 @@ public class ScrollableGridView extends JScrollPane implements View {
         }
         // Reset the filled hexagons
         filledHexagonViews = new HexagonView[3];
+    }
+
+    public HexagonView[] getFilledHexagons() {
+        return filledHexagonViews;
     }
 
     public void fillEachHexagons(TileView tile, HexagonView hoveredHexagon) {
@@ -135,18 +143,14 @@ public class ScrollableGridView extends JScrollPane implements View {
                 hex3 = grid.getHexagonAtGridPos(x - 1, y + 1);
                 break;
         }
-        if(hex1 !=null){
+        if(hex1 != null && hex2 != null && hex3 != null){
             hex1.fill(tile.hex1);
-        }
-        if(hex2 !=null){
             hex2.fill(tile.hex2);
-        }
-        if(hex3 !=null){
             hex3.fill(tile.hex3);
+            filledHexagonViews[0] = hex1;
+            filledHexagonViews[1] = hex2;
+            filledHexagonViews[2] = hex3;
         }
-        filledHexagonViews[0] = hex1;
-        filledHexagonViews[1] = hex2;
-        filledHexagonViews[2] = hex3;
     }
 
     @Override

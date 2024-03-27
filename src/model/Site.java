@@ -15,12 +15,12 @@ public class Site extends Model {
      * @param numberToDraw
      */
     public void updateSite(StackTiles stackTiles, int numberToDraw) {
-        System.out.println("updateSite");
         for (int i = tiles.size(); i < numberToDraw; i++) {
             if (!stackTiles.isEmpty()) {
                 tiles.add(stackTiles.pop());
             }
         }
+        System.out.println(stackTiles.size());
         firePropertyChange("tileUpdated", null, tiles);
     }
 
@@ -29,6 +29,9 @@ public class Site extends Model {
         for (Tile t : tiles) {
             if (t != tile) {
                 cost++;
+            }
+            else {
+                break;
             }
         }
         return cost;

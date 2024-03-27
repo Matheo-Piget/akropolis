@@ -173,6 +173,17 @@ public class BoardView extends JPanel implements View, KeyListener {
         //System.out.println("Next turn");
     }
 
+    public HexagonView[] getFilledHexagons() {
+        HexagonView[] filledHexagons = currentGridView.getFilledHexagons();
+        // Then we check that it doesn't contain null values
+        for (HexagonView hexagon : filledHexagons) {
+            if (hexagon == null) {
+                return null;
+            }
+        }
+        return filledHexagons;
+    }
+
     public ScrollableGridView getGridView() {
         return currentGridView;
     }
