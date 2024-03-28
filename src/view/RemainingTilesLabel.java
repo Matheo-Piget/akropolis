@@ -15,7 +15,7 @@ public class RemainingTilesLabel extends JLabel {
     }
 
     public void setRemainingTiles(int remainingTiles) {
-        this.setText("Remaining Tiles: " + remainingTiles);
+        this.setText("                                                                                              Remaining Tiles: " + remainingTiles+"                                                   ");
         validate();
         repaint();
     }

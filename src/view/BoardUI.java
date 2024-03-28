@@ -1,10 +1,16 @@
 package view;
 
 import java.awt.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Represents the ui of the game board.
@@ -12,8 +18,9 @@ import javax.swing.Timer;
  */
 public class BoardUI extends JPanel implements View{
     private PlayerLabel playerLabel = new PlayerLabel("Player");
-    private RockLabel rockLabel = new RockLabel();
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
+    private ArrayList<JLabel> rockImages = new ArrayList<>();
+
 
     private float hue = 0.0f;
     private Timer timer;
@@ -24,7 +31,8 @@ public class BoardUI extends JPanel implements View{
      */
     public BoardUI() {
         setOpaque(true);
-        setLayout(new BorderLayout());
+        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+        setLayout(layout);
         setPreferredSize(new Dimension(100, 75));
 
         JPanel topPanel = new JPanel(new GridBagLayout());
@@ -37,11 +45,11 @@ public class BoardUI extends JPanel implements View{
         gbc.gridy = 0;
         topPanel.add(playerLabel, gbc);
         gbc.gridx = 1;
-        topPanel.add(rockLabel, gbc);
         gbc.gridx = 2;
         topPanel.add(remainingTilesLabel, gbc);
 
         add(topPanel, BorderLayout.NORTH);
+    
 
         setBackground(bg);
         applyStyle();
@@ -72,8 +80,25 @@ public class BoardUI extends JPanel implements View{
     }
 
     public void setRock(int rock){
-        rockLabel.setRocks(rock);
+        while (rockImages.size() > 3) {// 3 pour tester
+            // Supprimez une image si une pierre est perdue
+            remove(rockImages.remove(rockImages.size() - 1));
+        }
+        while (rockImages.size() < 3) {
+            ImageIcon image = new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\rock.PNG");
+            Image scaledImage = image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+            JLabel newRockImage = new JLabel(new ImageIcon(scaledImage));
+            newRockImage.setBorder(new EmptyBorder(0, 0, 30, 0)); // Ajoutez un bord vide en bas
+
+            rockImages.add(newRockImage);
+            add(newRockImage);
+        }
+        validate();
+        repaint();
+        revalidate(); // Réorganisez les composants
+
     }
+    
 
     public void setRemainingTiles(int remainingTiles){
         remainingTilesLabel.setRemainingTiles(remainingTiles);
@@ -84,9 +109,7 @@ public class BoardUI extends JPanel implements View{
         playerLabel.setForeground(Color.WHITE);
         playerLabel.setFont(playerLabel.getFont().deriveFont(Font.BOLD, 16)); // Police en gras de taille 16
 
-        // Style pour rockLabel
-        rockLabel.setForeground(Color.WHITE); 
-        rockLabel.setFont(rockLabel.getFont().deriveFont(Font.PLAIN, 14)); // Police de taille 14
+        
 
         // Style pour remainingTilesLabel
         remainingTilesLabel.setForeground(Color.WHITE);

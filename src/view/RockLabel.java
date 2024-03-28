@@ -13,9 +13,5 @@ public class RockLabel extends JLabel {
         setForeground(java.awt.Color.WHITE);
     }
     
-    public void setRocks(int rocks){
-        this.setText("Rocks: " + rocks);
-        validate();
-        repaint();
-    }
+    
 }
