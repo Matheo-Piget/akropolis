@@ -7,15 +7,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MainMenuView extends JPanel {
 
     private BufferedImage backgroundImage;
+    private Clip backgroundMusicClip;
 
     public MainMenuView() {
         super();
@@ -34,6 +42,7 @@ public class MainMenuView extends JPanel {
 
         addTitleLabel();
         addButtonsPanel();
+        playBackgroundMusic();
     }
 
     @Override
@@ -108,7 +117,32 @@ public class MainMenuView extends JPanel {
         button.addActionListener(actionListener);
         return button;
     }
+    private void playBackgroundMusic() {
+        try {
+            // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources
+            InputStream audioSrc = getClass().getResourceAsStream("/Akropolis.wav");
+            InputStream bufferedIn = new BufferedInputStream(audioSrc);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+            // Garder la musique en boucle continuellement si désiré
+            // clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+    private void stopBackgroundMusic() {
+        if (backgroundMusicClip != null) {
+            backgroundMusicClip.stop();
+        }
+    }
+
+    
+
     private void startNewGame() {
+        stopBackgroundMusic();
         System.out.println("Nouvelle partie démarrée");
 
         // Utilisation de JComboBox pour sélectionner le nombre de joueurs
