@@ -54,7 +54,7 @@ public class SiteView extends JPanel implements View {
                 add(tiles.get(i));
             }
         }
-        validate();
+        revalidate();
         repaint();
     }
 

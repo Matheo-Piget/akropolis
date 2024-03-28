@@ -79,6 +79,8 @@ public class Board extends Model {
         if(tile == null) return; // No tile selected
         if (addTile(tile)) {
             currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
+            // Remove the tile from the site
+            site.getTiles().remove(tile);
             endTurn();
         }
     }
