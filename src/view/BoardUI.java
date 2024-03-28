@@ -85,7 +85,7 @@ public class BoardUI extends JPanel implements View{
             remove(rockImages.remove(rockImages.size() - 1));
         }
         while (rockImages.size() < 3) {
-            ImageIcon image = new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\rock.PNG");
+            ImageIcon image = new ImageIcon("res\\rock.PNG");
             Image scaledImage = image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
             JLabel newRockImage = new JLabel(new ImageIcon(scaledImage));
             newRockImage.setBorder(new EmptyBorder(0, 0, 30, 0)); // Ajoutez un bord vide en bas
