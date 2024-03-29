@@ -12,7 +12,6 @@ public abstract class Hexagon {
     private Grid grid; // Reference to the grid containing the tile
     private Hexagon below; // Tile below the current tile
     private Tile tile; // Tile containing the hexagons
-    private boolean isVisted ; // for counting the building score
 
     /**
      * Constructor to create a tile with specified coordinates and grid.

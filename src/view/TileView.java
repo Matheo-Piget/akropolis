@@ -3,8 +3,8 @@ package view;
 import javax.swing.JComponent;
 import model.Tile;
 import model.Hexagon;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,6 +27,7 @@ public class TileView extends JComponent implements View {
     private boolean increasing = true;
     private Timer glowTimer;
     private int rotation = 0;
+    private BufferedImage image;
 
     public TileView() {
         // Empty constructor
@@ -43,7 +44,7 @@ public class TileView extends JComponent implements View {
         add(hex1);
         add(hex2);
         add(hex3);
-        setupListener();
+        setupGlow();
         this.revalidate();
         this.repaint();
     }
@@ -69,20 +70,15 @@ public class TileView extends JComponent implements View {
         return rotation;
     }
 
-    private void setupListener() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                isHovered = true;
-                repaint();
-            }
+    public void setHovered(boolean hovered) {
+        isHovered = hovered;
+        repaint();
+    }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                isHovered = false;
-                repaint();
-            }
-        });
+    private void setupGlow() {
+        if(glowTimer != null) {
+            glowTimer.stop();
+        }
         // Create a Timer that fires every 100 milliseconds
         Timer timer = new Timer(100, new ActionListener() {
             @Override
@@ -107,6 +103,24 @@ public class TileView extends JComponent implements View {
             }
         });
         this.glowTimer = timer;
+    }
+
+    public void stopGlow() {
+        glowTimer.stop();
+        glow = 0.0f;
+        repaint();
+    }
+
+    @Override
+    protected void processMouseEvent(MouseEvent e) {
+        super.processMouseEvent(e);
+        getParent().dispatchEvent(e);
+    }
+
+    @Override
+    protected void processMouseMotionEvent(MouseEvent e) {
+        super.processMouseMotionEvent(e);
+        getParent().dispatchEvent(e);
     }
 
     @Override
@@ -136,7 +150,7 @@ public class TileView extends JComponent implements View {
         add(hex1);
         add(hex2);
         add(hex3);
-        setupListener();
+        setupGlow();
         this.revalidate();
         this.repaint();
     }

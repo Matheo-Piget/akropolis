@@ -2,8 +2,6 @@ package controller;
 
 import model.Tile;
 import view.TileView;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
 import java.beans.PropertyChangeEvent;
 
 
@@ -17,14 +15,6 @@ public class TileController extends Controller{
     public TileController(Tile model, TileView view, BoardController boardController) {
         super(model, view);
         this.boardController = boardController;
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                boardController.selectedTile(TileController.this);
-            }
-        };
-        ((TileView) view).addMouseListener(mouseAdapter);
-        ((TileView) view).addMouseMotionListener(mouseAdapter);
     }
 
     @Override

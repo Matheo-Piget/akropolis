@@ -46,6 +46,10 @@ public class SiteView extends JPanel implements View {
     }
 
     public void setTilesInSite(ArrayList<TileView> tiles) {
+        // Stop all animations
+        for (TileView tile : getTiles()) {
+            tile.stopGlow();
+        }
         removeAll();
         // Don't add more tiles than the capacity
         for (int i = 0; i < capacity; i++) {
