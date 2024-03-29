@@ -1,12 +1,12 @@
 package model;
 
-import java.util.ArrayList;
-
 public class Site extends Model {
-    private ArrayList<Tile> tiles;
+    private Tile[] tiles;
+    private int capacity;
 
-    public Site() {
-        tiles = new ArrayList<Tile>();
+    public Site(int capacity) {
+        tiles = new Tile[capacity];
+        this.capacity = capacity;
     }
 
     /**
@@ -14,14 +14,47 @@ public class Site extends Model {
      * @param stackTiles
      * @param numberToDraw
      */
-    public void updateSite(StackTiles stackTiles, int numberToDraw) {
-        for (int i = tiles.size(); i < numberToDraw; i++) {
+    public void updateSite(StackTiles stackTiles) {
+        // Firstly, we reorder the tiles in the site
+        Tile[] newTiles = new Tile[capacity];
+        int numberOfTiles = 0;
+        int index = 0;
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] != null) {
+                newTiles[index] = tiles[i];
+                index++;
+                numberOfTiles++;
+            }
+        }
+        System.out.println(numberOfTiles + " " + capacity);
+        tiles = newTiles;
+        // Then we add the new tiles from the stack
+        for (int i = numberOfTiles; i < capacity; i++) {
             if (!stackTiles.isEmpty()) {
-                tiles.add(stackTiles.pop());
+                newTiles[i] = stackTiles.pop();
             }
         }
         System.out.println(stackTiles.size());
         firePropertyChange("tileUpdated", null, tiles);
+    }
+
+    public void removeTile(Tile tile) {
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] == tile) {
+                tiles[i] = null;
+                break;
+            }
+        }
+        firePropertyChange("tileUpdated", null, tiles);
+    }
+
+    public boolean isEmpty() {
+        for (Tile tile : tiles) {
+            if (tile != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int calculateCost(Tile tile) {
@@ -37,7 +70,7 @@ public class Site extends Model {
         return cost;
     }
 
-    public ArrayList<Tile> getTiles() {
+    public Tile[] getTiles() {
         return tiles;
     }
 }

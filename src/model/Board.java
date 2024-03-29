@@ -1,16 +1,14 @@
 package model;
 
-import util.Tuple;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.beans.PropertyChangeListener;
 
 /**
  * Represents the game board and manages the game.
  */
 public class Board extends Model {
-    private final List<Tuple<Player, Grid>> playerGridList; // List of tuples (player, grid)
+    private final ArrayList<Player> playerList; // List of players in the game
     private final StackTiles stackTiles; // The stack of tiles in the game
     private final Site site; // The tiles on the table
     private Player currentPlayer; // The current player
@@ -21,16 +19,17 @@ public class Board extends Model {
      * @param players The list of players in the game.
      */
     public Board(List<Player> players) {
-        playerGridList = new ArrayList<>();
+        playerList = new ArrayList<>();
         int nb_rocks = 1;
         for (Player player : players) {
             player.setResources(nb_rocks);
-            playerGridList.add(new Tuple<>(player, new Grid(player)));
+            player.setGrid(new Grid(player));
+            playerList.add(player);
             nb_rocks++;
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
-        site = new Site();
-        currentPlayer = players.get(0); // Set the current player to the first player
+        site = new Site(switchSizePlayers());
+        currentPlayer = playerList.get(0);
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
 
@@ -44,7 +43,7 @@ public class Board extends Model {
 
     public boolean setSelectedTile(Tile tile) {
         if(canChooseTile(tile)) {;
-            currentPlayer.setSelectedTile(tile);
+            playerList.get(manche % playerList.size()).setSelectedTile(tile);
             return true;
         }
         return false;
@@ -54,7 +53,7 @@ public class Board extends Model {
      * Starts the game by starting the first turn.
      */
     public void startGame() {
-        startTurn(currentPlayer); // Start the first turn
+        startTurn(currentPlayer);
     }
 
     /**
@@ -63,11 +62,11 @@ public class Board extends Model {
      */
     public void startTurn(Player player) {
         firePropertyChange("nextTurn",null, player);
-        getCurrentGrid().display();
+        currentPlayer.getGrid().display();
         System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
-            site.updateSite(stackTiles, switchSizePlayers());
+            site.updateSite(stackTiles);
         }
     }
 
@@ -75,12 +74,12 @@ public class Board extends Model {
      * Adds a tile to the grid of the current player.
      */
     public void addTileToGrid() {
-        Tile tile = currentPlayer.getSelectedTile();
+        Tile tile = playerList.get(manche % playerList.size()).getSelectedTile();
         if(tile == null) return; // No tile selected
         if (addTile(tile)) {
             currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
             // Remove the tile from the site
-            site.getTiles().remove(tile);
+            site.removeTile(tile);
             endTurn();
         }
     }
@@ -105,23 +104,15 @@ public class Board extends Model {
      */
     private Player getNextPlayer() {
         // Trouver l'index du joueur actuel dans la liste des joueurs
-        int currentIndex = -1;
-        for (int i = 0; i < playerGridList.size(); i++) {
-            if (playerGridList.get(i).x.equals(currentPlayer)) {
-                currentIndex = i;
-                break;
-            }
-        }
+        return playerList.get(manche++ % playerList.size());
+    }
 
-        if (currentIndex != -1) {
-            // Incrémenter l'index pour obtenir le prochain joueur (liste circulaire)
-            int nextIndex = (currentIndex + 1) % playerGridList.size();
-            // Retourner le joueur correspondant à l'index suivant
-            return playerGridList.get(nextIndex).x;
-        } else {
-            // Si le joueur actuel n'est pas trouvé dans la liste, retourner null
-            return null;
+    public ArrayList<Grid> getGrids() {
+        ArrayList<Grid> grids = new ArrayList<>();
+        for (Player player : playerList) {
+            grids.add(player.getGrid());
         }
+        return grids;
     }
 
     public Site getSite() {
@@ -136,16 +127,12 @@ public class Board extends Model {
         return manche;
     }
 
-    public Tuple<Player, Grid> getPlayerGrid(Player player) {
-        return playerGridList.stream().filter(t -> t.x.equals(player)).findFirst().orElse(null);
-    }
-
     /**
      * Returns the number of players in the game.
      * @return The number of players in the game.
      */
     private int getNumberOfPlayers() {
-        return playerGridList.size();
+        return playerList.size();
     }
 
     /**
@@ -167,19 +154,19 @@ public class Board extends Model {
      * @return
      */
     public boolean addTile(Tile tile) {
-        return getCurrentGrid().addTile(tile);
+        return currentPlayer.getGrid().addTile(tile);
     }
 
     public boolean addTile(Tile tile, Player player) {
-        return getPlayerGrid(player).y.addTile(tile);
+        return player.getGrid().addTile(tile);
     }
 
     public Hexagon getHexagon(int x, int y) {
-        return getCurrentGrid().getHexagon(x, y);
+        return currentPlayer.getGrid().getHexagon(x, y);
     }
 
     public int getScore(Player player) {
-        return getPlayerGrid(player).y.calculateScore();
+        return player.getGrid().calculateScore();
     }
 
     /**
@@ -190,20 +177,13 @@ public class Board extends Model {
         return currentPlayer;
     }
 
-    /**
-     * Returns the current player's grid.
-     * @return The current player's grid.
-     */
-    public Grid getCurrentGrid() {
-        return Objects.requireNonNull(playerGridList.stream().filter(t -> t.x.equals(currentPlayer)).findFirst().orElse(null)).y;
-    }
 
     /**
      * Checks if the game is over.
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && site.getTiles().isEmpty();
+        return stackTiles.isEmpty() && site.isEmpty();
     }
 
     /**
@@ -212,10 +192,10 @@ public class Board extends Model {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerGridList.get(0).x;
-            for (Tuple<Player, Grid> tuple : playerGridList) {
-                if (getScore(tuple.x) > getScore(winner)) {
-                    winner = tuple.x;
+            Player winner = playerList.get(0);
+            for (Player p : playerList) {
+                if (getScore(p) > getScore(winner)) {
+                    winner = p;
                 }
             }
             return winner;
@@ -239,9 +219,5 @@ public class Board extends Model {
         }
         System.out.println("Price : "+price);
         return currentPlayer.getResources() >= price;
-    }
-
-    public Grid[] getGrids() {
-        return playerGridList.stream().map(t -> t.y).toArray(Grid[]::new);
     }
 }

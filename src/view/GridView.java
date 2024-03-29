@@ -1,9 +1,7 @@
 package view;
 
 import javax.swing.JPanel;
-import java.awt.event.MouseEvent;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
 import java.awt.geom.Point2D;
 import java.awt.Point;
 import util.Point3D;

@@ -28,6 +28,7 @@ public class GridController extends Controller {
             Hexagon hexagon = (Hexagon) evt.getNewValue();
             HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon);
             ((ScrollableGridView) view).addHexagon(hexagonView);
+            System.out.println("Hexagon added to the grid view");
         }
     }
 }

@@ -26,11 +26,12 @@ public class SiteController extends Controller {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("tileUpdated")) {
             // Update the view with the updated tile
-            ArrayList<Tile> tiles = ((Site) model).getTiles();
+            Tile[] tiles = ((Site) model).getTiles();
             ArrayList<TileView> tileViews = new ArrayList<TileView>();
             // Then we create the tile controllers
             tileControllers = new ArrayList<TileController>();
             for (Tile tile : tiles) {
+                if(tile == null) continue;
                 TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile), boardController);
                 tileControllers.add(tileController);
                 tileViews.add((TileView) tileController.view);

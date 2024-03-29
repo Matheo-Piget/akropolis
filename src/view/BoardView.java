@@ -170,7 +170,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView = gridViews.get(index);
         // Use CardLayout.show to switch to the next gridView
         cardLayout.show(cardPanel, String.valueOf(index));
-        //System.out.println("Next turn");
+        System.out.println("Next turn has been called in BoardView");
     }
 
     public HexagonView[] getFilledHexagons() {

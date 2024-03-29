@@ -5,6 +5,7 @@ package model;
  */
 public class Player extends Model {
     private String name; // The name of the player
+    private Grid grid; // The grid of the player
     private Tile selectedTile; // The tile selected by the player during their turn
     private int resources; // The resources (rocks) owned by the player
 
@@ -26,6 +27,22 @@ public class Player extends Model {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Get the grid of the player.
+     * @return The grid of the player.
+     */
+    public Grid getGrid() {
+        return grid;
+    }
+
+    /**
+     * Set the grid of the player.
+     * @param grid
+     */
+    public void setGrid(Grid grid) {
+        this.grid = grid;
     }
 
     /**
