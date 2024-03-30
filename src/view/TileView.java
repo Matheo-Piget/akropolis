@@ -4,7 +4,6 @@ import javax.swing.JComponent;
 import model.Tile;
 import model.Hexagon;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,7 +26,6 @@ public class TileView extends JComponent implements View {
     private boolean increasing = true;
     private Timer glowTimer;
     private int rotation = 0;
-    private BufferedImage image;
 
     public TileView() {
         // Empty constructor
@@ -39,7 +37,7 @@ public class TileView extends JComponent implements View {
         this.hex1 = hex1;
         this.hex2 = hex2;
         this.hex3 = hex3;
-        int hexHeight = (int) (Math.sqrt(3) / 2 * HexagonView.size);
+        int hexHeight = (int) (Math.sqrt(3) / 2 * hex1.getWidth());
         this.setPreferredSize(new Dimension((int) (Math.sqrt(3) * 80), hexHeight));
         add(hex1);
         add(hex2);
@@ -55,9 +53,9 @@ public class TileView extends JComponent implements View {
         Hexagon hex1 = tile.getHexagons().get(0);
         Hexagon hex2 = tile.getHexagons().get(1);
         Hexagon hex3 = tile.getHexagons().get(2);
-        HexagonView hexView1 = HexagonViewFactory.createHexagonView(hex1);
-        HexagonView hexView2 = HexagonViewFactory.createHexagonView(hex2);
-        HexagonView hexView3 = HexagonViewFactory.createHexagonView(hex3);
+        HexagonView hexView1 = HexagonViewFactory.createHexagonView(hex1, GridView.hexagonSize);
+        HexagonView hexView2 = HexagonViewFactory.createHexagonView(hex2, GridView.hexagonSize);
+        HexagonView hexView3 = HexagonViewFactory.createHexagonView(hex3, GridView.hexagonSize);
         setHexagons(hexView1, hexView2, hexView3);
     }
 
@@ -76,7 +74,7 @@ public class TileView extends JComponent implements View {
     }
 
     private void setupGlow() {
-        if(glowTimer != null) {
+        if (glowTimer != null) {
             glowTimer.stop();
         }
         // Create a Timer that fires every 100 milliseconds
@@ -127,8 +125,22 @@ public class TileView extends JComponent implements View {
     public void doLayout() {
         super.doLayout();
 
-        int hexWidth = HexagonView.size;
+        // Calculate the size of the hexagons based on the size of the TileView
+        int hexWidth = this.getWidth() / 3;
         int hexHeight = (int) (Math.sqrt(3) / 2 * hexWidth);
+
+        // Resize the hexagons
+        hex1 = HexagonViewFactory.createHexagonView(hex1, hexWidth);
+        hex2 = HexagonViewFactory.createHexagonView(hex2, hexWidth);
+        hex3 = HexagonViewFactory.createHexagonView(hex3, hexWidth);
+
+        // Remove all components
+        removeAll();
+
+        // Add the hexagons to the TileView
+        add(hex1);
+        add(hex2);
+        add(hex3);
 
         // Calculate the center of the TileView
         int centerX = this.getWidth() / 2;
@@ -144,12 +156,14 @@ public class TileView extends JComponent implements View {
 
     public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         removeAll();
-        this.hex1 = hex1;
-        this.hex2 = hex2;
-        this.hex3 = hex3;
-        add(hex1);
-        add(hex2);
-        add(hex3);
+        // Calculate the size of the hexagons based on the size of the TileView
+        int hexWidth = this.getWidth() / 3;
+        this.hex1 = HexagonViewFactory.createHexagonView(hex1, hexWidth);
+        this.hex2 = HexagonViewFactory.createHexagonView(hex2, hexWidth);
+        this.hex3 = HexagonViewFactory.createHexagonView(hex3, hexWidth);
+        add(this.hex1);
+        add(this.hex2);
+        add(this.hex3);
         setupGlow();
         this.revalidate();
         this.repaint();

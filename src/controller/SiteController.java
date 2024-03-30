@@ -80,16 +80,17 @@ public class SiteController extends Controller {
             ArrayList<TileView> tileViews = new ArrayList<TileView>();
             // Then we create the tile controllers
             tileControllers = new ArrayList<TileController>();
+            SiteView siteView = (SiteView) view;
             for (Tile tile : tiles) {
                 if (tile == null)
                     continue;
-                TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile),
+                TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile, siteView.getTileSize()),
                         boardController);
                 tileControllers.add(tileController);
                 tileViews.add((TileView) tileController.view);
             }
             // Then we update the view
-            ((SiteView) view).update(tileViews);
+            siteView.update(tileViews);
         }
     }
 }

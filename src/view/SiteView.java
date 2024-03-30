@@ -31,6 +31,11 @@ public class SiteView extends JPanel implements View {
         return null;
     }
 
+    public int getTileSize(){
+        // Calculate the size of the tiles
+        return getPreferredSize().height / capacity;
+    }
+
     public ArrayList<TileView> getTiles() {
         ArrayList<TileView> tiles = new ArrayList<TileView>();
         for (java.awt.Component component : getComponents()) {

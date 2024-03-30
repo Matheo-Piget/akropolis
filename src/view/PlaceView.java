@@ -11,8 +11,8 @@ public class PlaceView extends HexagonView {
     private Place place;
     private static Color strokeColor = Color.BLACK;
 
-    public PlaceView(int x, int y, int z, Place place) {
-        super(x, y, z);
+    public PlaceView(int x, int y, int z, Place place, int size) {
+        super(x, y, z, size);
         this.stars = place.getStars();
         this.place = place;
         switch (place.getType()) {
@@ -34,6 +34,10 @@ public class PlaceView extends HexagonView {
             default:
                 break;
         }
+    }
+
+    public Place getPlace() {
+        return place;
     }
 
     @Override

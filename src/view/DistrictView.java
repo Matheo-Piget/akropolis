@@ -7,8 +7,8 @@ public class DistrictView extends HexagonView {
     private District district;
     private static Color strokeColor = Color.BLACK;
 
-    public DistrictView(int x, int y, int z, District d) {
-        super(x, y, z);
+    public DistrictView(int x, int y, int z, District d, int size) {
+        super(x, y, z, size);
         this.district = d;
         switch (d.getType()) {
             case "Barrack":
@@ -29,6 +29,10 @@ public class DistrictView extends HexagonView {
             default:
                 break;
         }
+    }
+
+    public District getDistrict() {
+        return district;
     }
 
     @Override 

@@ -2,6 +2,7 @@ package controller;
 
 import model.Grid;
 import model.Hexagon;
+import view.GridView;
 import view.HexagonView;
 import view.HexagonViewFactory;
 import view.ScrollableGridView;
@@ -26,7 +27,7 @@ public class GridController extends Controller {
         if(evt.getPropertyName().equals("hexagonAdded")) {
             // Convert the hexagon to a view and add it to the grid view
             Hexagon hexagon = (Hexagon) evt.getNewValue();
-            HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon);
+            HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon, GridView.hexagonSize);
             ((ScrollableGridView) view).addHexagon(hexagonView);
             System.out.println("Hexagon added to the grid view");
         }

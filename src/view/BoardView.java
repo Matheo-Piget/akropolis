@@ -79,7 +79,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
-                                HexagonOutline hexagon = new HexagonOutline(q, r, 0);
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize);
                                 publish(hexagon);
                             }
                         }

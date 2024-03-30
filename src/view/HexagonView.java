@@ -19,8 +19,7 @@ import java.awt.image.BufferedImage;
  */
 public abstract class HexagonView extends JComponent {
 
-    public static int size = 80; // Size of the hexagons
-    private static BasicStroke stroke = new BasicStroke(size / 25);
+    private BasicStroke stroke = new BasicStroke(80 / 25);
     protected boolean isHovered = false;
     protected TexturePaint texture;
     protected Point pos = new Point(0, 0);
@@ -28,8 +27,9 @@ public abstract class HexagonView extends JComponent {
     protected Path2D.Double hexagon = new Path2D.Double();
     protected BufferedImage render;
 
-    public HexagonView(int x, int y, int z) {
-        this.setSize(size, size);
+    public HexagonView(int x, int y, int z, int size) {
+        setSize(size, size);
+        stroke = new BasicStroke(size / 25);
         setOpaque(false);
         // Calculate the coordinates of the six points of the hexagon
         pos = new Point(x, y);
@@ -47,8 +47,9 @@ public abstract class HexagonView extends JComponent {
         hexagon.closePath();
     }
 
-    public HexagonView(int x, int y, int z, BufferedImage img) {
+    public HexagonView(int x, int y, int z, BufferedImage img, int size) {
         this.setSize(size, size);
+        stroke = new BasicStroke(size / 25);
         pos = new Point(x, y);
         this.z = z;
         int center = size / 2 - 1; // Dumb rounding
@@ -65,8 +66,9 @@ public abstract class HexagonView extends JComponent {
         this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
     }
 
-    public HexagonView(int x, int y, int z, Color color) {
-        this.setSize(size, size);
+    public HexagonView(int x, int y, int z, Color color, int size) {
+        setSize(size, size);
+        stroke = new BasicStroke(size / 25);
         pos = new Point(x, y);
         this.z = z;
         int center = size / 2 - 1; // Ligma balls
@@ -168,6 +170,13 @@ public abstract class HexagonView extends JComponent {
 
         // Repaint the component
         this.repaint();
+    }
+
+    public BufferedImage getRender() {
+        if(render == null) {
+            renderHexagon(Color.BLACK, texture);
+        }
+        return render;
     }
 
     public TexturePaint getTexture() {

@@ -8,8 +8,8 @@ import java.awt.Color;
 public class HexagonOutline extends HexagonView {
     private static Color strokeColor = Color.BLUE;
 
-    public HexagonOutline(int x, int y, int z) {
-        super(x, y, z);
+    public HexagonOutline(int x, int y, int z, int size) {
+        super(x, y, z, size);
         setOpaque(false);
     }
 

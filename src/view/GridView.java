@@ -15,14 +15,15 @@ public class GridView extends JPanel {
 
     private int xOffset;
     private int yOffset;
+    public static int hexagonSize = 80;
 
     private HashMap<Point, HexagonView> hexagons = new HashMap<>();
 
     public GridView(int maxHexagons) {
         setDoubleBuffered(true);
-        int panelWidth = (int) (maxHexagons * 3.0 / 2 * HexagonView.size);
+        int panelWidth = (int) (maxHexagons * 3.0 / 2 * hexagonSize);
 
-        int panelHeight = (int) (maxHexagons * Math.sqrt(3) * HexagonView.size);
+        int panelHeight = (int) (maxHexagons * Math.sqrt(3) * hexagonSize);
         setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setLayout(null); // We will manually set the position of the hexagons
         xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
@@ -32,7 +33,7 @@ public class GridView extends JPanel {
     public Point2D convertGridPositionToPixelPosition(Point gridPosition) {
         int q = gridPosition.x; // column index
         int r = gridPosition.y; // row index
-        int size = HexagonView.size / 2; // size of the hexagon
+        int size = hexagonSize / 2; // size of the hexagon
         int pixelX = (int) (size * 3.0 / 2 * q) + xOffset;
         int pixelY = (int) (size * Math.sqrt(3) * (r + q / 2.0)) + yOffset;
         return new Point2D.Double(pixelX, pixelY);
@@ -64,7 +65,7 @@ public class GridView extends JPanel {
     // on obtient les coordonne qui peuveut etre sur n'importe quel partie de
     // l'hexagone mais faut savoir à quel hexagone appartient
     public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
-        int size = HexagonView.size / 2;
+        int size = hexagonSize / 2;
         double x = (pixelPosition.getX() - xOffset) / size;
         double y = (pixelPosition.getY() - yOffset) / size;
 
