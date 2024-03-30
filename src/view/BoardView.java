@@ -7,8 +7,21 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.List;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;  
+import javax.swing.SwingWorker;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.BorderFactory;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 
 /**
  * Panel for displaying the game board.

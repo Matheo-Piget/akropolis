@@ -1,8 +1,6 @@
 package view;
 
 import javax.swing.JComponent;
-import model.Tile;
-import model.Hexagon;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -27,10 +25,6 @@ public class TileView extends JComponent implements View {
     private Timer glowTimer;
     private int rotation = 0;
 
-    public TileView() {
-        // Empty constructor
-    }
-
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         setOpaque(false);
         setFocusable(true);
@@ -45,18 +39,6 @@ public class TileView extends JComponent implements View {
         setupGlow();
         this.revalidate();
         this.repaint();
-    }
-
-    public TileView(Tile tile) {
-        setOpaque(false);
-        setFocusable(true);
-        Hexagon hex1 = tile.getHexagons().get(0);
-        Hexagon hex2 = tile.getHexagons().get(1);
-        Hexagon hex3 = tile.getHexagons().get(2);
-        HexagonView hexView1 = HexagonViewFactory.createHexagonView(hex1, GridView.hexagonSize);
-        HexagonView hexView2 = HexagonViewFactory.createHexagonView(hex2, GridView.hexagonSize);
-        HexagonView hexView3 = HexagonViewFactory.createHexagonView(hex3, GridView.hexagonSize);
-        setHexagons(hexView1, hexView2, hexView3);
     }
 
     public void rotate() {
@@ -152,21 +134,6 @@ public class TileView extends JComponent implements View {
         // Position the second and third hexagons at the left of the first hexagon
         hex2.setLocation(centerX - hexWidth / 2, centerY - hexHeight / 2);
         hex3.setLocation(centerX - hexWidth / 2, centerY + hexHeight / 2);
-    }
-
-    public void setHexagons(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
-        removeAll();
-        // Calculate the size of the hexagons based on the size of the TileView
-        int hexWidth = this.getWidth() / 3;
-        this.hex1 = HexagonViewFactory.createHexagonView(hex1, hexWidth);
-        this.hex2 = HexagonViewFactory.createHexagonView(hex2, hexWidth);
-        this.hex3 = HexagonViewFactory.createHexagonView(hex3, hexWidth);
-        add(this.hex1);
-        add(this.hex2);
-        add(this.hex3);
-        setupGlow();
-        this.revalidate();
-        this.repaint();
     }
 
     public ArrayList<HexagonView> getHexagons() {

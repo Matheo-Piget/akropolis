@@ -1,7 +1,9 @@
 package model;
 
 import java.awt.Point;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import util.Point3D;
 
 /**
