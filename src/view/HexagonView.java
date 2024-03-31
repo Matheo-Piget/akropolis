@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.Font;
 
 /**
  * Represents an hexagon on the game grid.
@@ -30,7 +31,6 @@ public abstract class HexagonView extends JComponent {
     public HexagonView(int x, int y, int z, int size) {
         setSize(size, size);
         stroke = new BasicStroke(size / 25);
-        setOpaque(false);
         // Calculate the coordinates of the six points of the hexagon
         pos = new Point(x, y);
         this.z = z;
@@ -86,7 +86,7 @@ public abstract class HexagonView extends JComponent {
         // Create a BufferedImage and fill it with the color
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
-        g.setColor(darken(color, z));
+        g.setColor(color);
         g.fillRect(0, 0, 1, 1);
         g.dispose();
         this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, size, size));
@@ -106,6 +106,7 @@ public abstract class HexagonView extends JComponent {
 
     /**
      * Fill the hexagon based on the hexagon view passed
+     * 
      * @param hexagon the hexagon view to fill
      */
     public void fill(HexagonView hexagon) {
@@ -123,6 +124,7 @@ public abstract class HexagonView extends JComponent {
 
     /**
      * Render the hexagon with the given stroke color and texture
+     * 
      * @param strokeColor
      * @param texture
      */
@@ -152,6 +154,28 @@ public abstract class HexagonView extends JComponent {
         }
         g2d.setStroke(stroke);
         g2d.draw(hexagon);
+
+        // Draw the height number only when it's not an hexagon outline
+        if (!(this instanceof HexagonOutline)) {
+            int fontSize = (int) (getHeight() * 0.2);
+            g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
+            String heightStr = String.valueOf(z);
+            int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
+            int x = (getWidth() - stringWidth) / 2;
+            int y = getHeight() - fontSize / 2;
+            
+            // Draw a black outline around the text
+            g2d.setColor(Color.BLACK);
+            for(int dx = -1; dx <= 1; dx++) {
+                for(int dy = -1; dy <= 1; dy++) {
+                    g2d.drawString(heightStr, x + dx, y + dy);
+                }
+            }
+
+            // Draw the text
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(heightStr, x, y);
+        }
         g2d.dispose();
     }
 
@@ -173,7 +197,7 @@ public abstract class HexagonView extends JComponent {
     }
 
     public BufferedImage getRender() {
-        if(render == null) {
+        if (render == null) {
             renderHexagon(Color.BLACK, texture);
         }
         return render;
@@ -202,27 +226,5 @@ public abstract class HexagonView extends JComponent {
 
     public int getZ() {
         return z;
-    }
-
-    private Color darken(Color c, int z) {
-        for (int i = 0; i < z; i++) {
-            c = c.darker();
-        }
-        return c;
-    }
-
-    public TexturePaint darkenTexturePaint(TexturePaint texture, int floor) {
-        BufferedImage img = texture.getImage();
-        BufferedImage darkImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        for (int i = 0; i < img.getWidth(); i++) {
-            for (int j = 0; j < img.getHeight(); j++) {
-                Color color = new Color(img.getRGB(i, j), true);
-                for (int k = 0; k < floor; k++) {
-                    color = color.darker();
-                }
-                darkImg.setRGB(i, j, color.getRGB());
-            }
-        }
-        return new TexturePaint(darkImg, texture.getAnchorRect());
     }
 }

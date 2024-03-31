@@ -115,5 +115,7 @@ public class GridView extends JPanel {
         hexagons.put(hexagon.getPosition(), hexagon);
         // Add it to the jpanel
         this.add(hexagon);
+        // Repaint the area where the hexagon is
+        this.repaint(hexagon.getBounds());
     }
 }

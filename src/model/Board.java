@@ -92,6 +92,7 @@ public class Board extends Model {
         System.out.println("Next turn : "+ getNextPlayer().getName());
 
         // Logic to end a turn
+        manche++;
         currentPlayer = getNextPlayer(); // Switch to the next player
         currentPlayer.setSelectedTile(null); // Reset the selected tile
 
@@ -104,7 +105,7 @@ public class Board extends Model {
      */
     private Player getNextPlayer() {
         // Trouver l'index du joueur actuel dans la liste des joueurs
-        return playerList.get(manche++ % playerList.size());
+        return playerList.get(manche % playerList.size());
     }
 
     public ArrayList<Grid> getGrids() {
