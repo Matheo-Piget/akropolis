@@ -91,6 +91,8 @@ public class SiteController extends Controller {
             }
             // Then we update the view
             siteView.update(tileViews);
+            // Update also the UI
+            boardController.sendEventToUIController(new PropertyChangeEvent(this, "tilesRemainingUpdated", null, null));
         }
     }
 }

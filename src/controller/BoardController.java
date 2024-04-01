@@ -104,6 +104,9 @@ public class BoardController extends Controller {
         }
     }
 
+    public void sendEventToUIController(PropertyChangeEvent evt){
+        uiController.propertyChange(evt);
+    }
     /**
      * update the UI infos
      * @param evt the evt call

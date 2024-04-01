@@ -16,22 +16,11 @@ public class Site extends Model {
      */
     public void updateSite(StackTiles stackTiles) {
         // Firstly, we reorder the tiles in the site
-        Tile[] newTiles = new Tile[capacity];
-        int numberOfTiles = 0;
-        int index = 0;
-        for (int i = 0; i < tiles.length; i++) {
-            if (tiles[i] != null) {
-                newTiles[index] = tiles[i];
-                index++;
-                numberOfTiles++;
-            }
-        }
-        System.out.println(numberOfTiles + " " + capacity);
-        tiles = newTiles;
+        int numberOfTiles = reorderTiles();
         // Then we add the new tiles from the stack
         for (int i = numberOfTiles; i < capacity; i++) {
             if (!stackTiles.isEmpty()) {
-                newTiles[i] = stackTiles.pop();
+                tiles[i] = stackTiles.pop();
             }
         }
         System.out.println(stackTiles.size());
@@ -45,7 +34,21 @@ public class Site extends Model {
                 break;
             }
         }
+        reorderTiles();
         firePropertyChange("tileUpdated", null, tiles);
+    }
+
+    private int reorderTiles() {
+        Tile[] newTiles = new Tile[capacity];
+        int index = 0;
+        for (Tile tile : tiles) {
+            if (tile != null) {
+                newTiles[index] = tile;
+                index++;
+            }
+        }
+        tiles = newTiles;
+        return index;
     }
 
     public boolean isEmpty() {
