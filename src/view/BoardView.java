@@ -292,4 +292,8 @@ public class BoardView extends JPanel implements View, KeyListener {
     public void keyTyped(KeyEvent e) {
 
     }
+
+    public ArrayList<ScrollableGridView> getGridViews() {
+        return gridViews;
+    }
 }

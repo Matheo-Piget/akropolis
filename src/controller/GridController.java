@@ -25,10 +25,11 @@ public class GridController extends Controller {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getPropertyName().equals("hexagonAdded")) {
-            // Convert the hexagon to a view and add it to the grid view
             Hexagon hexagon = (Hexagon) evt.getNewValue();
+            // Récupérer la bonne GridView associée à ce contrôleur
+            ScrollableGridView gridView = (ScrollableGridView) view;
             HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon, GridView.hexagonSize);
-            ((ScrollableGridView) view).addHexagon(hexagonView);
+            gridView.addHexagon(hexagonView);
             System.out.println("Hexagon added to the grid view");
         }
     }

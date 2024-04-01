@@ -68,19 +68,19 @@ public class Board extends Model {
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles);
         }
-        firePropertyChange("nextTurn",null, player);
     }
 
     /**
      * Adds a tile to the grid of the current player.
      */
     public void addTileToGrid() {
-        Tile tile = playerList.get(manche % playerList.size()).getSelectedTile();
+        Tile tile = currentPlayer.getSelectedTile();
         if(tile == null) return; // No tile selected
         if (addTile(tile)) {
             currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
             // Remove the tile from the site
             site.removeTile(tile);
+            firePropertyChange("addTile", null, null);
             endTurn();
         }
     }
@@ -98,6 +98,7 @@ public class Board extends Model {
         currentPlayer.setSelectedTile(null); // Reset the selected tile
 
         System.out.println("Next turn : "+ getNextPlayer().getName());
+        firePropertyChange("nextTurn", null, currentPlayer);
 
         startTurn(currentPlayer); // Start the next player's turn
     }

@@ -28,18 +28,19 @@ public class BoardController extends Controller {
         initializeListeners();
         // Then we can start the game
         ((Board) (model)).startGame();
+
+
     }
 
     private void initializeGridControllers(Board model, BoardView view) {
         gridControllers = new ArrayList<>();
-        for (Grid grid : model.getGrids()) {
-            GridController gridController = new GridController(grid, view.getGridView());
-            view.nextTurn();
+        for (int i = 0; i < model.getGrids().size(); i++) {
+            Grid grid = model.getGrids().get(i);
+            ScrollableGridView gridView = view.getGridViews().get(i); // Utiliser la bonne GridView
+            GridController gridController = new GridController(grid, gridView);
             gridControllers.add(gridController);
         }
-        if (!gridControllers.isEmpty()) {
-            currentGridController = gridControllers.get(0);
-        }
+
     }
 
     private void initializeListeners() {
@@ -81,7 +82,7 @@ public class BoardController extends Controller {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("nextTurn")) {
+        if (evt.getPropertyName().equals("addTile")) {
             // Change the current grid to the next player's grid
             System.out.println("Next turn");
             ((BoardView) view).nextTurn();
