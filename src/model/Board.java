@@ -158,6 +158,7 @@ public class Board extends Model {
      * @return
      */
     public boolean addTile(Tile tile) {
+        System.out.println("Adding tile to grid to player "+currentPlayer.getName());
         return currentPlayer.getGrid().addTile(tile);
     }
 
