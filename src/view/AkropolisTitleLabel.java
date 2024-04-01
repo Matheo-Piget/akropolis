@@ -10,10 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Iterator;
+import java.util.*;
 
 public class AkropolisTitleLabel extends JPanel {
     private BufferedImage titleImage;
@@ -33,7 +30,7 @@ public class AkropolisTitleLabel extends JPanel {
 
         // Load the title image
         try {
-            titleImage = ImageIO.read(getClass().getResource("/akropolisTitle.png"));
+            titleImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/akropolisTitle.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,12 +85,11 @@ public class AkropolisTitleLabel extends JPanel {
     // Particle class representing individual particles
     private class Particle {
         private int x, y;
-        private int size = 8;
         private int life;
 
         public Particle() {
             x = width / 2 + random.nextInt(width / 2) - width / 4 - 25;
-            y = random.nextInt(((int) (height / 3)), height - 100);
+            y = random.nextInt(height / 3, height - 100);
             life = 100;
         }
 
@@ -105,6 +101,7 @@ public class AkropolisTitleLabel extends JPanel {
         public void draw(Graphics2D g) {
             g.setComposite(alphas[life]);
             g.setColor(color);
+            int size = 8;
             g.fillOval(x, y, size, size);
             g.setComposite(AlphaComposite.SrcOver);
         }
