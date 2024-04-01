@@ -61,13 +61,14 @@ public class Board extends Model {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
-        firePropertyChange("nextTurn",null, player);
+
         currentPlayer.getGrid().display();
         System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles);
         }
+        firePropertyChange("nextTurn",null, player);
     }
 
     /**
@@ -105,7 +106,7 @@ public class Board extends Model {
      */
     private Player getNextPlayer() {
         // Trouver l'index du joueur actuel dans la liste des joueurs
-        return playerList.get(manche % playerList.size());
+        return playerList.get((manche+1) % playerList.size());
     }
 
     public ArrayList<Grid> getGrids() {
