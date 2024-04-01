@@ -108,7 +108,7 @@ public class Board extends Model {
      */
     private Player getNextPlayer() {
         // Trouver l'index du joueur actuel dans la liste des joueurs
-        return playerList.get((manche+1) % playerList.size());
+        return playerList.get((manche) % playerList.size());
     }
 
     public ArrayList<Grid> getGrids() {
