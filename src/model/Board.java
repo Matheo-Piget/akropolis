@@ -61,6 +61,7 @@ public class Board extends Model {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
+        firePropertyChange("nextTurn", null, player);
 
         currentPlayer.getGrid().display();
         System.out.println("Player " + player.getName() + "'s turn");

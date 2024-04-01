@@ -84,7 +84,6 @@ public class BoardController extends Controller {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("addTile")) {
             // Change the current grid to the next player's grid
-            System.out.println("Next turn");
             ((BoardView) view).nextTurn();
         }
         handleUiUpdates(evt);
