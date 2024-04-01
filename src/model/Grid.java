@@ -164,7 +164,7 @@ public class Grid extends Model{
      *         otherwise.
      */
     private boolean checkElevation(Tile t) {
-        int elevation = t.hexagons.getFirst().getZ();
+        int elevation = t.hexagons.get(0).getZ();
         for (int i = 1; i < 3; i++) {
             if (t.hexagons.get(i).getZ() != elevation) {
                 return false;

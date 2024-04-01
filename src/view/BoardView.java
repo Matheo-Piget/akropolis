@@ -64,7 +64,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Initialize siteView and add it to the main panel
         siteView = new SiteView(siteCapacity);
         add(cardPanel, BorderLayout.CENTER);
-        currentGridView = gridViews.getFirst(); // Set initial gridView
+        currentGridView = gridViews.get(0); // Set initial gridView
         add(siteView, BorderLayout.WEST);
 
         // Initialize bottom panel

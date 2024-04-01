@@ -3,7 +3,6 @@ package view;
 import model.Hexagon;
 import model.Place;
 import model.Quarries;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;

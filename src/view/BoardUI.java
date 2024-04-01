@@ -82,7 +82,7 @@ public class BoardUI extends JPanel implements View{
     public void setRock(int rock){
         while (rockImages.size() > 3) {// 3 pour tester
             // Supprimez une image si une pierre est perdue
-            remove(rockImages.removeLast());
+            remove(rockImages.remove(rockImages.size() - 1));
         }
         while (rockImages.size() < 3) {
             ImageIcon image = new ImageIcon("res\\rock.PNG");

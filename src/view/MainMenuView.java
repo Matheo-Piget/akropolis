@@ -229,7 +229,7 @@ public class MainMenuView extends JPanel {
         }
         JLabel imagLabel = new JLabel();
         if (!rulesImages.isEmpty()) {
-            imagLabel.setIcon(rulesImages.getFirst()); // Affiche la première image
+            imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
         }
         // Utilise un JScrollPane pour permettre le défilement si l'image est plus grande que le panel.
         JScrollPane scrollPane = new JScrollPane(imagLabel);

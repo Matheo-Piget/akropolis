@@ -28,7 +28,7 @@ public class Board extends Model {
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         site = new Site(switchSizePlayers());
-        currentPlayer = playerList.getFirst();
+        currentPlayer = playerList.get(0); // The first player starts
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
 
@@ -190,7 +190,7 @@ public class Board extends Model {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerList.getFirst();
+            Player winner = playerList.get(0);
             for (Player p : playerList) {
                 if (getScore(p) > getScore(winner)) {
                     winner = p;
