@@ -7,13 +7,12 @@ import model.Place;
  * Represents a place on the game grid.
  */
 public class PlaceView extends HexagonView {
-    private int stars;
-    private Place place;
-    private static Color strokeColor = Color.BLACK;
+    private final Place place;
+    private static final Color strokeColor = Color.BLACK;
 
     public PlaceView(int x, int y, int z, Place place, int size) {
         super(x, y, z, size);
-        this.stars = place.getStars();
+        int stars = place.getStars();
         this.place = place;
         switch (place.getType()) {
             case "Barrack Place":

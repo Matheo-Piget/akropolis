@@ -3,22 +3,22 @@ package model;
 import util.Point3D;
 
 // Quarries are a type of tile that can be placed on the board that allow you to earn stones useful for buying tiles.
-public class Quarrie extends Hexagon{
+public class Quarries extends Hexagon{
 
-    public Quarrie(Point3D p, Grid grid) {
+    public Quarries(Point3D p, Grid grid) {
         super(p, grid);
     }
 
-    public Quarrie(int x, int y){
+    public Quarries(int x, int y){
         super(x, y);
     }
 
-    public Quarrie(Point3D p) {
+    public Quarries(Point3D p) {
         super(p);
     }
 
     @Override
     public String getType() {
-        return "Quarrie";
+        return "Quarries";
     }
 }

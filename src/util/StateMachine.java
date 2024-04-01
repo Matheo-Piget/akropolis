@@ -2,7 +2,7 @@ package util;
 
 public interface StateMachine {
 
-    public State getState();
+    State getState();
 
-    public void changeState(State s);
+    void changeState(State s);
 }

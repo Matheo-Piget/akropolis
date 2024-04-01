@@ -2,7 +2,7 @@ package model;
 
 public class Site extends Model {
     private Tile[] tiles;
-    private int capacity;
+    private final int capacity;
 
     public Site(int capacity) {
         tiles = new Tile[capacity];
@@ -11,8 +11,7 @@ public class Site extends Model {
 
     /**
      * This method is used to update the site with the tiles from the stack
-     * @param stackTiles
-     * @param numberToDraw
+     * @param stackTiles The stack of tiles to update the site with
      */
     public void updateSite(StackTiles stackTiles) {
         // Firstly, we reorder the tiles in the site

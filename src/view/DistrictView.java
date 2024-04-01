@@ -4,8 +4,8 @@ import java.awt.Color;
 import model.District;
 
 public class DistrictView extends HexagonView {
-    private District district;
-    private static Color strokeColor = Color.BLACK;
+    private final District district;
+    private static final Color strokeColor = Color.BLACK;
 
     public DistrictView(int x, int y, int z, District d, int size) {
         super(x, y, z, size);

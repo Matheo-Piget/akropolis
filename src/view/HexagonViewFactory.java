@@ -2,6 +2,7 @@ package view;
 
 import model.Hexagon;
 import model.Place;
+import model.Quarries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,14 +10,14 @@ import java.util.function.BiFunction;
 
 /**
  * This class is used to create the hexagon views
- * It's a convienent way to create hexagon views based on the model
+ * It's a convenient way to create hexagon views based on the model
  */
 public class HexagonViewFactory {
     private static final Map<Class<? extends Hexagon>, BiFunction<Hexagon, Integer, HexagonView>> hexagonViewCreators = new HashMap<>();
 
     static {
-        hexagonViewCreators.put(model.Quarrie.class,
-                (hexagon, size) -> new QuarrieView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), size));
+        hexagonViewCreators.put(Quarries.class,
+                (hexagon, size) -> new QuarriesView(hexagon.getX(), hexagon.getY(), hexagon.getZ(), size));
         hexagonViewCreators.put(model.Place.class, (hexagon, size) -> new PlaceView(hexagon.getX(), hexagon.getY(),
                 hexagon.getZ(), (model.Place) hexagon, size));
         hexagonViewCreators.put(model.District.class, (hexagon, size) -> new DistrictView(hexagon.getX(),
@@ -26,7 +27,7 @@ public class HexagonViewFactory {
     private static final Map<Class<? extends HexagonView>, BiFunction<HexagonView, Integer, HexagonView>> hexagonViewCopyCreators = new HashMap<>();
 
     static {
-        hexagonViewCopyCreators.put(QuarrieView.class, (hexagonView, size) -> new QuarrieView(hexagonView.getX(),
+        hexagonViewCopyCreators.put(QuarriesView.class, (hexagonView, size) -> new QuarriesView(hexagonView.getX(),
                 hexagonView.getY(), hexagonView.getZ(), size));
         hexagonViewCopyCreators.put(PlaceView.class, (hexagonView, size) -> {
             if (hexagonView instanceof PlaceView) {
@@ -37,7 +38,7 @@ public class HexagonViewFactory {
         });
         hexagonViewCopyCreators.put(DistrictView.class,(hexagonView, size) -> {
             if (hexagonView instanceof DistrictView) {
-                return new DistrictView(hexagonView.getX(), hexagonView.getY(), hexagonView.getZ(), (model.District) ((DistrictView) hexagonView).getDistrict(), size);
+                return new DistrictView(hexagonView.getX(), hexagonView.getY(), hexagonView.getZ(), ((DistrictView) hexagonView).getDistrict(), size);
             }
             return null;
         });

@@ -12,8 +12,8 @@ import util.Point3D;
  */
 public class Grid extends Model{
     // Map to store hexagons based on their positions
-    private Map<Point3D, Hexagon> hexagons;
-    private Player player;
+    private final Map<Point3D, Hexagon> hexagons;
+    private final Player player;
 
     /**
      * Constructor to initialize the grid and add the starting hexagons at the
@@ -27,9 +27,9 @@ public class Grid extends Model{
         Point3D p3 = new Point3D(0, -1);
         Point3D p4 = new Point3D(1, 0);
         Hexagon hexagon1 = new Place(p1, 1, DistrictColor.BLUE, this);
-        Hexagon hexagon2 = new Quarrie(p2, this);
-        Hexagon hexagon3 = new Quarrie(p3, this);
-        Hexagon hexagon4 = new Quarrie(p4, this);
+        Hexagon hexagon2 = new Quarries(p2, this);
+        Hexagon hexagon3 = new Quarries(p3, this);
+        Hexagon hexagon4 = new Quarries(p4, this);
         hexagons.put(p1, hexagon1);
         hexagons.put(p2, hexagon2);
         hexagons.put(p3, hexagon3);
@@ -58,10 +58,7 @@ public class Grid extends Model{
      * @param hexagon The hexagon to be added to the grid.
      * @return True if the hexagon is successfully added, false otherwise.
      */
-
-    // on regarde si l'elevation est de 1 alors faut que la tuille aie des voisisns
-    // pour etre placer
-    public boolean canAdd(Hexagon hexagon, Point3D p) {
+    public boolean canAdd(Hexagon hexagon) {
         int x = hexagon.getX();
         int y = hexagon.getY();
         int z = hexagon.getZ();
@@ -89,22 +86,25 @@ public class Grid extends Model{
      */
     public boolean addTile(Tile tile) {
         Hexagon[] bellowHexagons = new Hexagon[3];
+        // Check if the tile can be placed on the grid
         boolean hasNeighbor = checkNeighborsAndSetBelowTile(tile, bellowHexagons);
         boolean canBePlaced = checkElevation(tile);
-        int samehexagon = countSameHexagons(tile, bellowHexagons);
-        if (canBePlaced && hasNeighbor && samehexagon <= 1) {
+        int sameHexagon = countSameHexagons(tile, bellowHexagons);
+        // If the tile can be placed, add it to the grid
+        if (canBePlaced && hasNeighbor && sameHexagon <= 1) {
             addHexagonsToGrid(tile, bellowHexagons);
         }
-        if (canBePlaced && hasNeighbor && samehexagon <= 1){
+        // If the tile has a quarries below, give the player a resource
+        if (canBePlaced && hasNeighbor && sameHexagon <= 1){
             for (Hexagon hexagon : tile.hexagons) {
-                if(hexagon.getBelow() instanceof Quarrie){
+                if(hexagon.getBelow() instanceof Quarries){
                     player.setResources(player.getResources()+1);
                 }
             }
         }
         display();
-        System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", samehexagon: " + samehexagon);
-        return canBePlaced && hasNeighbor && samehexagon <= 1;
+        System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", sameHexagon: " + sameHexagon);
+        return canBePlaced && hasNeighbor && sameHexagon <= 1;
     }
 
     /**
@@ -120,12 +120,13 @@ public class Grid extends Model{
         for (int i = 0; i < 3; i++) {
             Hexagon newHexagon_i = tile.hexagons.get(i);
             if (!hexagons.containsKey(newHexagon_i.getPosition()) && !hasNeighbor) {
-                hasNeighbor = hasNeighbor || canAdd(newHexagon_i, newHexagon_i.getPosition());
+                hasNeighbor = canAdd(newHexagon_i);
             } else if (hexagons.containsKey(newHexagon_i.getPosition())) {
                 Hexagon topMosthexagon = getHexagon(newHexagon_i.getX(), newHexagon_i.getY());
                 if (topMosthexagon != null) {
                     bellowHexagons[i] = topMosthexagon;
                 }
+                assert topMosthexagon != null;
                 newHexagon_i.getPosition().z = topMosthexagon.getZ() + 1;
                 System.out.println("New position: " + newHexagon_i.getPosition());
                 hasNeighbor = true;
@@ -163,7 +164,7 @@ public class Grid extends Model{
      *         otherwise.
      */
     private boolean checkElevation(Tile t) {
-        int elevation = t.hexagons.get(0).getZ();
+        int elevation = t.hexagons.getFirst().getZ();
         for (int i = 1; i < 3; i++) {
             if (t.hexagons.get(i).getZ() != elevation) {
                 return false;
@@ -182,25 +183,15 @@ public class Grid extends Model{
      *         hexagons.
      */
     private int countSameHexagons(Tile tile, Hexagon[] bellowHexagons) {
-        int samehexagon = 0;
+        int sameHexagon = 0;
         for (int i = 0; i < 3; i++) {
             Hexagon newHexagon_i = tile.hexagons.get(i);
             if (bellowHexagons[i] != null && bellowHexagons[i].getType().equals(newHexagon_i.getType())) {
-                samehexagon++;
+                sameHexagon++;
             }
         }
-        return samehexagon;
+        return sameHexagon;
     }
-
-    public Hexagon neighbor(Hexagon t, Point p) {
-        Point p2 = new Point(t.getX(), t.getY());
-        return hexagons.get(sommePos(p, p2));
-    }
-
-    public Point sommePos(Point p1, Point p2) {
-        return new Point(p1.x + p2.x, p1.y + p2.y);
-    }
-
     public static boolean isAValidTile(Tile t) {
         Hexagon h1 = t.hexagons.get(0);
         Hexagon h2 = t.hexagons.get(1);
@@ -267,23 +258,23 @@ public class Grid extends Model{
      * @return the top hexagons of the grid
      */
      public ArrayList<Hexagon> getTopHexagons() {
-        ArrayList<Hexagon> tophexagons = new ArrayList<>();
+        ArrayList<Hexagon> topHexagons = new ArrayList<>();
         for (Hexagon hexagon : hexagons.values()) {
             Point3D p = new Point3D(hexagon.getX(), hexagon.getY(), hexagon.getZ());
             while (hexagons.containsKey(p)) {
                 p = new Point3D(hexagon.getX(), hexagon.getY(), p.z + 1);
             }
             Hexagon he = hexagons.get(new Point3D(hexagon.getX(), hexagon.getY(), p.z - 1));
-            if(!tophexagons.contains(he)){
-                tophexagons.add(he);
+            if(!topHexagons.contains(he)){
+                topHexagons.add(he);
             }
         }
-        return tophexagons;
+        return topHexagons;
     }
 
     /**
      * Get the top Place hexagons of the grid
-     * @param s
+     * @param s the type of the place
      * @return the top Place hexagons of the grid
      */
     public ArrayList<Place> placeDeTypeS(String s){
@@ -303,7 +294,7 @@ public class Grid extends Model{
      * @param place the places to get the number of stars
      * @return the number of stars of the places
      */
-    public int nbetoile(ArrayList<Place> place){
+    public int numberOfStars(ArrayList<Place> place){
         int nb =0;
         for (Place p : place) {
             nb+=p.getStars();
@@ -317,8 +308,8 @@ public class Grid extends Model{
      */
     public int calculateScore( ) {
         int totalScore = 0;
-        int buildingscore=0;
-        int lastbuildingS = 0;
+        int buildingScore=0;
+        int lastBuildingS = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Garden":
@@ -328,7 +319,7 @@ public class Grid extends Model{
                     totalScore += calculateBarrackScore(hexagon);
                     break;
                 case "Building":
-                    buildingscore += calculateBuildingScore(hexagon);
+                    buildingScore += calculateBuildingScore(hexagon);
                     break;
                 case "Temple":
                     totalScore += calculateTempleScore(hexagon);
@@ -339,12 +330,12 @@ public class Grid extends Model{
                 default:
                     break;
             }
-            if (buildingscore> lastbuildingS) {// si le score est pas plus grand on garde le dernier plus grand pour le nombre de batiment qui sont collé
-                lastbuildingS = buildingscore;
+            if (buildingScore> lastBuildingS) {//
+                lastBuildingS = buildingScore;
             }
         }
 
-        return totalScore+lastbuildingS;
+        return totalScore+lastBuildingS;
     }
 
     /**
@@ -353,7 +344,7 @@ public class Grid extends Model{
      * @return the score of the garden
      */
     private int calculateGardenScore(Hexagon hexagon) {
-        int nb = nbetoile(placeDeTypeS("Garden Place"));
+        int nb = numberOfStars(placeDeTypeS("Garden Place"));
         return hexagon.getElevation()*nb;
     }
 
@@ -363,7 +354,7 @@ public class Grid extends Model{
      * @return the score of the barrack
      */
     private int calculateBarrackScore(Hexagon hexagon) {
-        int nb = nbetoile(placeDeTypeS("Barrack Place"));
+        int nb = numberOfStars(placeDeTypeS("Barrack Place"));
         return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation()*nb: 0;
     }
 
@@ -373,7 +364,7 @@ public class Grid extends Model{
      * @param hexagon the hexagon to get the building neighbors
      * @return the building neighbors of the hexagon
      */
-    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ //pour avoir les voisins de type building quin'ont pas été visité
+    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ 
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
         for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Building")&&!visitedHexagons.contains(neighbor)) {
@@ -389,18 +380,18 @@ public class Grid extends Model{
      * @return the score of the building
      */
     private int calculateBuildingScore(Hexagon hexagon) {
-        return visitBuildingHex(hexagon , new ArrayList<Hexagon>());
+        return visitBuildingHex(hexagon , new ArrayList<>());
     }
     public int visitBuildingHex(Hexagon hexagone , ArrayList<Hexagon> visitedHexagone){
         if (hexagone.getType().equals("Building")&& !visitedHexagone.contains(hexagone)) {
-            visitedHexagone.add(hexagone); // on ajoute cette hexagone aux hexagones parcourus
-            int score =1; // on compte 1 point de cette hexagone et pour chaque hexagone 
-            for (Hexagon neighbor : BuildingNeighbors(hexagone ,visitedHexagone)) { // on parcours ses voisins qui n'ont pas été visité
-                score += visitBuildingHex(neighbor ,visitedHexagone); // on appel recursivement la fonction pour qu'elle parcours les voisins des voisins de cette hexagone en ajoutant le nombre des points qui ont été ajouté 
+            visitedHexagone.add(hexagone); // we add the hexagone to the visited hexagone
+            int score =1; // we add 1 point for each building
+            for (Hexagon neighbor : BuildingNeighbors(hexagone ,visitedHexagone)) {
+                score += visitBuildingHex(neighbor ,visitedHexagone); // we add the score of the neighbors
             }
-            return score;// retourn le socre 
+            return score; 
         }
-        return 0 ; // on retourn 0 si ca été deja visité ou c'est pas du type buildings
+        return 0 ;
     } 
 
     /**
@@ -409,7 +400,7 @@ public class Grid extends Model{
      * @return the score of the temple
      */
     private int calculateTempleScore(Hexagon hexagon) {
-        int nb = nbetoile(placeDeTypeS("Temple Place"));
+        int nb = numberOfStars(placeDeTypeS("Temple Place"));
         return hexagonIsSurrounded(hexagon) ? hexagon.getElevation()*nb : 0;
     }
 
@@ -419,19 +410,13 @@ public class Grid extends Model{
      * @return the score of the market
      */
     private int calculateMarketScore(Hexagon hexagon) {
-        int nb = nbetoile(placeDeTypeS("Market Place"));
+        int nb = numberOfStars(placeDeTypeS("Market Place"));
         for (Hexagon neighbor : hexagon.getNeighbors()) {
             if (neighbor.getType().equals("Market")) {
                 return 0;
             }
         }
-        return 1*nb;
+        return nb;
     }
-
-    /**
-     * Calculate the score of the place
-     * @param place the place to calculate the score
-     * @return the score of the place
-     */
     
 }

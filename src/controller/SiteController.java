@@ -13,8 +13,8 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 
 public class SiteController extends Controller {
-    private ArrayList<TileController> tileControllers = new ArrayList<TileController>();
-    private BoardController boardController;
+    private ArrayList<TileController> tileControllers = new ArrayList<>();
+    private final BoardController boardController;
 
     public SiteController(Site model, SiteView view, BoardController boardController) {
         super(model, view);
@@ -62,8 +62,8 @@ public class SiteController extends Controller {
                 }
             }
         };
-        ((SiteView) view).addMouseListener(mouseAdapter);
-        ((SiteView) view).addMouseMotionListener(mouseAdapter);
+        view.addMouseListener(mouseAdapter);
+        view.addMouseMotionListener(mouseAdapter);
     }
 
     /**
@@ -77,9 +77,9 @@ public class SiteController extends Controller {
         if (evt.getPropertyName().equals("tileUpdated")) {
             // Update the view with the updated tile
             Tile[] tiles = ((Site) model).getTiles();
-            ArrayList<TileView> tileViews = new ArrayList<TileView>();
+            ArrayList<TileView> tileViews = new ArrayList<>();
             // Then we create the tile controllers
-            tileControllers = new ArrayList<TileController>();
+            tileControllers = new ArrayList<>();
             SiteView siteView = (SiteView) view;
             for (Tile tile : tiles) {
                 if (tile == null)

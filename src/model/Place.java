@@ -4,8 +4,8 @@ import util.Point3D;
 
 // A place is a tile that allow you to earn more score points.
 public class Place extends Hexagon{
-    private int stars;
-    private DistrictColor color;
+    private final int stars;
+    private final DistrictColor color;
 
     public Place(Point3D position, int stars, DistrictColor color, Grid grid) {
         super(position, grid);

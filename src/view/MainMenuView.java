@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -42,11 +43,10 @@ public class MainMenuView extends JPanel {
         super();
         // Charger l'image de fond
         try {
-            backgroundImage = ImageIO.read(getClass().getResourceAsStream("/akropolisBG.jpg"));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/akropolisBG.jpg")));
             // Rendre le fond transparent pour afficher l'image
             setOpaque(false);
         } catch (IOException e) {
-            e.printStackTrace();
             // Remplacer l'image manquante par une couleur de fond grise
             setBackground(Color.GRAY);
         }
@@ -134,16 +134,18 @@ public class MainMenuView extends JPanel {
         try {
             // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources
             InputStream audioSrc = getClass().getResourceAsStream("/Akropolis.wav");
+            assert audioSrc != null;
             InputStream bufferedIn = new BufferedInputStream(audioSrc);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
-            // Garder la musique en boucle continuellement si désiré
+            // stay in loop if you want to play the clip continuously
             // clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
+
         }
     }
     private void stopBackgroundMusic() {
@@ -217,7 +219,7 @@ public class MainMenuView extends JPanel {
         List<ImageIcon> rulesImages= new ArrayList<>();
         for(int i = 7; i >= 1; i--) {
             try {
-                BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/regles" + i + ".png"));
+                BufferedImage img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
                 ImageIcon icon = new ImageIcon(img);
                 rulesImages.add(icon);
             } catch (IOException e) {
@@ -227,7 +229,7 @@ public class MainMenuView extends JPanel {
         }
         JLabel imagLabel = new JLabel();
         if (!rulesImages.isEmpty()) {
-            imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
+            imagLabel.setIcon(rulesImages.getFirst()); // Affiche la première image
         }
         // Utilise un JScrollPane pour permettre le défilement si l'image est plus grande que le panel.
         JScrollPane scrollPane = new JScrollPane(imagLabel);

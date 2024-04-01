@@ -2,22 +2,15 @@ package view;
 
 import view.main.App;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.List;
-import javax.swing.JPanel;  
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
-
-import model.Tile;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -26,65 +19,122 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+
+
+
 /**
  * Panel for displaying the game board.
- * It takes care of diplaying the scrolling board and the site to make the game
- * playable.
+ * It takes care of displaying the scrolling board and the site to make the game playable.
  */
 public class BoardView extends JPanel implements View, KeyListener {
 
+    // Fields
     private ScrollableGridView currentGridView;
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
-    private SiteView siteView;
-    private BoardUI boardUI;
-    private CardLayout cardLayout = new CardLayout();
-    private JPanel cardPanel = new JPanel(cardLayout);
+    private final SiteView siteView;
+    private final BoardUI boardUI;
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel cardPanel = new JPanel(cardLayout);
 
     /**
      * Constructor for the BoardView.
-     * 
-     * @param maxHexagons  The maximum number of hexagons to be displayed on the
-     *                     board.
+     *
+     * @param maxHexagons  The maximum number of hexagons to be displayed on the board.
      * @param numPlayers   The number of players in the game.
-     * 
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
     public BoardView(int maxHexagons, int numPlayers, int siteCapacity) {
         setLayout(new BorderLayout());
         setOpaque(true);
         setFocusable(true);
+
+        // Initialize gridViews and add them to cardPanel
         for (int i = 0; i < numPlayers; i++) {
             ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
             gridViews.add(gridView);
             cardPanel.add(gridView, Integer.toString(i));
         }
+
+        // Initialize siteView and add it to the main panel
         siteView = new SiteView(siteCapacity);
         add(cardPanel, BorderLayout.CENTER);
-        currentGridView = (ScrollableGridView) cardPanel.getComponent(0);
+        currentGridView = gridViews.getFirst(); // Set initial gridView
         add(siteView, BorderLayout.WEST);
 
+        // Initialize bottom panel
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false); // Rend le JPanel transparent
+        bottomPanel.setOpaque(false);
 
+        // Initialize boardUI and add it to bottom panel
         boardUI = new BoardUI();
         bottomPanel.add(boardUI, BorderLayout.CENTER);
 
-
+        // Initialize pause panel
         JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pausePanel.setOpaque(false); // Rend le JPanel transparent
+        pausePanel.setOpaque(false);
 
-        // Ajout du bouton pause au JPanel
+        // Add pause button to pause panel
         JButton pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> showPauseMenu());
         pausePanel.add(pauseButton);
 
         bottomPanel.add(pausePanel, BorderLayout.EAST);
-
-        // Ajout du JPanel contenant le bouton pause en haut de la fenêtre
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH); // Add bottom panel to main panel
 
         // Create a CountDownLatch with the number of workers in GridView
+        CountDownLatch latch = getCountDownLatch(maxHexagons);
+
+        // Create a SwingWorker to add the BoardView in a background thread
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            private JDialog dialog;
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Show loading dialog
+                SwingUtilities.invokeLater(() -> {
+                    dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(App.getInstance().getScreen()),
+                            "Loading", true);
+                    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+                    dialog.setLayout(new FlowLayout());
+                    dialog.add(new JLabel("Loading..."));
+                    dialog.setModal(true);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(App.getInstance().getScreen());
+                    dialog.setVisible(true);
+                });
+
+                latch.await(); // Wait for workers to finish
+                // Add BoardView to screen
+                SwingUtilities.invokeLater(() -> {
+                    App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
+                    App.getInstance().getScreen().revalidate();
+                    BoardView.this.requestFocusInWindow();
+                    BoardView.this.addKeyListener(BoardView.this);
+                });
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // Hide loading dialog
+                SwingUtilities.invokeLater(() -> {
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                });
+            }
+        };
+        worker.execute(); // Start the SwingWorker
+    }
+
+    private CountDownLatch getCountDownLatch(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
 
         // Create a SwingWorker for each GridView
@@ -92,6 +142,7 @@ public class BoardView extends JPanel implements View, KeyListener {
             SwingWorker<Void, HexagonOutline> worker = new SwingWorker<>() {
                 @Override
                 protected Void doInBackground() {
+                    // Generate hexagons
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
@@ -105,6 +156,7 @@ public class BoardView extends JPanel implements View, KeyListener {
 
                 @Override
                 protected void process(List<HexagonOutline> chunks) {
+                    // Add generated hexagons to the gridView
                     for (HexagonOutline hexagon : chunks) {
                         gridView.addHexagon(hexagon);
                     }
@@ -112,86 +164,45 @@ public class BoardView extends JPanel implements View, KeyListener {
 
                 @Override
                 protected void done() {
-                    // Cook pizza
-                    // Decrement the latch count
-                    latch.countDown();
+                    latch.countDown(); // Decrement the latch count
                 }
             };
-
-            // Start the SwingWorker
-            worker.execute();
+            worker.execute(); // Start the SwingWorker
         }
-
-        // Create a SwingWorker to add the BoardView in a background thread
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            private JDialog dialog;
-
-            @Override
-            protected Void doInBackground() throws Exception {
-                // Show the loading dialog
-                SwingUtilities.invokeLater(() -> {
-                    dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(App.getInstance().getScreen()),
-                            "Loading", true);
-                    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-                    dialog.setLayout(new FlowLayout());
-                    dialog.add(new JLabel("Loading..."));
-                    dialog.setModal(true);
-                    dialog.pack();
-                    dialog.setLocationRelativeTo(App.getInstance().getScreen());
-                    dialog.setVisible(true);
-                });
-
-                latch.await();
-                // Add the BoardView
-                SwingUtilities.invokeLater(() -> {
-                    App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
-                    App.getInstance().getScreen().revalidate();
-                    BoardView.this.requestFocusInWindow();
-                    BoardView.this.addKeyListener(BoardView.this);
-                });
-
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                // Hide the loading dialog
-                SwingUtilities.invokeLater(() -> {
-                    dialog.setVisible(false);
-                    dialog.dispose();
-                });
-            }
-        };
-
-        // Start the SwingWorker
-        worker.execute();
+        return latch;
     }
 
+    // Methods
+
     /**
-     * Set the selected tile
-     * @param tile
+     * Set the selected tile.
+     *
+     * @param tile The selected tile.
      */
     public void setSelectedTile(TileView tile) {
-        // Convert it to a movable object
         currentGridView.setSelectedTile(tile);
     }
 
     /**
-     * show the next GridView, pass turn
+     * Show the next GridView and pass turn.
      */
     public void nextTurn() {
         getGridView().removeSelectedTile();
         int index = gridViews.indexOf(currentGridView);
         index = (index + 1) % gridViews.size();
         currentGridView = gridViews.get(index);
-        // Use CardLayout.show to switch to the next gridView
         cardLayout.show(cardPanel, String.valueOf(index));
         System.out.println("Next turn has been called in BoardView");
     }
 
+    /**
+     * Get the filled hexagons in the current grid view.
+     *
+     * @return An array of filled hexagons.
+     */
     public HexagonView[] getFilledHexagons() {
         HexagonView[] filledHexagons = currentGridView.getFilledHexagons();
-        // Then we check that it doesn't contain null values
+        // Check for null values
         for (HexagonView hexagon : filledHexagons) {
             if (hexagon == null) {
                 return null;
@@ -200,6 +211,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         return filledHexagons;
     }
 
+    // Getter methods
     public ScrollableGridView getGridView() {
         return currentGridView;
     }
@@ -208,38 +220,46 @@ public class BoardView extends JPanel implements View, KeyListener {
         return siteView;
     }
 
+    public BoardUI getBoardUI() {
+        return boardUI;
+    }
+
+    public ArrayList<ScrollableGridView> getGridViews() {
+        return gridViews;
+    }
+
     /**
-     * show the pause menu
+     * Show the pause menu.
      */
     private void showPauseMenu() {
-        // Création du dialogue de pause
+        // Create pause dialog
         JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true);
         pauseMenu.setLayout(new GridLayout(2, 1));
         pauseMenu.setSize(200, 100);
         pauseMenu.setLocationRelativeTo(this);
 
-        // Bouton pour reprendre le jeu
-        JButton resumeButton = createStyledButton("Reprendre");
+        // Resume button
+        JButton resumeButton = createStyledButton("Resume");
         resumeButton.addActionListener(e -> pauseMenu.dispose());
 
-        // Bouton pour quitter le jeu
-        JButton quitButton = createStyledButton("Quitter");
+        // Quit button
+        JButton quitButton = createStyledButton("Quit");
         quitButton.addActionListener(e -> {
             pauseMenu.dispose();
             App.getInstance().exitToMainMenu();
         });
 
-        // Ajout des boutons au dialogue
+        // Add buttons to dialog
         pauseMenu.add(resumeButton);
         pauseMenu.add(quitButton);
-
-        // Affichage du dialogue de pause
-        pauseMenu.setVisible(true);
+        pauseMenu.setVisible(true); // Show dialog
     }
+
     /**
-     * created a styled JButton
-     * @param text the text on the button
-     * @return a JButton styled
+     * Create a styled JButton.
+     *
+     * @param text The text on the button.
+     * @return A styled JButton.
      */
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -263,21 +283,13 @@ public class BoardView extends JPanel implements View, KeyListener {
         return button;
     }
 
-    public BoardUI getBoardUI() {
-        return boardUI;
-    }
-
+    // KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
-        // Check if the pressed key is Escape (keyCode 27)
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            // Pause the game
             showPauseMenu();
         }
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            App.getInstance().appState.getState().getBoardController().nextTurn();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_R){
+        if (e.getKeyCode() == KeyEvent.VK_R) {
             currentGridView.rotateSelectedTile();
         }
     }
@@ -287,19 +299,8 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Not needed, but must be implemented due to KeyListener interface
     }
 
-    /**
-     * Invoked when a key has been typed.
-     * See the class description for {@link KeyEvent} for a definition of
-     * a key typed event.
-     *
-     * @param e the event to be processed
-     */
     @Override
     public void keyTyped(KeyEvent e) {
-
-    }
-
-    public ArrayList<ScrollableGridView> getGridViews() {
-        return gridViews;
+        // Not needed, but must be implemented due to KeyListener interface
     }
 }

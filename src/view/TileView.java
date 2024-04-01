@@ -3,8 +3,6 @@ package view;
 import javax.swing.JComponent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
@@ -64,29 +62,25 @@ public class TileView extends JComponent implements View {
             glowTimer.stop();
         }
         // Create a Timer that fires every 100 milliseconds
-        Timer timer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Update the glow variable
-                if (increasing) {
-                    glow += 0.1f;
-                    if (glow > 1.0f) {
-                        glow = 1.0f;
-                        increasing = false;
-                    }
-                } else {
-                    glow -= 0.1f;
-                    if (glow < 0.0f) {
-                        glow = 0.0f;
-                        increasing = true;
-                    }
+        this.glowTimer = new Timer(100, e -> {
+            // Update the glow variable
+            if (increasing) {
+                glow += 0.1f;
+                if (glow > 1.0f) {
+                    glow = 1.0f;
+                    increasing = false;
                 }
-
-                // Repaint the component
-                repaint();
+            } else {
+                glow -= 0.1f;
+                if (glow < 0.0f) {
+                    glow = 0.0f;
+                    increasing = true;
+                }
             }
+
+            // Repaint the component
+            repaint();
         });
-        this.glowTimer = timer;
     }
 
     public void stopGlow() {

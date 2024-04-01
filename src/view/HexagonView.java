@@ -16,21 +16,21 @@ import java.awt.image.BufferedImage;
 import java.awt.Font;
 
 /**
- * Represents an hexagon on the game grid.
+ * Represents a hexagon on the game grid.
  */
 public abstract class HexagonView extends JComponent {
 
-    private BasicStroke stroke = new BasicStroke(80 / 25);
+    private final BasicStroke stroke;
     protected boolean isHovered = false;
     protected TexturePaint texture;
-    protected Point pos = new Point(0, 0);
+    protected Point pos;
     protected int z;
     protected Path2D.Double hexagon = new Path2D.Double();
     protected BufferedImage render;
 
     public HexagonView(int x, int y, int z, int size) {
         setSize(size, size);
-        stroke = new BasicStroke(size / 25);
+        stroke = new BasicStroke((float) size / 25);
         // Calculate the coordinates of the six points of the hexagon
         pos = new Point(x, y);
         this.z = z;
@@ -49,7 +49,7 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, BufferedImage img, int size) {
         this.setSize(size, size);
-        stroke = new BasicStroke(size / 25);
+        stroke = new BasicStroke((float) size / 25);
         pos = new Point(x, y);
         this.z = z;
         int center = size / 2 - 1; // Dumb rounding
@@ -68,10 +68,10 @@ public abstract class HexagonView extends JComponent {
 
     public HexagonView(int x, int y, int z, Color color, int size) {
         setSize(size, size);
-        stroke = new BasicStroke(size / 25);
+        stroke = new BasicStroke((float) size / 25);
         pos = new Point(x, y);
         this.z = z;
-        int center = size / 2 - 1; // Ligma balls
+        int center = size / 2 - 1; // Dumb rounding
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
             double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
@@ -117,7 +117,7 @@ public abstract class HexagonView extends JComponent {
     /**
      * Remove the fill from the hexagon view
      */
-    public void unfill() {
+    public void unfilled() {
         renderHexagon(Color.BLACK, texture);
         repaint();
     }
@@ -125,8 +125,8 @@ public abstract class HexagonView extends JComponent {
     /**
      * Render the hexagon with the given stroke color and texture
      * 
-     * @param strokeColor
-     * @param texture
+     * @param strokeColor The color of the border
+     * @param texture The texture to fill the hexagon with
      */
     protected void renderHexagon(Color strokeColor, TexturePaint texture) {
         // Dispose of the old image before creating a new one
@@ -155,7 +155,7 @@ public abstract class HexagonView extends JComponent {
         g2d.setStroke(stroke);
         g2d.draw(hexagon);
 
-        // Draw the height number only when it's not an hexagon outline
+        // Draw the height number only when it's not a hexagon outline
         if (!(this instanceof HexagonOutline)) {
             int fontSize = (int) (getHeight() * 0.2);
             g2d.setFont(new Font("Arial", Font.BOLD, fontSize));

@@ -13,8 +13,7 @@ import java.awt.event.MouseEvent;
 import model.Tile;
 
 public class BoardController extends Controller {
-    private SiteController siteController;
-    private UIController uiController;
+    private final UIController uiController;
     private List<GridController> gridControllers;
     private GridController currentGridController;
     private TileController selectedTile;
@@ -22,12 +21,12 @@ public class BoardController extends Controller {
     public BoardController(Board model, BoardView view) {
         super(model, view);
         // Create the site controller
-        siteController = new SiteController(model.getSite(), view.getSiteView(), this);
+        SiteController siteController = new SiteController(model.getSite(), view.getSiteView(), this);
         uiController = new UIController(model, view.getBoardUI());
         initializeGridControllers(model, view);
         initializeListeners();
         // Then we can start the game
-        ((Board) (model)).startGame();
+        model.startGame();
 
 
     }
@@ -91,7 +90,7 @@ public class BoardController extends Controller {
 
     /**
      * Controller for the selected current tile
-     * @param tileController
+     * @param tileController the tile controller
      */
     public void selectedTile(TileController tileController) {
         Board board = (Board) model;
@@ -117,12 +116,5 @@ public class BoardController extends Controller {
             uiController.updatePlayerInfo();
             uiController.updateRemainingTilesInfo();
         }
-    }
-
-    /**
-     * call next turn in the model
-     */
-    public void nextTurn() {
-        ((Board) model).endTurn();
     }
 }

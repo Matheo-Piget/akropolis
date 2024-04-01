@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Represents a timeline that executes actions at specified intervals.
  * The timeline can be repeated a specified number of times.
- * The timeline is controlled by a timer so it can be executed asynchronously.
+ * The timeline is controlled by a timer, so it can be executed asynchronously.
  */
 public class Timeline {
-    private Timer timer;
-    private List<KeyFrame> keyFrames;
+    private final Timer timer;
+    private final List<KeyFrame> keyFrames;
     private int currentKeyFrameIndex;
     private int repeatCount;
 
@@ -35,9 +35,9 @@ public class Timeline {
         timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (keyFrames.size() > 0) {
+                if (!keyFrames.isEmpty()) {
                     KeyFrame currentKeyFrame = keyFrames.get(currentKeyFrameIndex);
-                    currentKeyFrame.getAction().actionPerformed(e);
+                    currentKeyFrame.action().actionPerformed(e);
                     currentKeyFrameIndex = (currentKeyFrameIndex + 1) % keyFrames.size();
                     if (currentKeyFrameIndex == 0) {
                         Timeline.this.repeatCount--;
@@ -46,7 +46,7 @@ public class Timeline {
                         }
                     }
                     if (currentKeyFrameIndex < keyFrames.size()) {
-                        timer.setDelay(keyFrames.get(currentKeyFrameIndex).getDelay());
+                        timer.setDelay(keyFrames.get(currentKeyFrameIndex).delay());
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class Timeline {
     public void addKeyFrame(KeyFrame keyFrame) {
         keyFrames.add(keyFrame);
         if (keyFrames.size() == 1) {
-            timer.setDelay(keyFrame.getDelay());
+            timer.setDelay(keyFrame.delay());
         }
     }
 
@@ -88,41 +88,38 @@ public class Timeline {
     }
 
     /**
-     * Represents a key frame in the timeline.
-     * A key frame consists of an action and a delay.
-     * The action is executed when the key frame is reached.
-     */
-    public static class KeyFrame {
-        private ActionListener action;
-        private int delay;
-
+         * Represents a key frame in the timeline.
+         * A key frame consists of an action and a delay.
+         * The action is executed when the key frame is reached.
+         */
+        public record KeyFrame(int delay, ActionListener action) {
         /**
          * Creates a new key frame with the specified delay and action.
          *
-         * @param delay the delay before the action is executed
+         * @param delay  the delay before the action is executed
          * @param action the action to execute
          */
-        public KeyFrame(int delay, ActionListener action) {
-            this.action = action;
-            this.delay = delay;
+        public KeyFrame {
         }
 
-        /**
-         * Gets the action of this key frame.
-         *
-         * @return the action of this key frame
-         */
-        public ActionListener getAction() {
-            return action;
-        }
+            /**
+             * Gets the action of this key frame.
+             *
+             * @return the action of this key frame
+             */
+            @Override
+            public ActionListener action() {
+                return action;
+            }
 
-        /**
-         * Gets the delay of this key frame.
-         *
-         * @return the delay of this key frame
-         */
-        public int getDelay() {
-            return delay;
+            /**
+             * Gets the delay of this key frame.
+             *
+             * @return the delay of this key frame
+             */
+            @Override
+            public int delay() {
+                return delay;
+            }
         }
-    }
 }

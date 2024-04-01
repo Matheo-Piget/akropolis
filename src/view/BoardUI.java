@@ -12,8 +12,6 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
@@ -23,9 +21,9 @@ import javax.swing.border.EmptyBorder;
  * Contains both the player name label, the rock label, and the remaining tiles label.
  */
 public class BoardUI extends JPanel implements View{
-    private PlayerLabel playerLabel = new PlayerLabel("Player");
-    private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
-    private ArrayList<JLabel> rockImages = new ArrayList<>();
+    private final PlayerLabel playerLabel = new PlayerLabel("Player");
+    private final RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
+    private final ArrayList<JLabel> rockImages = new ArrayList<>();
 
 
     private float hue = 0.0f;
@@ -50,7 +48,6 @@ public class BoardUI extends JPanel implements View{
         gbc.gridx = 0;
         gbc.gridy = 0;
         topPanel.add(playerLabel, gbc);
-        gbc.gridx = 1;
         gbc.gridx = 2;
         topPanel.add(remainingTilesLabel, gbc);
 
@@ -65,17 +62,14 @@ public class BoardUI extends JPanel implements View{
     public void doLayout(){
         super.doLayout();
         if (timer == null) {
-            timer = new Timer(70, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    hue += 0.005f;
-                    if (hue > 1.0f) {
-                        hue = 0.0f;
-                    }
-                    bg = Color.getHSBColor(hue, 0.5f, 0.5f);
-                    setBackground(bg);
-                    repaint();
+            timer = new Timer(70, e -> {
+                hue += 0.005f;
+                if (hue > 1.0f) {
+                    hue = 0.0f;
                 }
+                bg = Color.getHSBColor(hue, 0.5f, 0.5f);
+                setBackground(bg);
+                repaint();
             });
             timer.start();
         }
@@ -88,7 +82,7 @@ public class BoardUI extends JPanel implements View{
     public void setRock(int rock){
         while (rockImages.size() > 3) {// 3 pour tester
             // Supprimez une image si une pierre est perdue
-            remove(rockImages.remove(rockImages.size() - 1));
+            remove(rockImages.removeLast());
         }
         while (rockImages.size() < 3) {
             ImageIcon image = new ImageIcon("res\\rock.PNG");

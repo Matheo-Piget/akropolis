@@ -7,10 +7,8 @@ import view.main.states.AppState;
 import view.main.states.StartState;
 
 public class App extends JFrame{
-    private final int WIDTH = 1500;
-    private final int HEIGHT = 700;
 
-    private JPanel screen = new JPanel();
+    private final JPanel screen = new JPanel();
     private static final App INSTANCE = new App();
 
     public AppState appState;
@@ -23,6 +21,8 @@ public class App extends JFrame{
         
         getContentPane().setBackground(java.awt.Color.BLACK);
         screen.setBackground(java.awt.Color.WHITE);
+        int WIDTH = 1500;
+        int HEIGHT = 700;
         screen.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGHT));
         add(screen);
         pack();

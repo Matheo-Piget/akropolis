@@ -1,10 +1,10 @@
 package model;
 
 /**
- * Represents a player in the Akrapolis game.
+ * Represents a player in the Akropolis game.
  */
 public class Player extends Model {
-    private String name; // The name of the player
+    private final String name; // The name of the player
     private Grid grid; // The grid of the player
     private Tile selectedTile; // The tile selected by the player during their turn
     private int resources; // The resources (rocks) owned by the player
@@ -39,7 +39,7 @@ public class Player extends Model {
 
     /**
      * Set the grid of the player.
-     * @param grid
+     * @param grid The grid of the player.
      */
     public void setGrid(Grid grid) {
         this.grid = grid;

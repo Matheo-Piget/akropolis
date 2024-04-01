@@ -11,12 +11,12 @@ import java.awt.Graphics;
  * They can choose from a selection based on the shop capacity.
  */
 public class SiteView extends JPanel implements View {
-    private int capacity;
+    private final int capacity;
 
     public SiteView(int capacity) {
         setOpaque(true);
         setLayout(new GridLayout(capacity, 1));
-        // It needs to take slighly less space than the grid view which is 1500x844
+        // It needs to take slightly less space than the grid view which is 1500x844
         // To have a nice padding on the top and bottom
         setPreferredSize(new java.awt.Dimension(200, 800));
         this.capacity = capacity;
@@ -37,7 +37,7 @@ public class SiteView extends JPanel implements View {
     }
 
     public ArrayList<TileView> getTiles() {
-        ArrayList<TileView> tiles = new ArrayList<TileView>();
+        ArrayList<TileView> tiles = new ArrayList<>();
         for (java.awt.Component component : getComponents()) {
             tiles.add((TileView) component);
         }

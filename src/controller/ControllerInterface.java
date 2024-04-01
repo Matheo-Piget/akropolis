@@ -11,7 +11,7 @@ import view.View;
 interface ControllerInterface extends PropertyChangeListener{
 
     /**
-     * This method is used to setup the observer pattern between the view and the model
+     * This method is used to set up the observer pattern between the view and the model
      */
     void setupListener(Model model, View view);
 }

@@ -11,9 +11,7 @@ import java.util.List;
 
 public class PlayingState extends State {
     // The players of the game by default there are 1 player
-    private ArrayList<Player> players = new ArrayList<Player>(); //{{
-    //  add(new Player("Player 1"));
-    //}};
+    private final ArrayList<Player> players = new ArrayList<>();
     private BoardController boardController;
     private static final PlayingState INSTANCE = new PlayingState();
 
@@ -21,11 +19,11 @@ public class PlayingState extends State {
         return players;
     }
 
-    // Setter pour la liste des joueurs
+    // Setter for the players
     public void setPlayers(List<String> playerNames) {
-        players.clear(); // Nettoie la liste actuelle
+        players.clear(); // empty the list
         for (String name : playerNames) {
-            players.add(new Player(name)); // Crée de nouveaux joueurs et les ajoute à la liste
+            players.add(new Player(name)); // create a new player
         }
     }
 

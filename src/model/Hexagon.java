@@ -11,7 +11,6 @@ public abstract class Hexagon {
     private Point3D position; // Coordinates of the tile
     private Grid grid; // Reference to the grid containing the tile
     private Hexagon below; // Tile below the current tile
-    private Tile tile; // Tile containing the hexagons
 
     /**
      * Constructor to create a tile with specified coordinates and grid.
@@ -56,20 +55,14 @@ public abstract class Hexagon {
 
     public static Hexagon generateRandomHexagon(){
         int random = (int) (Math.random() * 6);
-        switch (random){
-            case 1:
-                return new District(0, 0, DistrictColor.RED);
-            case 2:
-                return new District(0, 0, DistrictColor.BLUE);
-            case 3:
-                return new District(0, 0, DistrictColor.GREEN);
-            case 4:
-                return new District(0, 0, DistrictColor.YELLOW);
-            case 5:
-                return new District(0, 0, DistrictColor.PURPLE);
-            default:
-                return new Quarrie(0,0);
-        }
+        return switch (random) {
+            case 1 -> new District(0, 0, DistrictColor.RED);
+            case 2 -> new District(0, 0, DistrictColor.BLUE);
+            case 3 -> new District(0, 0, DistrictColor.GREEN);
+            case 4 -> new District(0, 0, DistrictColor.YELLOW);
+            case 5 -> new District(0, 0, DistrictColor.PURPLE);
+            default -> new Quarries(0, 0);
+        };
     }
 
     /**
@@ -82,7 +75,7 @@ public abstract class Hexagon {
     }
 
     public void setTile(Tile tile){
-        this.tile = tile;
+        // Tile containing the hexagons
     }
 
     public void setPosition(int x, int y){
@@ -147,7 +140,7 @@ public abstract class Hexagon {
         ArrayList<Hexagon> neighbors = new ArrayList<>();
 
         // Define the directions for the 6 neighbors in a hexagonal grid
-        Point axialDirections[] = {
+        Point[] axialDirections = {
             new Point(1, 0), new Point(1, -1), new Point(0, -1),
             new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };

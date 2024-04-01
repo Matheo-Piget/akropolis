@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.beans.PropertyChangeListener;
 
 /**
  * Represents the game board and manages the game.
@@ -29,20 +28,12 @@ public class Board extends Model {
         }
         stackTiles = new StackTiles(60); // Assuming 60 tiles in the stack
         site = new Site(switchSizePlayers());
-        currentPlayer = playerList.get(0);
+        currentPlayer = playerList.getFirst();
         stackTiles.shuffle(); // Shuffle the stack of tiles
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        propertyChangeSupport.addPropertyChangeListener(pcl);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        propertyChangeSupport.removePropertyChangeListener(pcl);
-    }
-
     public boolean setSelectedTile(Tile tile) {
-        if(canChooseTile(tile)) {;
+        if(canChooseTile(tile)) {
             playerList.get(manche % playerList.size()).setSelectedTile(tile);
             return true;
         }
@@ -156,8 +147,8 @@ public class Board extends Model {
 
     /**
      * For debug only
-     * @param tile
-     * @return
+     * @param tile The tile to add to the grid.
+     * @return True if the tile was added, false otherwise.
      */
     public boolean addTile(Tile tile) {
         System.out.println("Adding tile to grid to player "+currentPlayer.getName());
@@ -199,7 +190,7 @@ public class Board extends Model {
      */
     public Player getWinner() {
         if (isGameOver()) {
-            Player winner = playerList.get(0);
+            Player winner = playerList.getFirst();
             for (Player p : playerList) {
                 if (getScore(p) > getScore(winner)) {
                     winner = p;

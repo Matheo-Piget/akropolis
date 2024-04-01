@@ -13,11 +13,11 @@ import java.util.HashMap;
  */
 public class GridView extends JPanel {
 
-    private int xOffset;
-    private int yOffset;
+    private final int xOffset;
+    private final int yOffset;
     public static int hexagonSize = 80;
 
-    private HashMap<Point, HexagonView> hexagons = new HashMap<>();
+    private final HashMap<Point, HexagonView> hexagons = new HashMap<>();
 
     public GridView(int maxHexagons) {
         setDoubleBuffered(true);
@@ -30,6 +30,11 @@ public class GridView extends JPanel {
         yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
     }
 
+    /**
+     * Convert a grid position to a pixel position
+     * @param gridPosition The grid position
+     * @return The pixel position
+     */
     public Point2D convertGridPositionToPixelPosition(Point gridPosition) {
         int q = gridPosition.x; // column index
         int r = gridPosition.y; // row index
@@ -42,8 +47,8 @@ public class GridView extends JPanel {
     /**
      * Get the hexagon at the given pixel position
      * Be careful, it will return null if there is no hexagon at the given mouse position
-     * @param pixelPosition
-     * @return
+     * @param pixelPosition The pixel position
+     * @return The hexagon at the given pixel position
      */
     public HexagonView getHexagonAtPixelPos(Point2D pixelPosition) {
         // We just need to use getComponentAt to get the hexagon at the pixel position
@@ -62,8 +67,6 @@ public class GridView extends JPanel {
         return hexagons.get(new Point(x, y));
     }
 
-    // on obtient les coordonne qui peuveut etre sur n'importe quel partie de
-    // l'hexagone mais faut savoir à quel hexagone appartient
     public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
         int size = hexagonSize / 2;
         double x = (pixelPosition.getX() - xOffset) / size;
@@ -72,13 +75,10 @@ public class GridView extends JPanel {
         double q = (2.0 / 3 * x);
         double r = (-1.0 / 3 * x + Math.sqrt(3) / 3 * y);
 
-        return axialRound(q, r);// determiner dans quel hexagone se trouve un point donné et renvoyer les
-                                // coordonné de cette hexagone
+        return axialRound(q, r);
 
     }
 
-    // determiner dans quel hexagone se trouve un point donné et renvoyer les
-    // coordonné de cette hexagone
     private Point3D axialRound(double q, double r) {
         double s = -q - r;
         double rq = Math.round(q);
@@ -113,7 +113,7 @@ public class GridView extends JPanel {
         }
         hexagon.setLocation((int) Math.round(position.getX()), (int) Math.round(position.getY()));
         hexagons.put(hexagon.getPosition(), hexagon);
-        // Add it to the jpanel
+        // Add it to the JPanel
         this.add(hexagon);
         // Repaint the area where the hexagon is
         this.repaint(hexagon.getBounds());

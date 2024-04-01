@@ -21,7 +21,7 @@ public enum AppState implements StateMachine {
      *
      * @param initialState The initial state of the application.
      */
-    private AppState(State initialState) {
+    AppState(State initialState) {
         currentState = initialState;
     }
 
