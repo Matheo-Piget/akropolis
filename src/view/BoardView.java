@@ -9,6 +9,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.List;
 import javax.swing.JPanel;  
 import javax.swing.SwingWorker;
+
+import model.Tile;
+
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -273,6 +276,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             App.getInstance().appState.getState().getBoardController().nextTurn();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_R){
+            currentGridView.rotateSelectedTile();
         }
     }
 

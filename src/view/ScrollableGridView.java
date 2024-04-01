@@ -178,7 +178,20 @@ public class ScrollableGridView extends JScrollPane implements View {
             // Unfill the hexagons
             unfillEachHexagons();
         }
+        // Reset also the previous rotation
+        tile.resetRotation();
         selectedTile = tile;
+    }
+
+    public void rotateSelectedTile(){
+        if(selectedTile != null){
+            selectedTile.rotate();
+            if(hoveredHexagon != null){
+                unfillEachHexagons();
+                fillEachHexagons(selectedTile, hoveredHexagon);
+            }
+        }
+    
     }
 
     public void removeSelectedTile() {

@@ -46,6 +46,10 @@ public class TileView extends JComponent implements View {
         rotation = (rotation + 90) % 360;
     }
 
+    public void resetRotation() {
+        rotation = 0;
+    }
+
     public int getRotation() {
         return rotation;
     }
