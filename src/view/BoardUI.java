@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class BoardUI extends JPanel implements View{
     private final PlayerLabel playerLabel = new PlayerLabel("Player");
+    private ScoreLabel scorelabel =new ScoreLabel(0);
     private final RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
     private final ArrayList<JLabel> rockImages = new ArrayList<>();
 
@@ -51,6 +52,12 @@ public class BoardUI extends JPanel implements View{
         gbc.gridx = 2;
         topPanel.add(remainingTilesLabel, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 4; 
+        gbc.anchor = GridBagConstraints.CENTER; 
+        topPanel.add(scorelabel, gbc);
+
         add(topPanel, BorderLayout.NORTH);
     
 
@@ -78,6 +85,11 @@ public class BoardUI extends JPanel implements View{
     public void setPlayer(String playerName){
         playerLabel.setPlayer(playerName);
     }
+
+    public void setscore (int score){
+        scorelabel.setScore(score);
+    }
+
 
     public void setRock(int rock){
         while (rockImages.size() > 3) {// 3 pour tester

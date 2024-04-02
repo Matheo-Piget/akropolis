@@ -29,6 +29,10 @@ public class UIController extends Controller {
         BoardUI boardUI = (BoardUI)view;
         boardUI.setPlayer(currentPlayer.getName());
         boardUI.setRock(currentPlayer.getResources());
+        int score=currentPlayer.getGrid().calculateScore();
+        currentPlayer.setScore(score);
+        System.out.println("Le score est "+score);
+        boardUI.setscore(currentPlayer.getScore());
     }
 
     /**
