@@ -13,7 +13,6 @@ public class PlaceView extends HexagonView {
 
     public PlaceView(int x, int y, int z, Place place, int size) {
         super(x, y, z, size);
-        int stars = place.getStars();
         this.place = place;
         switch (place.getType()) {
             case "Barrack Place":
@@ -78,7 +77,7 @@ public class PlaceView extends HexagonView {
         int nPoints = xPoints.length;
 
         // Dessiner l'étoile
-        g.setColor(Color.YELLOW); // Couleur de l'étoile
+        g.setColor(Color.BLACK); // Couleur de l'étoile
         g.fillPolygon(xPoints, yPoints, nPoints);
     }
 }
