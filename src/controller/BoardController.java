@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Board;
 import model.Grid;
+import model.Player;
 import view.*;
 
 import java.awt.Point;
@@ -84,6 +85,9 @@ public class BoardController extends Controller {
         if (evt.getPropertyName().equals("addTile")) {
             // Change the current grid to the next player's grid
             ((BoardView) view).nextTurn();
+        }
+        if (evt.getPropertyName().equals("gameOver")) {
+            ((BoardView) view).showGameOver(((Player) (evt.getNewValue())).getName());
         }
         handleUiUpdates(evt);
     }

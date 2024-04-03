@@ -303,4 +303,28 @@ public class BoardView extends JPanel implements View, KeyListener {
     public void keyTyped(KeyEvent e) {
         // Not needed, but must be implemented due to KeyListener interface
     }
+
+    public void showGameOver(String winner) {
+        // Create game over dialog
+        JDialog gameOverDialog = new JDialog(App.getInstance(), "Game Over", true);
+        gameOverDialog.setLayout(new GridLayout(2, 1));
+        gameOverDialog.setSize(200, 100);
+        gameOverDialog.setLocationRelativeTo(this);
+
+        // Winner label
+        JLabel winnerLabel = new JLabel("Winner: " + winner);
+        winnerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        // Quit button
+        JButton quitButton = createStyledButton("Quit");
+        quitButton.addActionListener(e -> {
+            gameOverDialog.dispose();
+            App.getInstance().exitToMainMenu();
+        });
+
+        // Add components to dialog
+        gameOverDialog.add(winnerLabel);
+        gameOverDialog.add(quitButton);
+        gameOverDialog.setVisible(true); // Show dialog
+    }
 }
