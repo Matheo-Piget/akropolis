@@ -69,9 +69,9 @@ public class PlaceView extends HexagonView {
      * @param size the size of the star
      */
     private void drawStar(Graphics g, int x, int y, int size) {
-        int xPoints[] = {x + size / 2, x + (int)(0.6 * size), x + size, x + (int)(0.7 * size), x + (int)(0.8 * size),
+        int[] xPoints = {x + size / 2, x + (int)(0.6 * size), x + size, x + (int)(0.7 * size), x + (int)(0.8 * size),
                 x + size / 2, x + (int)(0.2 * size), x + (int)(0.3 * size), x, x + (int)(0.4 * size)};
-        int yPoints[] = {y, y + (int)(0.4 * size), y + (int)(0.4 * size), y + (int)(0.6 * size), y + size,
+        int[] yPoints = {y, y + (int)(0.4 * size), y + (int)(0.4 * size), y + (int)(0.6 * size), y + size,
                 y + (int)(0.8 * size), y + size, y + (int)(0.6 * size), y + (int)(0.4 * size), y + (int)(0.4 * size)};
         int nPoints = xPoints.length;
 
