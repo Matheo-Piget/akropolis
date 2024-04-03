@@ -38,6 +38,8 @@ public class MainMenuView extends JPanel {
 
     private BufferedImage backgroundImage;
     private Clip backgroundMusicClip;
+    //private Clip buttonClickSound;
+    private SoundEffect buttonClickSound;
 
     public MainMenuView() {
         super();
@@ -56,6 +58,7 @@ public class MainMenuView extends JPanel {
         addTitleLabel();
         addButtonsPanel();
         playBackgroundMusic();
+        initSoundEffects();
     }
 
     @Override
@@ -109,6 +112,9 @@ public class MainMenuView extends JPanel {
         add(buttonPanel, gbc);
     }
 
+    private void initSoundEffects() {
+        buttonClickSound = new SoundEffect("/GameButton.wav"); // Assurez-vous que le chemin est correct
+    }
     private JButton createStyledButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(150, 50));
@@ -126,10 +132,17 @@ public class MainMenuView extends JPanel {
                 button.setBackground(new Color(255, 215, 0));
             }
         });
-        // Ajouter l'écouteur d'événements
-        button.addActionListener(actionListener);
+        // Ajout l'écouteur d'événements
+        button.addActionListener(e -> {
+            buttonClickSound.play(); // pour Jouez l'effet sonore ici
+            actionListener.actionPerformed(e); 
+        });
         return button;
     }
+    
+
+    
+
     private void playBackgroundMusic() {
         try {
             // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources

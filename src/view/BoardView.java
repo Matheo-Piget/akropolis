@@ -28,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
 
 
 
+
 /**
  * Panel for displaying the game board.
  * It takes care of displaying the scrolling board and the site to make the game playable.
@@ -41,6 +42,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     private final BoardUI boardUI;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
+    private SoundEffect pauseButtonClickSound; 
 
     /**
      * Constructor for the BoardView.
@@ -60,6 +62,9 @@ public class BoardView extends JPanel implements View, KeyListener {
             gridViews.add(gridView);
             cardPanel.add(gridView, Integer.toString(i));
         }
+
+        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
+
 
         // Initialize siteView and add it to the main panel
         siteView = new SiteView(siteCapacity);
@@ -82,7 +87,10 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Add pause button to pause panel
         JButton pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
-        pauseButton.addActionListener(e -> showPauseMenu());
+        pauseButton.addActionListener(e -> {
+            pauseButtonClickSound.play(); // Play sound effect
+            showPauseMenu();
+        });
         pausePanel.add(pauseButton);
 
         bottomPanel.add(pausePanel, BorderLayout.EAST);
@@ -302,5 +310,29 @@ public class BoardView extends JPanel implements View, KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // Not needed, but must be implemented due to KeyListener interface
+    }
+
+    public void showGameOver(String winner) {
+        // Create game over dialog
+        JDialog gameOverDialog = new JDialog(App.getInstance(), "Game Over", true);
+        gameOverDialog.setLayout(new GridLayout(2, 1));
+        gameOverDialog.setSize(200, 100);
+        gameOverDialog.setLocationRelativeTo(this);
+
+        // Winner label
+        JLabel winnerLabel = new JLabel("Winner: " + winner);
+        winnerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        // Quit button
+        JButton quitButton = createStyledButton("Quit");
+        quitButton.addActionListener(e -> {
+            gameOverDialog.dispose();
+            App.getInstance().exitToMainMenu();
+        });
+
+        // Add components to dialog
+        gameOverDialog.add(winnerLabel);
+        gameOverDialog.add(quitButton);
+        gameOverDialog.setVisible(true); // Show dialog
     }
 }

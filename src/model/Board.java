@@ -53,7 +53,10 @@ public class Board extends Model {
      */
     public void startTurn(Player player) {
         firePropertyChange("nextTurn", null, player);
-
+        if (isGameOver()) {
+            firePropertyChange("gameOver", null, getWinner());
+            return;
+        }
         currentPlayer.getGrid().display();
         System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over

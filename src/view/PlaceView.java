@@ -1,6 +1,7 @@
 package view;
 
-import java.awt.Color;
+import java.awt.*;
+
 import model.Place;
 
 /**
@@ -12,7 +13,6 @@ public class PlaceView extends HexagonView {
 
     public PlaceView(int x, int y, int z, Place place, int size) {
         super(x, y, z, size);
-        int stars = place.getStars();
         this.place = place;
         switch (place.getType()) {
             case "Barrack Place":
@@ -46,5 +46,39 @@ public class PlaceView extends HexagonView {
             renderHexagon(strokeColor, texture);
         }
         g.drawImage(render, 0, 0, null);
+
+        int stars = place.getStars();
+        int starSize = 15; // Height of the star
+
+        // Position of the first star
+        int startX = getSize().width / 2 - (starSize * stars) / 2;
+        int startY = getSize().height / 2 - starSize / 2;
+
+        // Draw the stars
+        for (int i = 0; i < stars; i++) {
+            // Dessiner une étoile à la position actuelle
+            drawStar(g, startX + i * starSize, startY, starSize);
+        }
     }
+
+    /**
+     * Draws a star at the given position with the given size.
+     * @param g the graphics context
+     * @param x the x coordinate of the star
+     * @param y the y coordinate of the star
+     * @param size the size of the star
+     */
+    private void drawStar(Graphics g, int x, int y, int size) {
+        int[] xPoints = {x + size / 2, x + (int)(0.6 * size), x + size, x + (int)(0.7 * size), x + (int)(0.8 * size),
+                x + size / 2, x + (int)(0.2 * size), x + (int)(0.3 * size), x, x + (int)(0.4 * size)};
+        int[] yPoints = {y, y + (int)(0.4 * size), y + (int)(0.4 * size), y + (int)(0.6 * size), y + size,
+                y + (int)(0.8 * size), y + size, y + (int)(0.6 * size), y + (int)(0.4 * size), y + (int)(0.4 * size)};
+        int nPoints = xPoints.length;
+
+        // Dessiner l'étoile
+        g.setColor(Color.BLACK); // Couleur de l'étoile
+        g.fillPolygon(xPoints, yPoints, nPoints);
+    }
+
+
 }

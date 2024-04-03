@@ -9,6 +9,17 @@ public class Player extends Model {
     private Tile selectedTile; // The tile selected by the player during their turn
     private int resources; // The resources (rocks) owned by the player
 
+    private int score ; // The number of points scored by the player
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+
     /**
      * Constructs a new player with the given name.
      * @param name The name of the player.
