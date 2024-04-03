@@ -1,18 +1,15 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.util.ArrayList;
+import javax.swing.JProgressBar;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
@@ -21,9 +18,20 @@ import javax.swing.border.EmptyBorder;
  * Contains both the player name label, the rock label, and the remaining tiles label.
  */
 public class BoardUI extends JPanel implements View{
-    private final PlayerLabel playerLabel = new PlayerLabel("Player");
-    private final RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
-    private final ArrayList<JLabel> rockImages = new ArrayList<>();
+    private PlayerLabel playerLabel = new PlayerLabel("Player");
+    private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
+    private ImageIcon playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\player.png").getImage());
+    private JLabel PlayerImageLabel = new JLabel(playerIcon);
+
+    private RockLabel rockLabel = new RockLabel();
+
+    private ImageIcon rockIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\rock.PNG").getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+    private JLabel rockImageLabel = new JLabel(rockIcon);
+
+
+    private JProgressBar remainingTilesBar ;
+
+
 
 
     private float hue = 0.0f;
@@ -35,8 +43,7 @@ public class BoardUI extends JPanel implements View{
      */
     public BoardUI() {
         setOpaque(true);
-        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-        setLayout(layout);
+        setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
 
         JPanel topPanel = new JPanel(new GridBagLayout());
@@ -47,9 +54,19 @@ public class BoardUI extends JPanel implements View{
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        topPanel.add(playerLabel, gbc);
+        //rockImageLabel.setBorder(new EmptyBorder(0, 400, 0, 0)); 
+        topPanel.add(playerLabel, gbc);        
+        topPanel.add(PlayerImageLabel, gbc);        
         gbc.gridx = 2;
+        topPanel.add(rockImageLabel, gbc);
+        topPanel.add(rockLabel, gbc);
+
+        remainingTilesBar = createRemainingTilesBar();
+        gbc.gridx = 3;
+        topPanel.add(remainingTilesBar, gbc);
         topPanel.add(remainingTilesLabel, gbc);
+
+
 
         add(topPanel, BorderLayout.NORTH);
     
@@ -58,18 +75,37 @@ public class BoardUI extends JPanel implements View{
         applyStyle();
     }
 
+    private JProgressBar createRemainingTilesBar() {
+        JProgressBar bar = new JProgressBar();
+        bar.setMinimum(0);
+        bar.setMaximum(57); 
+        bar.setStringPainted(true);
+        bar.setFont(new Font("Serif", Font.BOLD, 16)); 
+        bar.setForeground(Color.GRAY); 
+        bar.setBackground(Color.WHITE); 
+        return bar;
+    }
+
+    public void setRemainingTiles(int remainingTiles){
+        remainingTilesBar.setValue(remainingTiles);
+        remainingTilesBar.setString("Remaining Tiles: " + remainingTiles);
+    }
+
     @Override
     public void doLayout(){
         super.doLayout();
         if (timer == null) {
-            timer = new Timer(70, e -> {
-                hue += 0.005f;
-                if (hue > 1.0f) {
-                    hue = 0.0f;
+            timer = new Timer(70, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    hue += 0.005f;
+                    if (hue > 1.0f) {
+                        hue = 0.0f;
+                    }
+                    bg = Color.getHSBColor(hue, 0.5f, 0.5f);
+                    setBackground(bg);
+                    repaint();
                 }
-                bg = Color.getHSBColor(hue, 0.5f, 0.5f);
-                setBackground(bg);
-                repaint();
             });
             timer.start();
         }
@@ -80,29 +116,10 @@ public class BoardUI extends JPanel implements View{
     }
 
     public void setRock(int rock){
-        while (rockImages.size() > 3) {// 3 pour tester
-            // Supprimez une image si une pierre est perdue
-            remove(rockImages.remove(rockImages.size() - 1));
-        }
-        while (rockImages.size() < 3) {
-            ImageIcon image = new ImageIcon("res\\rock.PNG");
-            Image scaledImage = image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-            JLabel newRockImage = new JLabel(new ImageIcon(scaledImage));
-            newRockImage.setBorder(new EmptyBorder(0, 0, 30, 0)); // Ajoutez un bord vide en bas
-
-            rockImages.add(newRockImage);
-            add(newRockImage);
-        }
-        validate();
-        repaint();
-        revalidate(); // Réorganisez les composants
-
+        rockLabel.setRocks(rock);
     }
     
 
-    public void setRemainingTiles(int remainingTiles){
-        remainingTilesLabel.setRemainingTiles(remainingTiles);
-    }
 
     private void applyStyle() {
         // Style pour playerLabel
