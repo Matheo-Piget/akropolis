@@ -18,12 +18,12 @@ public class RockLabel extends JLabel {
         super("Rocks: 0");
         setOpaque(false);
         setForeground(java.awt.Color.WHITE);
-        setBorder(new EmptyBorder(38, 0, 0, 0)); // Ajoute un espace en haut du texte
+        setBorder(new EmptyBorder(24, 0, 0, 0)); // Ajoute un espace en haut du texte
     }
     public void setRocks(int rocks){
         
         setFont(new Font("Serif", Font.BOLD, 18)); 
-        this.setText("                  " + rocks);
+        this.setText("                 " + rocks);
         startBlinking();
 
         validate();

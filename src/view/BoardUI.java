@@ -21,7 +21,7 @@ public class BoardUI extends JPanel implements View{
     private PlayerLabel playerLabel = new PlayerLabel("Player");
     private ScoreLabel scorelabel =new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
-    private ImageIcon playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\player.png").getImage());
+    private ImageIcon playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\play.png").getImage());
     private JLabel PlayerImageLabel = new JLabel(playerIcon);
 
     private RockLabel rockLabel = new RockLabel();
@@ -56,9 +56,12 @@ public class BoardUI extends JPanel implements View{
         gbc.gridx = 0;
         gbc.gridy = 0;
         //rockImageLabel.setBorder(new EmptyBorder(0, 400, 0, 0)); 
+        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 200));
+        PlayerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
         topPanel.add(playerLabel, gbc);        
         topPanel.add(PlayerImageLabel, gbc);        
         gbc.gridx = 2;
+        rockImageLabel.setBorder(new EmptyBorder(0, 0, 15, 0));
         topPanel.add(rockImageLabel, gbc);
         topPanel.add(rockLabel, gbc);
 
@@ -66,11 +69,10 @@ public class BoardUI extends JPanel implements View{
         gbc.gridx = 3;
         topPanel.add(remainingTilesBar, gbc);
         topPanel.add(remainingTilesLabel, gbc);
+        scorelabel.setBorder(new EmptyBorder(0, 150, 0, 0));
+        scorelabel.setFont(new Font("Serif", Font.BOLD, 19)); 
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 4; 
-        gbc.anchor = GridBagConstraints.CENTER; 
         topPanel.add(scorelabel, gbc);
 
 
