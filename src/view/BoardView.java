@@ -28,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
 
 
 
+
 /**
  * Panel for displaying the game board.
  * It takes care of displaying the scrolling board and the site to make the game playable.
@@ -41,6 +42,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     private final BoardUI boardUI;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
+    private SoundEffect pauseButtonClickSound; 
 
     /**
      * Constructor for the BoardView.
@@ -60,6 +62,9 @@ public class BoardView extends JPanel implements View, KeyListener {
             gridViews.add(gridView);
             cardPanel.add(gridView, Integer.toString(i));
         }
+
+        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
+
 
         // Initialize siteView and add it to the main panel
         siteView = new SiteView(siteCapacity);
@@ -82,7 +87,10 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Add pause button to pause panel
         JButton pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
-        pauseButton.addActionListener(e -> showPauseMenu());
+        pauseButton.addActionListener(e -> {
+            pauseButtonClickSound.play(); // Play sound effect
+            showPauseMenu();
+        });
         pausePanel.add(pauseButton);
 
         bottomPanel.add(pausePanel, BorderLayout.EAST);
