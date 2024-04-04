@@ -58,9 +58,12 @@ public class PlaceView extends HexagonView {
 
         // Draw the stars
         for (int i = 0; i < stars; i++) {
+            Graphics2D g2d = (Graphics2D) g.create();
             // Dessiner une étoile à la position actuelle
-            drawStar(g, startX + i * starSize, startY, starSize);
+            drawStar(g2d, startX + i * starSize, startY, starSize);
         }
+        // Free the graphics context
+        g.dispose();
     }
 
     /**
@@ -70,21 +73,17 @@ public class PlaceView extends HexagonView {
      * @param y the y coordinate of the star
      * @param size the size of the star
      */
-    private void drawStar(Graphics g, int x, int y, int size) {
+    private void drawStar(Graphics2D g2d, int x, int y, int size) {
         int[] xPoints = {x + size / 2, x + (int)(0.6 * size), x + size, x + (int)(0.7 * size), x + (int)(0.8 * size),
                 x + size / 2, x + (int)(0.2 * size), x + (int)(0.3 * size), x, x + (int)(0.4 * size)};
         int[] yPoints = {y, y + (int)(0.4 * size), y + (int)(0.4 * size), y + (int)(0.6 * size), y + size,
                 y + (int)(0.8 * size), y + size, y + (int)(0.6 * size), y + (int)(0.4 * size), y + (int)(0.4 * size)};
         int nPoints = xPoints.length;
 
-
-        // Convert to graphics2D
-        Graphics2D g2d = (Graphics2D) g;
         // Antialiasing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(Color.BLACK); // Couleur de l'étoile
         g2d.fillPolygon(xPoints, yPoints, nPoints);
-        // Free the resources
         g2d.dispose();
     }
 }
