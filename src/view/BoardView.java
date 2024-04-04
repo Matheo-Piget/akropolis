@@ -1,7 +1,6 @@
 package view;
 
 import view.main.App;
-
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.JDialog;
@@ -10,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -18,16 +16,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
-
-
-
 
 /**
  * Panel for displaying the game board.

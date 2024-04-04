@@ -6,10 +6,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import javax.imageio.ImageIO;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
@@ -21,20 +20,12 @@ public class BoardUI extends JPanel implements View{
     private PlayerLabel playerLabel = new PlayerLabel("Player");
     private ScoreLabel scorelabel =new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
-    private ImageIcon playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\play.png").getImage());
-    private JLabel PlayerImageLabel = new JLabel(playerIcon);
-
+    private ImageIcon playerIcon = null;
+    private JLabel playerImageLabel = new JLabel(playerIcon);
     private RockLabel rockLabel = new RockLabel();
-
-    private ImageIcon rockIcon = new ImageIcon(new ImageIcon("C:\\Users\\Utilisateur\\Desktop\\Akropolis\\akropolis\\res\\rock.PNG").getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-    private JLabel rockImageLabel = new JLabel(rockIcon);
-
-
+    private ImageIcon rockIcon;
+    private JLabel rockImageLabel = new JLabel();
     private JProgressBar remainingTilesBar ;
-
-
-
-
     private float hue = 0.0f;
     private Timer timer;
     private Color bg = new Color(255,229,180);
@@ -47,6 +38,19 @@ public class BoardUI extends JPanel implements View{
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
 
+        try{
+            Image img1 = ImageIO.read(getClass().getResource("/play.png"));
+            playerIcon = new ImageIcon(img1);
+            playerImageLabel = new JLabel(playerIcon);
+            playerLabel.add(playerImageLabel);
+            Image img2 = ImageIO.read(getClass().getResource("/rock.png")).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+            rockIcon = new ImageIcon(img2);
+            rockImageLabel = new JLabel(rockIcon);
+            
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         JPanel topPanel = new JPanel(new GridBagLayout());
         topPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -57,9 +61,9 @@ public class BoardUI extends JPanel implements View{
         gbc.gridy = 0;
         //rockImageLabel.setBorder(new EmptyBorder(0, 400, 0, 0)); 
         playerLabel.setBorder(new EmptyBorder(0, 0, 0, 200));
-        PlayerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
+        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
         topPanel.add(playerLabel, gbc);        
-        topPanel.add(PlayerImageLabel, gbc);        
+        topPanel.add(playerImageLabel, gbc);        
         gbc.gridx = 2;
         rockImageLabel.setBorder(new EmptyBorder(0, 0, 15, 0));
         topPanel.add(rockImageLabel, gbc);
@@ -75,11 +79,8 @@ public class BoardUI extends JPanel implements View{
         gbc.gridx = 0;
         topPanel.add(scorelabel, gbc);
 
-
-
         add(topPanel, BorderLayout.NORTH);
     
-
         setBackground(bg);
         applyStyle();
     }
