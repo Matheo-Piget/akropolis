@@ -139,6 +139,9 @@ public abstract class HexagonView extends JComponent {
         render.setAccelerationPriority(1);
         Graphics2D g2d = render.createGraphics();
 
+        // Enable antialiasing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         // Draw the hexagon
         g2d.setPaint(texture);
         g2d.fill(hexagon);

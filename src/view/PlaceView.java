@@ -1,7 +1,9 @@
 package view;
 
-import java.awt.*;
-
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import model.Place;
 
 /**
@@ -75,10 +77,14 @@ public class PlaceView extends HexagonView {
                 y + (int)(0.8 * size), y + size, y + (int)(0.6 * size), y + (int)(0.4 * size), y + (int)(0.4 * size)};
         int nPoints = xPoints.length;
 
-        // Dessiner l'étoile
-        g.setColor(Color.BLACK); // Couleur de l'étoile
-        g.fillPolygon(xPoints, yPoints, nPoints);
+
+        // Convert to graphics2D
+        Graphics2D g2d = (Graphics2D) g;
+        // Antialiasing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(Color.BLACK); // Couleur de l'étoile
+        g2d.fillPolygon(xPoints, yPoints, nPoints);
+        // Free the resources
+        g2d.dispose();
     }
-
-
 }
