@@ -157,23 +157,17 @@ public abstract class HexagonView extends JComponent {
 
         // Draw the height number only when it's not a hexagon outline
         if (!(this instanceof HexagonOutline)) {
-            int fontSize = (int) (getHeight() * 0.2);
+            int fontSize = (int) (getHeight() * 0.8);
             g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
             String heightStr = String.valueOf(z);
             int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
             int x = (getWidth() - stringWidth) / 2;
-            int y = getHeight() - fontSize / 2;
-            
-            // Draw a black outline around the text
-            g2d.setColor(Color.BLACK);
-            for(int dx = -1; dx <= 1; dx++) {
-                for(int dy = -1; dy <= 1; dy++) {
-                    g2d.drawString(heightStr, x + dx, y + dy);
-                }
-            }
+            int y = getHeight() / 2 + fontSize / 3;
 
-            // Draw the text
-            g2d.setColor(Color.WHITE);
+            // Change the color of the text to a darker version of the hexagon color
+            Color hexagonColor = texture.getImage().getGraphics().getColor();
+            g2d.setColor(hexagonColor.darker());
+
             g2d.drawString(heightStr, x, y);
         }
         g2d.dispose();

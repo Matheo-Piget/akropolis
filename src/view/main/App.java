@@ -1,13 +1,13 @@
 package view.main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import view.main.states.AppState;
 import view.main.states.StartState;
 
 public class App extends JFrame{
 
+    private static final ImageIcon appIcon = new ImageIcon("res/akropolis_logo2.png");
     private final JPanel screen = new JPanel();
     private static final App INSTANCE = new App();
 
@@ -26,6 +26,8 @@ public class App extends JFrame{
         screen.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGHT));
         add(screen);
         pack();
+
+        setIconImage(appIcon.getImage());
 
         setVisible(true);
     }

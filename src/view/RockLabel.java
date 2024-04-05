@@ -34,7 +34,7 @@ public class RockLabel extends JLabel {
             return;
         }
 
-        timer = new Timer(900, e -> {
+        timer = new Timer(9, e -> {
             isBlinking = !isBlinking;
             setForeground(isBlinking ? Color.RED : Color.WHITE);
             if (!isBlinking) {
