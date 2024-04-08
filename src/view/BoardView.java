@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
@@ -24,23 +25,26 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Panel for displaying the game board.
- * It takes care of displaying the scrolling board and the site to make the game playable.
+ * It takes care of displaying the scrolling board and the site to make the game
+ * playable.
  */
 public class BoardView extends JPanel implements View, KeyListener {
 
     // Fields
     private ScrollableGridView currentGridView;
+    private EndTurnPlayerLabel endTurnPlayerLabel;
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private final SiteView siteView;
     private final BoardUI boardUI;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
-    private SoundEffect pauseButtonClickSound; 
+    private SoundEffect pauseButtonClickSound;
 
     /**
      * Constructor for the BoardView.
      *
-     * @param maxHexagons  The maximum number of hexagons to be displayed on the board.
+     * @param maxHexagons  The maximum number of hexagons to be displayed on the
+     *                     board.
      * @param numPlayers   The number of players in the game.
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
@@ -58,10 +62,16 @@ public class BoardView extends JPanel implements View, KeyListener {
 
         pauseButtonClickSound = new SoundEffect("/GameButton.wav");
 
-
         // Initialize siteView and add it to the main panel
         siteView = new SiteView(siteCapacity);
-        add(cardPanel, BorderLayout.CENTER);
+        
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.add(cardPanel, 0);
+        cardPanel.setBounds(0, 0, cardPanel.getPreferredSize().width, cardPanel.getPreferredSize().height);
+        endTurnPlayerLabel = new EndTurnPlayerLabel();
+        layeredPane.add(endTurnPlayerLabel, 1);
+        endTurnPlayerLabel.setBounds(0, 0, endTurnPlayerLabel.getPreferredSize().width, endTurnPlayerLabel.getPreferredSize().height);
+        add(layeredPane, BorderLayout.CENTER);
         currentGridView = gridViews.get(0); // Set initial gridView
         add(siteView, BorderLayout.WEST);
 
@@ -129,6 +139,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                 SwingUtilities.invokeLater(() -> {
                     dialog.setVisible(false);
                     dialog.dispose();
+                    endTurnPlayerLabel.play();
                 });
             }
         };

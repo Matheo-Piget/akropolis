@@ -10,7 +10,11 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Iterator;
+import java.util.Queue;
+import java.util.Random;
 
 public class AkropolisTitleLabel extends JPanel {
     private BufferedImage titleImage;
@@ -18,6 +22,7 @@ public class AkropolisTitleLabel extends JPanel {
     private AlphaComposite[] alphas;
     private Queue<Particle> particles = new LinkedList<>();
     private Random random = new Random();
+    private Timer timer;
     protected int width = 1024;
     protected int height = 329;
     private int particleCount = 0;
@@ -45,7 +50,7 @@ public class AkropolisTitleLabel extends JPanel {
         }
 
         // Create a timer to animate the particles
-        Timer timer = new Timer(15, e -> {
+        timer = new Timer(15, e -> {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastTime > 1000) {
                 particleCount = 0;
@@ -67,6 +72,10 @@ public class AkropolisTitleLabel extends JPanel {
             repaint(); // Repaint the particles
         });
         timer.start();
+    }
+
+    public void stop(){
+        timer.stop();
     }
 
     @Override

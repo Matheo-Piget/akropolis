@@ -37,6 +37,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class MainMenuView extends JPanel {
 
     private BufferedImage backgroundImage;
+    private AkropolisTitleLabel titleLabel;
     private Clip backgroundMusicClip;
     //private Clip buttonClickSound;
     private SoundEffect buttonClickSound;
@@ -69,8 +70,15 @@ public class MainMenuView extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        stopBackgroundMusic();
+        titleLabel.stop();
+    }
+
     private void addTitleLabel() {
-        AkropolisTitleLabel titleLabel = new AkropolisTitleLabel();
+        titleLabel = new AkropolisTitleLabel();
         GridBagConstraints titleGbc = new GridBagConstraints();
         titleGbc.gridx = 0;
         titleGbc.gridy = 0;
