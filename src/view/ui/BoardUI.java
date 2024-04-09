@@ -1,4 +1,4 @@
-package view;
+package view.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,11 +18,13 @@ import javax.imageio.ImageIO;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import view.View;
+
 /**
  * Represents the ui of the game board.
  * Contains both the player name label, the rock label, and the remaining tiles label.
  */
-public class BoardUI extends JPanel implements View{
+public class BoardUI extends JPanel implements View {
     private PlayerLabel playerLabel = new PlayerLabel("Player");
     private ScoreLabel scorelabel =new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
@@ -37,7 +39,8 @@ public class BoardUI extends JPanel implements View{
     private Color bg = new Color(255,229,180);
 
     /**
-     * created a BoardUI that contains player info and stack infos
+     * Constructor for the BoardUI class.
+     * Initializes the player name label, the rock label, and the remaining tiles label.
      */
     public BoardUI() {
         setOpaque(true);
@@ -65,7 +68,6 @@ public class BoardUI extends JPanel implements View{
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        //rockImageLabel.setBorder(new EmptyBorder(0, 400, 0, 0)); 
         playerLabel.setBorder(new EmptyBorder(0, 0, 0, 200));
         playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
         topPanel.add(playerLabel, gbc);        
@@ -74,7 +76,6 @@ public class BoardUI extends JPanel implements View{
         rockImageLabel.setBorder(new EmptyBorder(0, 0, 15, 0));
         topPanel.add(rockImageLabel, gbc);
         topPanel.add(rockLabel, gbc);
-
         remainingTilesBar = createRemainingTilesBar();
         gbc.gridx = 3;
         topPanel.add(remainingTilesBar, gbc);
@@ -104,7 +105,7 @@ public class BoardUI extends JPanel implements View{
 
     public void setRemainingTiles(int remainingTiles){
         remainingTilesBar.setValue(remainingTiles);
-        remainingTilesBar.setString("Remaining Tiles: " + remainingTiles);
+        remainingTilesBar.setString("Tuiles restantes: " + remainingTiles);
     }
 
     @Override
@@ -135,20 +136,14 @@ public class BoardUI extends JPanel implements View{
         scorelabel.setScore(score);
     }
 
-
     public void setRock(int rock){
         rockLabel.setRocks(rock);
     }
-    
-
 
     private void applyStyle() {
         // Style pour playerLabel
         playerLabel.setForeground(Color.WHITE);
         playerLabel.setFont(playerLabel.getFont().deriveFont(Font.BOLD, 16)); // Police en gras de taille 16
-
-        
-
         // Style pour remainingTilesLabel
         remainingTilesLabel.setForeground(Color.WHITE);
         remainingTilesLabel.setFont(remainingTilesLabel.getFont().deriveFont(Font.ITALIC, 12)); // Police italique de taille 12

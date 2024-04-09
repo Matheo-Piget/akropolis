@@ -4,7 +4,8 @@ public class QuarriesView extends HexagonView {
     private static final java.awt.Color strokeColor = java.awt.Color.BLACK;
     
     public QuarriesView(int x, int y, int z, int size) {
-        super(x, y, z, java.awt.Color.GRAY, size);
+        super(x, y, z, size);
+        this.texture = TextureFactory.getTexture("quarries");
     }
 
     @Override

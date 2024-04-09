@@ -1,25 +1,30 @@
 package model;
 
 import util.Point3D;
-
 import java.util.Collections;
 import java.util.Stack;
 import java.util.Random;
 
 /**
- * Représente la pile de tuiles dans le jeu Akropolis. Cette pile contient toutes les tuiles qui peuvent être tirées par les joueurs pendant le jeu.
+ * Représente la pile de tuiles dans le jeu Akropolis. Cette pile contient
+ * toutes les tuiles qui peuvent être tirées par les joueurs pendant le jeu.
  */
 
-public class StackTiles extends Stack<Tile>{
-
+public class StackTiles extends Stack<Tile> {
     int remainingTiles;
     Random random = new Random();
 
-     /**
-     * Construit une pile de tuiles vide prête à être remplie avec des tuiles.
+    /**
+     * Constructs a new stack of tiles with a given size.
+     * 
+     * @param size The size of the stack.
+     *             @pre. size > 0
      */
-    public StackTiles(int size){
+    public StackTiles(int size) {
         super();
+        if (size <= 0) {
+            throw new IllegalArgumentException("The size of the stack must be greater than 0");
+        }
         // We lock the size of the stack to avoid any modification
         remainingTiles = size;
         generateTiles();
@@ -29,7 +34,7 @@ public class StackTiles extends Stack<Tile>{
     /**
      * Generates the tiles for the stack randomly.
      */
-    public void generateTiles() {
+    void generateTiles() {
         // Generate one place of each type with stars
         int randomNumberOfPlaces = (int) (Math.random() * 20);
         for (DistrictColor color : DistrictColor.values()) {
@@ -46,8 +51,8 @@ public class StackTiles extends Stack<Tile>{
     }
 
     /**
-     * generates place with stars and random tiles
-     *
+     * Generates place with stars and random tiles
+     * 
      * @param color The color of the place.
      **/
     private void addPlaceWithStars(DistrictColor color) {
@@ -55,7 +60,7 @@ public class StackTiles extends Stack<Tile>{
         int stars = random.nextInt(5) + 1;
 
         // Create a place with stars of the specified color
-        Point3D position = new Point3D(0, 0, 1); 
+        Point3D position = new Point3D(0, 0, 1);
         Place place = new Place(position, stars, color);
 
         // Then the other two hexagons are random
@@ -80,13 +85,12 @@ public class StackTiles extends Stack<Tile>{
             Tile tile = new Tile(h1, h2, h3);
             push(tile);
         }
-
     }
 
     /**
      * Shuffles the stack of tiles.
      */
-    public void shuffle(){
+    void shuffle() {
         Collections.shuffle(this);
     }
 }

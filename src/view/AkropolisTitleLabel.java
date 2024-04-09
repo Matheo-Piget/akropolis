@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.Random;
 
-public class AkropolisTitleLabel extends JPanel {
+class AkropolisTitleLabel extends JPanel {
     private BufferedImage titleImage;
     private Color color;
     private AlphaComposite[] alphas;

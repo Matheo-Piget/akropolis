@@ -11,6 +11,7 @@ public class Site extends Model {
 
     /**
      * This method is used to update the site with the tiles from the stack
+     * 
      * @param stackTiles The stack of tiles to update the site with
      */
     public void updateSite(StackTiles stackTiles) {
@@ -64,8 +65,7 @@ public class Site extends Model {
         for (Tile t : tiles) {
             if (t != tile) {
                 cost++;
-            }
-            else {
+            } else {
                 break;
             }
         }

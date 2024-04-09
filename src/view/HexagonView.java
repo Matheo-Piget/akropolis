@@ -4,13 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
 import javax.swing.JComponent;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
-import java.awt.Rectangle;
 import java.awt.BasicStroke;
 import java.awt.geom.Path2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.Font;
@@ -47,70 +43,13 @@ public abstract class HexagonView extends JComponent {
         hexagon.closePath();
     }
 
-    public HexagonView(int x, int y, int z, BufferedImage img, int size) {
-        this.setSize(size, size);
-        stroke = new BasicStroke((float) size / 25);
-        pos = new Point(x, y);
-        this.z = z;
-        int center = size / 2 - 1; // Dumb rounding
-        for (int i = 0; i < 6; i++) {
-            double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
-            double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
-            if (i == 0) {
-                hexagon.moveTo(xval, yval);
-            } else {
-                hexagon.lineTo(xval, yval);
-            }
-        }
-        hexagon.closePath();
-        this.texture = new TexturePaint(img, new java.awt.Rectangle(0, 0, size, size));
-    }
-
-    public HexagonView(int x, int y, int z, Color color, int size) {
-        setSize(size, size);
-        stroke = new BasicStroke((float) size / 25);
-        pos = new Point(x, y);
-        this.z = z;
-        int center = size / 2 - 1; // Dumb rounding
-        for (int i = 0; i < 6; i++) {
-            double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
-            double yval = center + center * Math.sin(i * 2 * Math.PI / 6);
-            if (i == 0) {
-                hexagon.moveTo(xval, yval);
-            } else {
-                hexagon.lineTo(xval, yval);
-            }
-        }
-        hexagon.closePath();
-
-        // Create a BufferedImage and fill it with the color
-        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        g.setColor(color);
-        g.fillRect(0, 0, 1, 1);
-        g.dispose();
-        this.texture = new TexturePaint(img, new java.awt.Rectangle(x, y, size, size));
-    }
-
-    @Override
-    protected void processMouseEvent(MouseEvent e) {
-        super.processMouseEvent(e);
-        getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
-    }
-
-    @Override
-    protected void processMouseMotionEvent(MouseEvent e) {
-        super.processMouseMotionEvent(e);
-        getParent().dispatchEvent(SwingUtilities.convertMouseEvent(this, e, getParent()));
-    }
-
     /**
      * Fill the hexagon based on the hexagon view passed
      * 
      * @param hexagon the hexagon view to fill
      */
     public void fill(HexagonView hexagon) {
-        renderHexagon(Color.BLACK, hexagon.getTexture());
+        renderHexagon(Color.BLACK, hexagon.texture);
         repaint();
     }
 
@@ -171,34 +110,6 @@ public abstract class HexagonView extends JComponent {
             g2d.drawString(heightStr, x, y);
         }
         g2d.dispose();
-    }
-
-    public void rotate() {
-        // Calculate the center of the hexagon
-        Rectangle bounds = hexagon.getBounds();
-        double centerX = bounds.getCenterX();
-        double centerY = bounds.getCenterY();
-
-        // Create an AffineTransform and rotate it 90 degrees around the center
-        AffineTransform at = new AffineTransform();
-        at.rotate(Math.toRadians(90), centerX, centerY);
-
-        // Apply the rotation to the hexagon
-        hexagon = (Path2D.Double) at.createTransformedShape(hexagon);
-
-        // Repaint the component
-        this.repaint();
-    }
-
-    public BufferedImage getRender() {
-        if (render == null) {
-            renderHexagon(Color.BLACK, texture);
-        }
-        return render;
-    }
-
-    public TexturePaint getTexture() {
-        return texture;
     }
 
     public void setHovered(boolean hovered) {

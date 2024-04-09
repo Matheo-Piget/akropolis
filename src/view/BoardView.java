@@ -1,6 +1,7 @@
 package view;
 
 import view.main.App;
+import view.ui.BoardUI;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.JDialog;
@@ -34,8 +35,8 @@ public class BoardView extends JPanel implements View, KeyListener {
     private ScrollableGridView currentGridView;
     private EndTurnPlayerLabel endTurnPlayerLabel;
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
-    private final SiteView siteView;
-    private final BoardUI boardUI;
+    private SiteView siteView;
+    private BoardUI boardUI;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
     private SoundEffect pauseButtonClickSound;
@@ -49,60 +50,16 @@ public class BoardView extends JPanel implements View, KeyListener {
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
     public BoardView(int maxHexagons, int numPlayers, int siteCapacity) {
-        setLayout(new BorderLayout());
-        setOpaque(true);
-        setFocusable(true);
-
-        // Initialize gridViews and add them to cardPanel
-        for (int i = 0; i < numPlayers; i++) {
-            ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
-            gridViews.add(gridView);
-            cardPanel.add(gridView, Integer.toString(i));
-        }
-
-        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
-
-        // Initialize siteView and add it to the main panel
-        siteView = new SiteView(siteCapacity);
-        
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.add(cardPanel, 0);
-        cardPanel.setBounds(0, 0, cardPanel.getPreferredSize().width, cardPanel.getPreferredSize().height);
-        endTurnPlayerLabel = new EndTurnPlayerLabel();
-        layeredPane.add(endTurnPlayerLabel, 1);
-        endTurnPlayerLabel.setBounds(0, 0, endTurnPlayerLabel.getPreferredSize().width, endTurnPlayerLabel.getPreferredSize().height);
-        add(layeredPane, BorderLayout.CENTER);
-        currentGridView = gridViews.get(0); // Set initial gridView
-        add(siteView, BorderLayout.WEST);
-
-        // Initialize bottom panel
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false);
-
-        // Initialize boardUI and add it to bottom panel
-        boardUI = new BoardUI();
-        bottomPanel.add(boardUI, BorderLayout.CENTER);
-
-        // Initialize pause panel
-        JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pausePanel.setOpaque(false);
-
-        // Add pause button to pause panel
-        JButton pauseButton = createStyledButton("||");
-        pauseButton.setPreferredSize(new Dimension(85, 85));
-        pauseButton.addActionListener(e -> {
-            pauseButtonClickSound.play(); // Play sound effect
-            showPauseMenu();
-        });
-        pausePanel.add(pauseButton);
-
-        bottomPanel.add(pausePanel, BorderLayout.EAST);
-        add(bottomPanel, BorderLayout.SOUTH); // Add bottom panel to main panel
+        setupView();
+        initializeGridViews(maxHexagons, numPlayers);
+        initializeSiteView(siteCapacity);
+        setupLayeredPane();
+        setupBottomPanel();
 
         // Create a CountDownLatch with the number of workers in GridView
-        CountDownLatch latch = getCountDownLatch(maxHexagons);
+        CountDownLatch latch = addHexagonOulineInBackground(maxHexagons);
 
-        // Create a SwingWorker to add the BoardView in a background thread
+        // Display loading dialog while workers are running
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             private JDialog dialog;
 
@@ -146,9 +103,8 @@ public class BoardView extends JPanel implements View, KeyListener {
         worker.execute(); // Start the SwingWorker
     }
 
-    private CountDownLatch getCountDownLatch(int maxHexagons) {
+    private CountDownLatch addHexagonOulineInBackground(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
-
         // Create a SwingWorker for each GridView
         for (ScrollableGridView gridView : gridViews) {
             SwingWorker<Void, HexagonOutline> worker = new SwingWorker<>() {
@@ -182,6 +138,62 @@ public class BoardView extends JPanel implements View, KeyListener {
             worker.execute(); // Start the SwingWorker
         }
         return latch;
+    }
+
+    private void setupView() {
+        setLayout(new BorderLayout());
+        setOpaque(true);
+        setFocusable(true);
+        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
+    }
+
+    private void initializeGridViews(int maxHexagons, int numPlayers) {
+        for (int i = 0; i < numPlayers; i++) {
+            ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
+            gridViews.add(gridView);
+            cardPanel.add(gridView, Integer.toString(i));
+        }
+        currentGridView = gridViews.get(0); // Set initial gridView
+    }
+
+    private void initializeSiteView(int siteCapacity) {
+        siteView = new SiteView(siteCapacity);
+        add(siteView, BorderLayout.WEST);
+    }
+
+    private void setupLayeredPane() {
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.add(cardPanel, 0);
+        layeredPane.setSize(cardPanel.getPreferredSize());
+        cardPanel.setBounds(0, 0, cardPanel.getPreferredSize().width, cardPanel.getPreferredSize().height);
+        endTurnPlayerLabel = new EndTurnPlayerLabel();
+        layeredPane.add(endTurnPlayerLabel, 1);
+        // For some stupid reason, the label is not visible if I DONT FORCIBLY MOVE IT
+        // TO THE FRONT
+        layeredPane.moveToFront(endTurnPlayerLabel);
+        add(layeredPane, BorderLayout.CENTER);
+    }
+
+    private void setupBottomPanel() {
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setOpaque(false);
+
+        boardUI = new BoardUI();
+        bottomPanel.add(boardUI, BorderLayout.CENTER);
+
+        JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pausePanel.setOpaque(false);
+
+        JButton pauseButton = createStyledButton("||");
+        pauseButton.setPreferredSize(new Dimension(85, 85));
+        pauseButton.addActionListener(e -> {
+            pauseButtonClickSound.play();
+            showPauseMenu();
+        });
+        pausePanel.add(pauseButton);
+
+        bottomPanel.add(pausePanel, BorderLayout.EAST);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // Methods

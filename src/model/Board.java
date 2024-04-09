@@ -15,6 +15,7 @@ public class Board extends Model {
 
     /**
      * Constructs a new board and initializes the game.
+     * 
      * @param players The list of players in the game.
      */
     public Board(List<Player> players) {
@@ -33,7 +34,7 @@ public class Board extends Model {
     }
 
     public boolean setSelectedTile(Tile tile) {
-        if(canChooseTile(tile)) {
+        if (canChooseTile(tile)) {
             playerList.get(manche % playerList.size()).setSelectedTile(tile);
             return true;
         }
@@ -49,6 +50,7 @@ public class Board extends Model {
 
     /**
      * Starts a turn for the given player.
+     * 
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
@@ -70,7 +72,8 @@ public class Board extends Model {
      */
     public void addTileToGrid() {
         Tile tile = currentPlayer.getSelectedTile();
-        if(tile == null) return; // No tile selected
+        if (tile == null)
+            return; // No tile selected
         if (addTile(tile)) {
             currentPlayer.setResources(currentPlayer.getResources() - site.calculateCost(tile));
             // Remove the tile from the site
@@ -81,18 +84,18 @@ public class Board extends Model {
     }
 
     /**
-     * Ends the turn for the given player, switches to the next player, and starts their turn.
+     * Ends the turn for the given player, switches to the next player, and starts
+     * their turn.
      */
     public void endTurn() {
-        System.out.println("End of turn : "+ currentPlayer.getName());
-
+        System.out.println("End of turn : " + currentPlayer.getName());
 
         // Logic to end a turn
         manche++;
         currentPlayer = getNextPlayer(); // Switch to the next player
         currentPlayer.setSelectedTile(null); // Reset the selected tile
 
-        System.out.println("Next turn : "+ getNextPlayer().getName());
+        System.out.println("Next turn : " + getNextPlayer().getName());
         firePropertyChange("nextTurn", null, currentPlayer);
 
         startTurn(currentPlayer); // Start the next player's turn
@@ -100,6 +103,7 @@ public class Board extends Model {
 
     /**
      * Retrieves the next player in the list.
+     * 
      * @return The next player in the list.
      */
     private Player getNextPlayer() {
@@ -129,6 +133,7 @@ public class Board extends Model {
 
     /**
      * Returns the number of players in the game.
+     * 
      * @return The number of players in the game.
      */
     private int getNumberOfPlayers() {
@@ -136,7 +141,9 @@ public class Board extends Model {
     }
 
     /**
-     * Returns the number of tiles to put on the table according to the number of players.
+     * Returns the number of tiles to put on the table according to the number of
+     * players.
+     * 
      * @return The number of tiles to put on the table.
      */
     public int switchSizePlayers() {
@@ -150,11 +157,12 @@ public class Board extends Model {
 
     /**
      * For debug only
+     * 
      * @param tile The tile to add to the grid.
      * @return True if the tile was added, false otherwise.
      */
     public boolean addTile(Tile tile) {
-        System.out.println("Adding tile to grid to player "+currentPlayer.getName());
+        System.out.println("Adding tile to grid to player " + currentPlayer.getName());
         return currentPlayer.getGrid().addTile(tile);
     }
 
@@ -172,15 +180,16 @@ public class Board extends Model {
 
     /**
      * Returns the current player.
+     * 
      * @return The current player.
      */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-
     /**
      * Checks if the game is over.
+     * 
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
@@ -189,6 +198,7 @@ public class Board extends Model {
 
     /**
      * Returns the winner of the game.
+     * 
      * @return The winner of the game.
      */
     public Player getWinner() {
@@ -205,7 +215,9 @@ public class Board extends Model {
     }
 
     /**
-     * Checks if the player can choose a tile from the provided list based on their resources.
+     * Checks if the player can choose a tile from the provided list based on their
+     * resources.
+     * 
      * @param chosen The tile chosen by the player.
      * @return True if the player can choose the tile, false otherwise.
      */
@@ -218,7 +230,7 @@ public class Board extends Model {
                 break;
             }
         }
-        System.out.println("Price : "+price);
+        System.out.println("Price : " + price);
         return currentPlayer.getResources() >= price;
     }
 }

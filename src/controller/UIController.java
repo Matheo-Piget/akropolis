@@ -2,7 +2,7 @@ package controller;
 
 import model.Board;
 import model.Player;
-import view.BoardUI;
+import view.ui.BoardUI;
 import java.beans.PropertyChangeEvent;
 
 public class UIController extends Controller {

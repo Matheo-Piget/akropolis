@@ -1,6 +1,6 @@
 package model;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import util.Point3D;
 

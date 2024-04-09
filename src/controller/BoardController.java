@@ -6,8 +6,10 @@ import java.util.List;
 import model.Board;
 import model.Grid;
 import model.Player;
-import view.*;
-
+import view.BoardView;
+import view.HexagonView;
+import view.ScrollableGridView;
+import view.TileView;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,20 +18,17 @@ import model.Tile;
 public class BoardController extends Controller {
     private final UIController uiController;
     private List<GridController> gridControllers;
-    private GridController currentGridController;
     private TileController selectedTile;
 
     public BoardController(Board model, BoardView view) {
         super(model, view);
         // Create the site controller
-        SiteController siteController = new SiteController(model.getSite(), view.getSiteView(), this);
+        new SiteController(model.getSite(), view.getSiteView(), this);
         uiController = new UIController(model, view.getBoardUI());
         initializeGridControllers(model, view);
         initializeListeners();
         // Then we can start the game
         model.startGame();
-
-
     }
 
     private void initializeGridControllers(Board model, BoardView view) {

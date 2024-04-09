@@ -6,7 +6,7 @@ import java.awt.Point;
 /**
  * This class represents a tile that the player can set onto the board.
  */
-public class Tile extends Model{
+public class Tile extends Model {
     // An array to store the three hexagons that make up the tile
     public ArrayList<Hexagon> hexagons = new ArrayList<>();
 
@@ -27,19 +27,6 @@ public class Tile extends Model{
         for (int i = 0; i < hexagons.size(); i++) {
             hexagons.get(i).setPosition(coordinates.get(i).x, coordinates.get(i).y);
         }
-    }
-
-    /**
-     * Exchanges two specified hexagons in the tile.
-     *
-     * @param hexagon1 The first hexagon to be exchanged.
-     * @param hexagon2 The second hexagon to be exchanged.
-     */
-    public void exchange(Hexagon hexagon1, Hexagon hexagon2) {
-        int index1 = hexagons.indexOf(hexagon1);
-        int index2 = hexagons.indexOf(hexagon2);
-        hexagons.set(index1, hexagon2);
-        hexagons.set(index2, hexagon1);
     }
 
     public ArrayList<Hexagon> getHexagons() {
