@@ -39,7 +39,7 @@ public class MainMenuView extends JPanel {
     private BufferedImage backgroundImage;
     private AkropolisTitleLabel titleLabel;
     private Clip backgroundMusicClip;
-    //private Clip buttonClickSound;
+    // private Clip buttonClickSound;
     private SoundEffect buttonClickSound;
 
     public MainMenuView() {
@@ -123,6 +123,7 @@ public class MainMenuView extends JPanel {
     private void initSoundEffects() {
         buttonClickSound = new SoundEffect("/GameButton.wav"); // Assurez-vous que le chemin est correct
     }
+
     private JButton createStyledButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(150, 50));
@@ -143,13 +144,10 @@ public class MainMenuView extends JPanel {
         // Ajout l'écouteur d'événements
         button.addActionListener(e -> {
             buttonClickSound.play(); // pour Jouez l'effet sonore ici
-            actionListener.actionPerformed(e); 
+            actionListener.actionPerformed(e);
         });
         return button;
     }
-    
-
-    
 
     private void playBackgroundMusic() {
         try {
@@ -166,23 +164,21 @@ public class MainMenuView extends JPanel {
             // clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
-
         }
     }
+
     private void stopBackgroundMusic() {
         if (backgroundMusicClip != null) {
             backgroundMusicClip.stop();
         }
     }
 
-    
-
     private void startNewGame() {
         stopBackgroundMusic();
         System.out.println("Nouvelle partie démarrée");
 
         // Utilisation de JComboBox pour sélectionner le nombre de joueurs
-        JComboBox<Integer> playerNumberComboBox = new JComboBox<>(new Integer[]{1, 2, 3, 4});
+        JComboBox<Integer> playerNumberComboBox = new JComboBox<>(new Integer[] { 1, 2, 3, 4 });
         playerNumberComboBox.setSelectedIndex(0); // Sélectionne la première option par défaut
 
         JPanel dialogPanel = new JPanel(new BorderLayout());
@@ -196,17 +192,22 @@ public class MainMenuView extends JPanel {
                 dialogPanel,
                 "Nombre de Joueurs",
                 JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             int numberOfPlayers = (int) playerNumberComboBox.getSelectedItem();
             List<String> playerNames = new ArrayList<>();
 
             for (int i = 1; i <= numberOfPlayers; i++) {
-                playerNames.add(collectPlayerName(i));
+                String playerName = collectPlayerName(i);
+                if (playerName == null) {
+                    // That means the user clicked cancel
+                    // So we should stop the game creation process
+                    System.out.println("Annulation de la création de la partie");
+                    return;
+                }
+                playerNames.add(playerName);
             }
-
             if (!playerNames.isEmpty()) {
                 PlayingState playingState = PlayingState.getInstance();
                 playingState.setPlayers(playerNames);
@@ -214,15 +215,28 @@ public class MainMenuView extends JPanel {
             }
         } else {
             System.out.println("Aucun choix fait, partie non démarrée");
-            JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private String collectPlayerName(int playerNumber) {
         String playerName;
         do {
-            playerName = JOptionPane.showInputDialog(this, "Entrez le nom du joueur " + playerNumber + " :", "Nom du Joueur", JOptionPane.PLAIN_MESSAGE);
-            if (playerName == null || playerName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Le nom du joueur ne peut pas être vide.", "Erreur", JOptionPane.WARNING_MESSAGE);
+            playerName = JOptionPane.showInputDialog(this, "Entrez le nom du joueur " + playerNumber + " :",
+                    "Nom du Joueur", JOptionPane.PLAIN_MESSAGE);
+            if (playerName == null) {
+                return null;
+            } else if (playerName.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Le nom du joueur ne peut pas être vide.", "Erreur",
+                        JOptionPane.WARNING_MESSAGE);
+                playerName = null;
+            } else if (!playerName.matches("[a-zA-Z0-9]{1,10}")) {
+                JOptionPane.showMessageDialog(this,
+                        "Le nom du joueur ne peut contenir que des caractères alphanumériques et doit être de 10 caractères maximum.",
+                        "Erreur",
+                        JOptionPane.WARNING_MESSAGE);
+                playerName = null;
             }
         } while (playerName == null || playerName.trim().isEmpty());
         return playerName.trim();
@@ -236,11 +250,12 @@ public class MainMenuView extends JPanel {
         rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.
         // Crée un panel principal utilisant BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
-        //liste pour stocker les images des règles du jeu.
-        List<ImageIcon> rulesImages= new ArrayList<>();
-        for(int i = 7; i >= 1; i--) {
+        // liste pour stocker les images des règles du jeu.
+        List<ImageIcon> rulesImages = new ArrayList<>();
+        for (int i = 7; i >= 1; i--) {
             try {
-                BufferedImage img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
+                BufferedImage img = ImageIO
+                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
                 ImageIcon icon = new ImageIcon(img);
                 rulesImages.add(icon);
             } catch (IOException e) {
@@ -252,29 +267,33 @@ public class MainMenuView extends JPanel {
         if (!rulesImages.isEmpty()) {
             imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
         }
-        // Utilise un JScrollPane pour permettre le défilement si l'image est plus grande que le panel.
+        // Utilise un JScrollPane pour permettre le défilement si l'image est plus
+        // grande que le panel.
         JScrollPane scrollPane = new JScrollPane(imagLabel);
-        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); // Couleur de fond de la barre de défilement
+        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); // Couleur de fond de la barre de
+                                                                                   // défilement
         scrollPane.getVerticalScrollBar().setForeground(new Color(255, 215, 0)); // Couleur de la barre de défilement
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0)); // Taille de la barre de défilement
 
-        mainPanel.add(scrollPane , BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         JButton prevButton = createStyledNavigationButton("<");
         JButton nextButton = createStyledNavigationButton(">");
 
-        final int[] currentIndex = {0};
-        prevButton.addActionListener(e ->{
-            // Décrémente l'index et met à jour l'image affichée quand le bouton précédent est cliqué.
-            if(currentIndex[0]>0){
+        final int[] currentIndex = { 0 };
+        prevButton.addActionListener(e -> {
+            // Décrémente l'index et met à jour l'image affichée quand le bouton précédent
+            // est cliqué.
+            if (currentIndex[0] > 0) {
                 currentIndex[0]--;
                 imagLabel.setIcon(rulesImages.get(currentIndex[0]));
             }
         });
 
         nextButton.addActionListener(e -> {
-            // incrémente l'index et met à jour l'image affichée quand le bouton précédent est cliqué.
-            if(currentIndex[0] < rulesImages.size() - 1) {
+            // incrémente l'index et met à jour l'image affichée quand le bouton précédent
+            // est cliqué.
+            if (currentIndex[0] < rulesImages.size() - 1) {
                 currentIndex[0]++;
                 imagLabel.setIcon(rulesImages.get(currentIndex[0]));
             }
@@ -302,12 +321,12 @@ public class MainMenuView extends JPanel {
         creditsDialog.setSize(400, 300); // Taille ajustable selon vos besoins
         creditsDialog.setLocationRelativeTo(this); // Centre par rapport à MainMenuView
         creditsDialog.setLayout(new BorderLayout());
-    
+
         // Panel semi-transparent qui assombrit l'arrière-plan
         JPanel overlayPanel = new JPanel();
         overlayPanel.setLayout(new BorderLayout());
         overlayPanel.setBackground(new Color(0, 0, 0, 150)); // Couleur semi-transparente
-    
+
         // Panel pour les noms des développeurs
         JPanel creditsPanel = new JPanel();
         creditsPanel.setLayout(new GridLayout(0, 1)); // Disposition en colonne pour les noms
@@ -318,12 +337,13 @@ public class MainMenuView extends JPanel {
         creditsPanel.add(createStyledCreditLabel("Développeur 4: PIGET Matheo"));
         creditsPanel.add(createStyledCreditLabel("Développeur 5: GBAGUIDI Nerval"));
 
-        // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre équipe
-    
+        // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre
+        // équipe
+
         // Ajout des panels au dialogue
         overlayPanel.add(creditsPanel, BorderLayout.CENTER);
         creditsDialog.add(overlayPanel);
-    
+
         creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
     }
@@ -356,5 +376,5 @@ public class MainMenuView extends JPanel {
         label.setForeground(Color.BLACK);
         return label;
     }
-    
+
 }
