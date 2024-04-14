@@ -18,7 +18,7 @@ public abstract class HexagonView extends JComponent {
 
     private final BasicStroke stroke;
     protected boolean isHovered = false;
-    protected TexturePaint texture;
+    protected BufferedImage texture;
     protected Point pos;
     protected int z;
     protected Path2D.Double hexagon = new Path2D.Double();
@@ -67,7 +67,7 @@ public abstract class HexagonView extends JComponent {
      * @param strokeColor The color of the border
      * @param texture The texture to fill the hexagon with
      */
-    protected void renderHexagon(Color strokeColor, TexturePaint texture) {
+    protected void renderHexagon(Color strokeColor, BufferedImage texture) {
         // Dispose of the old image before creating a new one
         if (render != null) {
             render.flush();
@@ -81,8 +81,15 @@ public abstract class HexagonView extends JComponent {
         // Enable antialiasing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Create a TexturePaint object using the BufferedImage
+        if(texture == null){
+            texture = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            texture.setRGB(0, 0, 0);
+        }
+        TexturePaint texturePaint = new TexturePaint(texture, hexagon.getBounds());
+
         // Draw the hexagon
-        g2d.setPaint(texture);
+        g2d.setPaint(texturePaint);
         g2d.fill(hexagon);
 
         // Draw the border of the hexagon
@@ -104,7 +111,7 @@ public abstract class HexagonView extends JComponent {
             int y = getHeight() / 2 + fontSize / 3;
 
             // Change the color of the text to a darker version of the hexagon color
-            Color hexagonColor = texture.getImage().getGraphics().getColor();
+            Color hexagonColor = texture.getGraphics().getColor();
             g2d.setColor(hexagonColor.darker());
 
             g2d.drawString(heightStr, x, y);
