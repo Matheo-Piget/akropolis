@@ -47,6 +47,10 @@ public class PlaceView extends HexagonView {
             renderHexagon(strokeColor, texture);
         }
         g.drawImage(render, 0, 0, null);
+        if(isFilled){
+            // Do not draw the stars if the place is filled
+            return;
+        }
 
         int stars = place.getStars();
         int starSize = 15; // Height of the star

@@ -316,6 +316,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_R) {
             currentGridView.rotateSelectedTile();
         }
+        if( e.getKeyCode() == KeyEvent.VK_C){
+            currentGridView.centerView();
+        }
     }
 
     @Override

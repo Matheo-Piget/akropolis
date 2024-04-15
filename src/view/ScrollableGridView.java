@@ -190,7 +190,15 @@ public class ScrollableGridView extends JScrollPane implements View {
                 fillEachHexagons(selectedTile, hoveredHexagon);
             }
         }
+    }
 
+    /**
+     * Center the view of the scroll pane
+     */
+    public void centerView(){
+        int x = (grid.getPreferredSize().width - getPreferredSize().width) / 2;
+        int y = (grid.getPreferredSize().height - getPreferredSize().height) / 2;
+        getViewport().setViewPosition(new Point(x, y));
     }
 
     public void removeSelectedTile() {

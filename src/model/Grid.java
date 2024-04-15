@@ -26,10 +26,10 @@ public class Grid extends Model{
         Point3D p2 = new Point3D(-1, 1);
         Point3D p3 = new Point3D(0, -1);
         Point3D p4 = new Point3D(1, 0);
-        Hexagon hexagon1 = new Place(p1, 1, DistrictColor.BLUE, this);
-        Hexagon hexagon2 = new Quarries(p2, this);
-        Hexagon hexagon3 = new Quarries(p3, this);
-        Hexagon hexagon4 = new Quarries(p4, this);
+        Hexagon hexagon1 = new Place(p1, 1, DistrictColor.BLUE);
+        Hexagon hexagon2 = new Quarries(p2);
+        Hexagon hexagon3 = new Quarries(p3);
+        Hexagon hexagon4 = new Quarries(p4);
         hexagons.put(p1, hexagon1);
         hexagons.put(p2, hexagon2);
         hexagons.put(p3, hexagon3);
@@ -145,7 +145,6 @@ public class Grid extends Model{
     private void addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) {
         for (int i = 0; i < 3; i++) {
             Hexagon newHexagon_i = tile.hexagons.get(i);
-            newHexagon_i.setGrid(this);
             newHexagon_i.setTile(tile);
             if (bellowHexagons[i] != null) {
                 newHexagon_i.setBelow(bellowHexagons[i]);
@@ -238,12 +237,32 @@ public class Grid extends Model{
     }
 
     /**
+     * Get the neighbors of a hexagon
+     * @param h The hexagon to get the neighbors
+     * @return The neighbors of the hexagon
+     */
+    private ArrayList<Hexagon> getNeighbors(Hexagon h){
+        ArrayList<Hexagon> neighbors = new ArrayList<>();
+        Point[] axialDirections = {
+            new Point(1, 0), new Point(1, -1), new Point(0, -1),
+            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+        };
+        for (Point direction : axialDirections) {
+            Hexagon neighbor = getHexagon(h.getX() + direction.x, h.getY() + direction.y);
+            if (neighbor != null) {
+                neighbors.add(neighbor);
+            }
+        }
+        return neighbors;
+    }
+
+    /**
      * Return whether the hexagon is surrounded by other hexagons or not
      * 
      * @param hexagon The hexagon to check if it is surrounded
      */
     private boolean hexagonIsSurrounded(Hexagon hexagon) {
-        return hexagon.getNeighbors().size() == 6;
+        return getNeighbors(hexagon).size() == 6;
     }
 
     /***
@@ -355,7 +374,7 @@ public class Grid extends Model{
      */
     private int calculateBarrackScore(Hexagon hexagon) {
         int nb = numberOfStars(placeDeTypeS("Barrack Place"));
-        return (hexagon.getNeighbors().size() < 6) ? hexagon.getElevation()*nb: 0;
+        return (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation()*nb: 0;
     }
 
     
@@ -366,7 +385,7 @@ public class Grid extends Model{
      */
     private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ 
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
-        for (Hexagon neighbor : hexagon.getNeighbors()) {
+        for (Hexagon neighbor : getNeighbors(hexagon)) {
             if (neighbor.getType().equals("Building")&&!visitedHexagons.contains(neighbor)) {
                 buildingNeighbors.add(neighbor);
             }
@@ -411,7 +430,7 @@ public class Grid extends Model{
      */
     private int calculateMarketScore(Hexagon hexagon) {
         int nb = numberOfStars(placeDeTypeS("Market Place"));
-        for (Hexagon neighbor : hexagon.getNeighbors()) {
+        for (Hexagon neighbor : getNeighbors(hexagon)) {
             if (neighbor.getType().equals("Market")) {
                 return 0;
             }

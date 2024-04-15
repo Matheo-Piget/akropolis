@@ -18,6 +18,7 @@ public abstract class HexagonView extends JComponent {
 
     private final BasicStroke stroke;
     protected boolean isHovered = false;
+    protected boolean isFilled = false;
     protected BufferedImage texture;
     protected Point pos;
     protected int z;
@@ -49,7 +50,8 @@ public abstract class HexagonView extends JComponent {
      * @param hexagon the hexagon view to fill
      */
     public void fill(HexagonView hexagon) {
-        renderHexagon(Color.BLACK, hexagon.texture);
+        renderHexagonFilled(Color.BLACK, hexagon);
+        isFilled = true;
         repaint();
     }
 
@@ -58,40 +60,64 @@ public abstract class HexagonView extends JComponent {
      */
     public void unfilled() {
         renderHexagon(Color.BLACK, texture);
+        isFilled = false;
         repaint();
+    }
+
+    private void renderHexagonFilled(Color strokeColor, HexagonView h) {
+        if (render != null) {
+            render.flush();
+        }
+        render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        render.setAccelerationPriority(1);
+        Graphics2D g2d = render.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        TexturePaint texturePaint = new TexturePaint(h.texture, hexagon.getBounds());
+        g2d.setPaint(texturePaint);
+        g2d.fill(hexagon);
+        if (isHovered) {
+            g2d.setColor(Color.YELLOW);
+        } else {
+            g2d.setColor(strokeColor);
+        }
+        g2d.setStroke(stroke);
+        g2d.draw(hexagon);
+        int fontSize = (int) (getHeight() * 0.8);
+        g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
+        String heightStr = String.valueOf(z + 1);
+        int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
+        int x = (getWidth() - stringWidth) / 2;
+        int y = getHeight() / 2 + fontSize / 3;
+        Color hexagonColor = h.texture.getGraphics().getColor();
+        g2d.setColor(hexagonColor.darker());
+        g2d.drawString(heightStr, x, y);
+        g2d.dispose();
     }
 
     /**
      * Render the hexagon with the given stroke color and texture
      * 
      * @param strokeColor The color of the border
-     * @param texture The texture to fill the hexagon with
+     * @param texture     The texture to fill the hexagon with
      */
     protected void renderHexagon(Color strokeColor, BufferedImage texture) {
         // Dispose of the old image before creating a new one
         if (render != null) {
             render.flush();
         }
-
         // Create the new image
         render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         render.setAccelerationPriority(1);
         Graphics2D g2d = render.createGraphics();
-
         // Enable antialiasing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         // Create a TexturePaint object using the BufferedImage
-        if(texture == null){
-            texture = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-            texture.setRGB(0, 0, 0);
+        if (texture != null) {
+            TexturePaint texturePaint = new TexturePaint(texture, hexagon.getBounds());
+            // Draw the hexagon
+            g2d.setPaint(texturePaint);
+            g2d.fill(hexagon);
         }
-        TexturePaint texturePaint = new TexturePaint(texture, hexagon.getBounds());
-
-        // Draw the hexagon
-        g2d.setPaint(texturePaint);
-        g2d.fill(hexagon);
-
         // Draw the border of the hexagon
         if (isHovered) {
             g2d.setColor(Color.YELLOW);
@@ -100,20 +126,19 @@ public abstract class HexagonView extends JComponent {
         }
         g2d.setStroke(stroke);
         g2d.draw(hexagon);
-
-        // Draw the height number only when it's not a hexagon outline
+        // Draw the height number only when it's not an outline
         if (!(this instanceof HexagonOutline)) {
             int fontSize = (int) (getHeight() * 0.8);
             g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
+            // That means that the hexagon is not filled, so we can draw the height number +
+            // 1
             String heightStr = String.valueOf(z);
             int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
             int x = (getWidth() - stringWidth) / 2;
             int y = getHeight() / 2 + fontSize / 3;
-
             // Change the color of the text to a darker version of the hexagon color
             Color hexagonColor = texture.getGraphics().getColor();
             g2d.setColor(hexagonColor.darker());
-
             g2d.drawString(heightStr, x, y);
         }
         g2d.dispose();

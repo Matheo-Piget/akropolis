@@ -7,12 +7,13 @@ public class Place extends Hexagon{
     private final int stars;
     private final DistrictColor color;
 
-    public Place(Point3D position, int stars, DistrictColor color, Grid grid) {
-        super(position, grid);
-        this.stars = stars;
-        this.color = color;
-    }
-
+    /**
+     * Constructor to create a place with specified coordinates.
+     * @param x The x-coordinate of the place.
+     * @param y The y-coordinate of the place.
+     * @param stars The number of stars of the place.
+     * @param color The color of the place.
+     */
     public Place(int x, int y, int stars, DistrictColor color) {
         super(x, y);
         this.stars = stars;
@@ -20,8 +21,7 @@ public class Place extends Hexagon{
     }
 
     /**
-     * Constructor to create a place with specified coordinates (used without grid reference).
-     *
+     * Constructor to create a place with specified coordinates using a Point3D.
      * @param position The position of the place.
      * @param stars The number of stars of the place.
      * @param color The color of the place.

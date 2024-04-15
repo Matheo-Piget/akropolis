@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import util.Point3D;
 
 /**
@@ -9,22 +8,10 @@ import util.Point3D;
  */
 public abstract class Hexagon {
     private Point3D position; // Coordinates of the tile
-    private Grid grid; // Reference to the grid containing the tile
     private Hexagon below; // Tile below the current tile
 
     /**
-     * Constructor to create a tile with specified coordinates and grid.
-     *
-     * @param p    The position of the tile.
-     * @param grid The grid containing the tile.
-     */
-    public Hexagon(Point3D p, Grid grid) {
-        this.position = p;
-        this.grid = grid;
-    }
-
-    /**
-     * Constructor to create a tile with specified coordinates (used without grid reference).
+     * Constructor to create a tile with specified coordinates using a Point3D.
      *
      * @param p The position of the tile.
      */
@@ -33,7 +20,8 @@ public abstract class Hexagon {
     }
 
     /**
-     * Constructor to create a tile with specified coordinates (used without grid reference).
+     * Constructor to create a tile with specified coordinates using x and y.
+     * The z-coordinate is set to 1 by default.
      *
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
@@ -42,17 +30,17 @@ public abstract class Hexagon {
         this.position = new Point3D(x, y, 1);
     }
 
+    /**
+     * Returns the type of the tile in a string format.
+     * @return The type of the tile.
+     */
     public abstract String getType();
 
     /**
-     * Sets the grid reference for the tile.
+     * Generates a random hexagon.
      *
-     * @param grid The grid containing the tile.
+     * @return A random hexagon.
      */
-    public void setGrid(Grid grid) {
-        this.grid = grid;
-    }
-
     public static Hexagon generateRandomHexagon(){
         int random = (int) (Math.random() * 6);
         return switch (random) {
@@ -129,31 +117,6 @@ public abstract class Hexagon {
      */
     public void setBelow(Hexagon belowTile) {
         this.below = belowTile;
-    }
-
-    /**
-     * Gets a list of neighboring tiles based on the hexagonal grid layout.
-     *
-     * @return List of neighboring tiles.
-     */
-    public ArrayList<Hexagon> getNeighbors() {
-        ArrayList<Hexagon> neighbors = new ArrayList<>();
-
-        // Define the directions for the 6 neighbors in a hexagonal grid
-        Point[] axialDirections = {
-            new Point(1, 0), new Point(1, -1), new Point(0, -1),
-            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
-        };
-        
-        // Check each direction and add the neighboring tile if it exists
-        for (Point direction : axialDirections) {
-            Hexagon neighbor = grid.getHexagon(position.x + direction.x, position.y + direction.y);
-            if (neighbor != null) {
-                neighbors.add(neighbor);
-            }
-        }
-
-        return neighbors;
     }
 
     /**

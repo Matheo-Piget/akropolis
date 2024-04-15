@@ -15,7 +15,7 @@ public class GridView extends JPanel {
 
     private final int xOffset;
     private final int yOffset;
-    public static int hexagonSize = 80;
+    public static int hexagonSize = 90;
 
     private final HashMap<Point, HexagonView> hexagons = new HashMap<>();
 
