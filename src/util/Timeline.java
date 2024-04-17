@@ -25,13 +25,13 @@ public class Timeline {
     /**
      * Creates a new timeline with the specified repeat count.
      *
-     * @param repeatCount the number of times to repeat the timeline (0 for
+     * @param repeatCount the number of times to repeat the timeline (-1 for
      *                    infinite)
      * @throws IllegalArgumentException if the repeat count is negative
      */
     public Timeline(int repeatCount) {
         // Validate the repeat count
-        if (repeatCount < 0) {
+        if (repeatCount < -1) {
             throw new IllegalArgumentException("Repeat count must be non-negative");
         }
         keyFrames = new ArrayList<>();
@@ -48,14 +48,20 @@ public class Timeline {
                     if (currentKeyFrame.currentRepeat == 0) {
                         currentKeyFrameIndex = (currentKeyFrameIndex + 1) % keyFrames.size();
                         if (currentKeyFrameIndex == 0) {
-                            Timeline.this.repeatCount--;
                             if (Timeline.this.repeatCount == 0) {
+                                System.out.println("Timeline finished");
                                 onFinished.actionPerformed(e);
                                 timer.stop();
+                                return;
+                            }
+                            if (Timeline.this.repeatCount > 0) {
+                                Timeline.this.repeatCount--;
                             }
                         }
                         if (currentKeyFrameIndex < keyFrames.size()) {
-                            timer.setDelay(keyFrames.get(currentKeyFrameIndex).delay());
+                            timer.stop();
+                            timer.setInitialDelay(keyFrames.get(currentKeyFrameIndex).delay());
+                            timer.restart();
                         }
                     }
                 }
@@ -143,6 +149,14 @@ public class Timeline {
             currentRepeat = repeat;
         }
 
+        /**
+         * Creates a new key frame with the specified delay and action.
+         * The action is executed only once.
+         *
+         * @param delay  the delay before the action is executed
+         * @param action the action to execute
+         * @throws IllegalArgumentException if the delay is negative
+         */
         public KeyFrame(int delay, ActionListener action) {
             this(delay, 1, action);
         }

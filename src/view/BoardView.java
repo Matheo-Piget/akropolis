@@ -1,5 +1,6 @@
 package view;
 
+import model.Player;
 import view.main.App;
 import view.ui.BoardUI;
 import javax.swing.JPanel;
@@ -40,6 +41,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
     private SoundEffect pauseButtonClickSound;
+    private String[] playerNames;
 
     /**
      * Constructor for the BoardView.
@@ -49,12 +51,17 @@ public class BoardView extends JPanel implements View, KeyListener {
      * @param numPlayers   The number of players in the game.
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
-    public BoardView(int maxHexagons, int numPlayers, int siteCapacity) {
+    public BoardView(int maxHexagons, ArrayList<Player> players, int siteCapacity) {
         setupView();
+        int numPlayers = players.size();
         initializeGridViews(maxHexagons, numPlayers);
         initializeSiteView(siteCapacity);
         setupLayeredPane();
         setupBottomPanel();
+        playerNames = new String[players.size()];
+        for (Player player : players) {
+            playerNames[players.indexOf(player)] = player.getName();
+        }
 
         // Create a CountDownLatch with the number of workers in GridView
         CountDownLatch latch = addHexagonOulineInBackground(maxHexagons);
@@ -96,7 +103,6 @@ public class BoardView extends JPanel implements View, KeyListener {
                 SwingUtilities.invokeLater(() -> {
                     dialog.setVisible(false);
                     dialog.dispose();
-                    endTurnPlayerLabel.play();
                 });
             }
         };
@@ -211,12 +217,27 @@ public class BoardView extends JPanel implements View, KeyListener {
      * Show the next GridView and pass turn.
      */
     public void nextTurn() {
-        getGridView().removeSelectedTile();
         int index = gridViews.indexOf(currentGridView);
+        // Play the end turn animation
+        endTurnPlayerLabel.play(playerNames[index]);
+        getGridView().removeSelectedTile();
         index = (index + 1) % gridViews.size();
         currentGridView = gridViews.get(index);
-        cardLayout.show(cardPanel, String.valueOf(index));
-        System.out.println("Next turn has been called in BoardView");
+    }
+
+    public void freeze() {
+        currentGridView.disableListeners();
+        this.setEnabled(false);
+    }
+
+    public void unfreeze() {
+        currentGridView.enableListeners();
+        this.setEnabled(true);
+        this.requestFocusInWindow();
+    }
+
+    public void displayNextBoard() {
+        cardLayout.show(cardPanel, String.valueOf(gridViews.indexOf(currentGridView)));
     }
 
     /**
@@ -316,7 +337,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_R) {
             currentGridView.rotateSelectedTile();
         }
-        if( e.getKeyCode() == KeyEvent.VK_C){
+        if (e.getKeyCode() == KeyEvent.VK_C) {
             currentGridView.centerView();
         }
     }

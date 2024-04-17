@@ -16,6 +16,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     private TileView selectedTile;
     private HexagonView[] filledHexagonViews = new HexagonView[3];
     private HexagonView hoveredHexagon = null;
+    private MouseAdapter ma;
 
     public ScrollableGridView(GridView grid) {
         super(grid);
@@ -34,7 +35,7 @@ public class ScrollableGridView extends JScrollPane implements View {
         setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Add a mouse adapter to handle right-click dragging
-        MouseAdapter ma = new MouseAdapter() {
+        ma = new MouseAdapter() {
             private Point origin;
 
             @Override
@@ -170,6 +171,18 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     public void addHexagon(HexagonView hexagon) {
         grid.addHexagon(hexagon);
+    }
+
+    public void enableListeners(){
+        grid.addMouseListener(ma);
+        grid.addMouseMotionListener(ma);
+        grid.setEnabled(true);
+    }
+
+    public void disableListeners(){
+        grid.removeMouseListener(ma);
+        grid.removeMouseMotionListener(ma);
+        grid.setEnabled(false);
     }
 
     public void setSelectedTile(TileView tile) {

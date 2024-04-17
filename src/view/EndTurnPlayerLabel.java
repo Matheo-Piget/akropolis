@@ -22,7 +22,7 @@ class EndTurnPlayerLabel extends JLabel {
         super("Prochain Joueur:");
         setForeground(Color.BLACK);
         timeline = new Timeline(1);
-        setSize(200, 100);
+        setSize(200, 150);
         // Center the label
         setHorizontalAlignment(JLabel.CENTER);
     }
@@ -34,11 +34,13 @@ class EndTurnPlayerLabel extends JLabel {
         // Create a translation animation the label starts off screen to the center
         // of the screen
         Container parent = getParent();
+        // Ugly but we know the parent of the parent is the BoardView
+        BoardView boardView = (BoardView) parent.getParent();
         int centerY = parent.getHeight() / 2;
         int centerLabelY = getHeight() + centerY / 2;
         setBounds(-getWidth(), centerY - centerLabelY, getWidth(), getHeight());
         setFont(new Font("Serif", Font.BOLD, 25));
-        timeline = new Timeline(1);
+        timeline = new Timeline(0);
         int centerX = parent.getWidth() / 2;
         int labelWidth = getWidth();
         int finalX = centerX - labelWidth / 2;
@@ -47,10 +49,17 @@ class EndTurnPlayerLabel extends JLabel {
         timeline.addKeyFrame(new Timeline.KeyFrame(ANIMATION_RATE, ANIMATION_REPEAT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                boardView.freeze();
                 setLocation(getX() + step, getY());
                 if (parent instanceof JComponent) {
                     ((JComponent) parent).repaint(getBounds());
                 }
+            }
+        }));
+        timeline.addKeyFrame(new Timeline.KeyFrame(900, 1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Do nothing
             }
         }));
         timeline.setOnFinished(new ActionListener() {
@@ -58,6 +67,8 @@ class EndTurnPlayerLabel extends JLabel {
             public void actionPerformed(ActionEvent e) {
                 timeline.reset();
                 setLocation(-getWidth(), parent.getHeight() / 2 - getHeight() / 2);
+                boardView.displayNextBoard();
+                boardView.unfreeze();
             }
         });
     }
@@ -97,13 +108,10 @@ class EndTurnPlayerLabel extends JLabel {
         setText("Prochain Joueur: " + playerName);
     }
 
-    public void play() {
-        timeline.start();
-    }
 
     public void play(String playerName) {
         setPlayerName(playerName);
-        play();
+        timeline.start();
     }
 
     public void stop() {
