@@ -13,9 +13,11 @@ find . -type f -path "./$BIN_DIR/*/*" -name "*.class" -delete
 mkdir -p $BIN_DIR
 
 # Compile all Java files in the source directory (excluding the test directory) into the bin directory
+# shellcheck disable=SC2038
 find $SRC_DIR -name "*.java" -not -path "$TEST_DIR/*" -print | xargs javac -cp $SRC_DIR -d $BIN_DIR
 
 # If compilation was successful, run the main class
+# shellcheck disable=SC2181
 if [ $? -eq 0 ]; then
     java -cp $BIN_DIR:$RES_DIR view.main.App
 else
