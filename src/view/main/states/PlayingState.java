@@ -31,10 +31,6 @@ public class PlayingState extends State {
         return INSTANCE;
     }
 
-    private PlayingState() {
-        super();
-    }
-
     @Override
     public void enter() {
         System.out.println("Entering Playing State");

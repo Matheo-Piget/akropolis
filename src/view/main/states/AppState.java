@@ -11,6 +11,7 @@ public enum AppState implements StateMachine {
 
     // Definition of the application states with their initial instances
     START(StartState.getInstance()),
+    LOGO(StartingLogoState.getInstance()),
     PLAYING(PlayingState.getInstance());
 
     // Current instance of the state

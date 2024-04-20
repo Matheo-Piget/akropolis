@@ -31,26 +31,33 @@ class EndTurnPlayerLabel extends JLabel {
     @Override
     public void addNotify() {
         super.addNotify();
-        // Create a translation animation the label starts off screen to the center
-        // of the screen
         Container parent = getParent();
-        // Ugly but we know the parent of the parent is the BoardView
         BoardView boardView = (BoardView) parent.getParent();
-        int centerY = parent.getHeight() / 2;
-        int centerLabelY = getHeight() + centerY / 2;
-        setBounds(-getWidth(), centerY - centerLabelY, getWidth(), getHeight());
         setFont(new Font("Serif", Font.BOLD, 25));
         timeline = new Timeline(0);
+
+        // Set the label's initial position to the center of the parent
         int centerX = parent.getWidth() / 2;
+        int centerY = parent.getHeight() / 2;
         int labelWidth = getWidth();
-        int finalX = centerX - labelWidth / 2;
-        int totalDistance = finalX - getX();
-        int step = totalDistance / ANIMATION_REPEAT;
+        int labelHeight = getHeight() * 2;
+        setBounds(centerX - labelWidth, centerY - labelHeight, labelWidth, labelHeight);
+
+        // Set the label's initial opacity to 0 (fully transparent)
+        setOpaque(false);
+        setVisible(false);
+        setForeground(new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
+
         timeline.addKeyFrame(new Timeline.KeyFrame(ANIMATION_RATE, ANIMATION_REPEAT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boardView.freeze();
-                setLocation(getX() + step, getY());
+                setVisible(true);
+                // Increase the label's opacity by a step each time the action is performed
+                int alpha = getForeground().getAlpha();
+                alpha = Math.min(alpha + 255 / ANIMATION_REPEAT, 255);
+                setForeground(new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(),
+                        alpha));
                 if (parent instanceof JComponent) {
                     ((JComponent) parent).repaint(getBounds());
                 }
@@ -66,7 +73,10 @@ class EndTurnPlayerLabel extends JLabel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 timeline.reset();
-                setLocation(-getWidth(), parent.getHeight() / 2 - getHeight() / 2);
+                setVisible(false);
+                // Reset the label's opacity to 0
+                setForeground(
+                        new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
                 boardView.displayNextBoard();
                 boardView.unfreeze();
             }
@@ -75,6 +85,9 @@ class EndTurnPlayerLabel extends JLabel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        if(!isVisible()){
+            return;
+        }
         String labelText = getText();
         String[] words = labelText.split("\\s+");
         Font labelFont = getFont();
@@ -98,7 +111,7 @@ class EndTurnPlayerLabel extends JLabel {
 
         y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
         for (String word : words) {
-            g2d.setColor(Color.BLACK);
+            g2d.setColor(getForeground());
             g2d.drawString(word, x, y);
             y += g2d.getFontMetrics().getHeight();
         }
@@ -107,7 +120,6 @@ class EndTurnPlayerLabel extends JLabel {
     public void setPlayerName(String playerName) {
         setText("Prochain Joueur: " + playerName);
     }
-
 
     public void play(String playerName) {
         setPlayerName(playerName);

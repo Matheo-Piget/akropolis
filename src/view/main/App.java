@@ -41,7 +41,7 @@ public class App extends JFrame{
     }
 
     public void run() {
-        appState = AppState.START;
+        appState = AppState.LOGO;
         appState.getState().enter();
     }
     public void exitToMainMenu() {
