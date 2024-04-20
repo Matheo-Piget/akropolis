@@ -60,7 +60,7 @@ public class StartingLogoState extends State {
         final ImageIcon[] logoUnivIcon = { null };
         try {
             imageUniv = ImageIO
-                    .read(getClass().getResourceAsStream("/universiteParisCite_logo_horizontal_blanc_1000px.png"));
+                    .read(Objects.requireNonNull(getClass().getResourceAsStream("/universiteParisCite_logo_horizontal_blanc_1000px.png")));
             logoUnivIcon[0] = new ImageIcon(imageUniv);
             logoUniv = new JLabel(logoUnivIcon[0]);
         } catch (IOException e) {
@@ -78,81 +78,58 @@ public class StartingLogoState extends State {
         blackScreen.validate();
         logo.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 25));
         timeline = new Timeline(0);
-        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                // Increase the label's opacity by a step each time the action is performed
-                int alpha = logo.getForeground().getAlpha();
-                alpha = Math.min(alpha + 255 / 50, 255);
-                logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
-                        logo.getForeground().getBlue(), alpha));
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Increase the label's opacity by a step each time the action is performed
+            int alpha = logo.getForeground().getAlpha();
+            alpha = Math.min(alpha + 255 / 50, 255);
+            logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
+                    logo.getForeground().getBlue(), alpha));
         }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                // Just wait
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, e -> {
+            // Just wait
         }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                // Decrease the label's opacity by a step each time the action is performed
-                int alpha = logo.getForeground().getAlpha();
-                alpha = Math.max(alpha - 255 / 50, 0);
-                logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
-                        logo.getForeground().getBlue(), alpha));
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Decrease the label's opacity by a step each time the action is performed
+            int alpha = logo.getForeground().getAlpha();
+            alpha = Math.max(alpha - 255 / 50, 0);
+            logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
+                    logo.getForeground().getBlue(), alpha));
         }));
         // #Java sucks
         final JLabel finalLogoUniv = logoUniv;
         final BufferedImage finalImageUniv = imageUniv;
         final float[] alpha = { 0 };
-        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                if (finalLogoUniv.getParent() == null) {
-                    blackScreen.removeAll();
-                    blackScreen.add(finalLogoUniv, java.awt.BorderLayout.CENTER);
-                    blackScreen.revalidate();
-                }
-                // Increase the image's opacity by a step each time the action is performed
-                alpha[0] = Math.min(alpha[0] + 1f / 50, 1);
-                BufferedImage imageWithAlpha = new BufferedImage(finalImageUniv.getWidth(), finalImageUniv.getHeight(),
-                        BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = imageWithAlpha.createGraphics();
-                g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
-                g2d.drawImage(finalImageUniv, 0, 0, null);
-                g2d.dispose();
-                finalLogoUniv.setIcon(new ImageIcon(imageWithAlpha));
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            if (finalLogoUniv.getParent() == null) {
+                blackScreen.removeAll();
+                blackScreen.add(finalLogoUniv, BorderLayout.CENTER);
+                blackScreen.revalidate();
             }
+            // Increase the image's opacity by a step each time the action is performed
+            alpha[0] = Math.min(alpha[0] + 1f / 50, 1);
+            BufferedImage imageWithAlpha = new BufferedImage(finalImageUniv.getWidth(), finalImageUniv.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = imageWithAlpha.createGraphics();
+            g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
+            g2d.drawImage(finalImageUniv, 0, 0, null);
+            g2d.dispose();
+            finalLogoUniv.setIcon(new ImageIcon(imageWithAlpha));
         }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                // Just wait
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, e -> {
+            // Just wait
         }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                // Decrease the image's opacity by a step each time the action is performed
-                alpha[0] = Math.max(alpha[0] - 1f / 50, 0);
-                BufferedImage imageWithAlpha = new BufferedImage(finalImageUniv.getWidth(), finalImageUniv.getHeight(),
-                        BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = imageWithAlpha.createGraphics();
-                g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
-                g2d.drawImage(finalImageUniv, 0, 0, null);
-                g2d.dispose();
-                finalLogoUniv.setIcon(new ImageIcon(imageWithAlpha));
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Decrease the image's opacity by a step each time the action is performed
+            alpha[0] = Math.max(alpha[0] - 1f / 50, 0);
+            BufferedImage imageWithAlpha = new BufferedImage(finalImageUniv.getWidth(), finalImageUniv.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = imageWithAlpha.createGraphics();
+            g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
+            g2d.drawImage(finalImageUniv, 0, 0, null);
+            g2d.dispose();
+            finalLogoUniv.setIcon(new ImageIcon(imageWithAlpha));
         }));
-        timeline.setOnFinished(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                handleExit();
-            }
-        });
+        timeline.setOnFinished(e -> handleExit());
         timeline.start();
     }
 
@@ -170,28 +147,20 @@ public class StartingLogoState extends State {
             blackScreen.add(bg, java.awt.BorderLayout.CENTER);
             timeline = new Timeline(0);
             float[] alpha = { 0 };
-            timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, new java.awt.event.ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    // Increase the image's opacity by a step each time the action is performed
-                    alpha[0] = Math.min(alpha[0] + 1f / 50, 1);
-                    BufferedImage imageWithAlpha = new BufferedImage(backgroundImage.getWidth(),
-                            backgroundImage.getHeight(),
-                            BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g2d = imageWithAlpha.createGraphics();
-                    g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
-                    g2d.drawImage(backgroundImage, 0, 0, null);
-                    g2d.dispose();
-                    bg.setIcon(new ImageIcon(imageWithAlpha));
-                    bg.setVisible(true);
-                }
+            timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+                // Increase the image's opacity by a step each time the action is performed
+                alpha[0] = Math.min(alpha[0] + 1f / 50, 1);
+                BufferedImage imageWithAlpha = new BufferedImage(backgroundImage.getWidth(),
+                        backgroundImage.getHeight(),
+                        BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = imageWithAlpha.createGraphics();
+                g2d.setComposite(AlphaComposite.SrcOver.derive(alpha[0]));
+                g2d.drawImage(backgroundImage, 0, 0, null);
+                g2d.dispose();
+                bg.setIcon(new ImageIcon(imageWithAlpha));
+                bg.setVisible(true);
             }));
-            timeline.setOnFinished(new java.awt.event.ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    App.getInstance().appState.changeState(StartState.getInstance());
-                }
-            });
+            timeline.setOnFinished(e -> App.getInstance().appState.changeState(StartState.getInstance()));
             timeline.start();
         } catch (IOException e) {
             e.printStackTrace();

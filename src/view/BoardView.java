@@ -2,6 +2,7 @@ package view;
 
 import model.Player;
 import view.main.App;
+import view.main.states.GameOverState;
 import view.ui.BoardUI;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -48,7 +49,6 @@ public class BoardView extends JPanel implements View, KeyListener {
      *
      * @param maxHexagons  The maximum number of hexagons to be displayed on the
      *                     board.
-     * @param numPlayers   The number of players in the game.
      * @param siteCapacity The number of tiles that can be stored in the site.
      */
     public BoardView(int maxHexagons, ArrayList<Player> players, int siteCapacity) {
@@ -353,26 +353,6 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     public void showGameOver(String winner) {
-        // Create game over dialog
-        JDialog gameOverDialog = new JDialog(App.getInstance(), "Game Over", true);
-        gameOverDialog.setLayout(new GridLayout(2, 1));
-        gameOverDialog.setSize(200, 100);
-        gameOverDialog.setLocationRelativeTo(this);
-
-        // Winner label
-        JLabel winnerLabel = new JLabel("Winner: " + winner);
-        winnerLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-        // Quit button
-        JButton quitButton = createStyledButton("Quit");
-        quitButton.addActionListener(e -> {
-            gameOverDialog.dispose();
-            App.getInstance().exitToMainMenu();
-        });
-
-        // Add components to dialog
-        gameOverDialog.add(winnerLabel);
-        gameOverDialog.add(quitButton);
-        gameOverDialog.setVisible(true); // Show dialog
+        App.getInstance().appState.changeState(GameOverState.getInstance());
     }
 }
