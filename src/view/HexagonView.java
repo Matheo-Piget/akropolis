@@ -89,8 +89,23 @@ public abstract class HexagonView extends JComponent {
         int x = (getWidth() - stringWidth) / 2;
         int y = getHeight() / 2 + fontSize / 3;
         Color hexagonColor = h.texture.getGraphics().getColor();
-        g2d.setColor(hexagonColor.darker());
+        Color outlineColor = hexagonColor.darker();
+
+        // Draw the outline
+        g2d.setColor(outlineColor);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dy = -2; dy <= 2; dy++) {
+                g2d.drawString(heightStr, x + dx, y + dy);
+            }
+        }
+
+        // Draw the text
+        g2d.setColor(hexagonColor);
         g2d.drawString(heightStr, x, y);
+        // If it's a place, draw the stars
+        if (h instanceof PlaceView) {
+            ((PlaceView) h).drawStars(g2d, getSize());
+        }
         g2d.dispose();
     }
 
@@ -130,15 +145,23 @@ public abstract class HexagonView extends JComponent {
         if (!(this instanceof HexagonOutline)) {
             int fontSize = (int) (getHeight() * 0.8);
             g2d.setFont(new Font("Arial", Font.BOLD, fontSize));
-            // That means that the hexagon is not filled, so we can draw the height number +
-            // 1
             String heightStr = String.valueOf(z);
             int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
             int x = (getWidth() - stringWidth) / 2;
             int y = getHeight() / 2 + fontSize / 3;
-            // Change the color of the text to a darker version of the hexagon color
             Color hexagonColor = texture.getGraphics().getColor();
-            g2d.setColor(hexagonColor.darker());
+            Color outlineColor = hexagonColor.darker();
+
+            // Draw the outline
+            g2d.setColor(outlineColor);
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dy = -2; dy <= 2; dy++) {
+                    g2d.drawString(heightStr, x + dx, y + dy);
+                }
+            }
+
+            // Draw the text
+            g2d.setColor(hexagonColor);
             g2d.drawString(heightStr, x, y);
         }
         g2d.dispose();

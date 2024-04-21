@@ -14,7 +14,6 @@ public class TextureFactory {
 
     public static BufferedImage getTexture(String imageName) {
         BufferedImage texture = textures.get(imageName);
-        System.out.println(textures);
         if (texture != null) {
             return texture;
         }

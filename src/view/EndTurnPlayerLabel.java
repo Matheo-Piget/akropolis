@@ -77,15 +77,15 @@ class EndTurnPlayerLabel extends JLabel {
                 // Reset the label's opacity to 0
                 setForeground(
                         new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
-                boardView.displayNextBoard();
                 boardView.unfreeze();
+                boardView.displayNextBoard();
             }
         });
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        if(!isVisible()){
+        if (!isVisible()) {
             return;
         }
         String labelText = getText();
