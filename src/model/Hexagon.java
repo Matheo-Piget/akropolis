@@ -6,7 +6,7 @@ import util.Point3D;
 /**
  * Represents a tile on the game grid.
  */
-public abstract class Hexagon {
+public abstract class Hexagon implements java.io.Serializable{
     private Point3D position; // Coordinates of the tile
     private Hexagon below; // Tile below the current tile
 
