@@ -337,9 +337,6 @@ public class Grid extends Model{
                 case "Barrack":
                     totalScore += calculateBarrackScore(hexagon);
                     break;
-                case "Building":
-                    buildingScore += calculateBuildingScore(hexagon);
-                    break;
                 case "Temple":
                     totalScore += calculateTempleScore(hexagon);
                     break;
@@ -349,12 +346,26 @@ public class Grid extends Model{
                 default:
                     break;
             }
-            if (buildingScore> lastBuildingS) {//
-                lastBuildingS = buildingScore;
-            }
+           //calcul le score du batiment tout seule(le plus grand quartier tout seule)
+        buildingScore = BuildingScore();
         }
 
-        return totalScore+lastBuildingS;
+        return totalScore+buildingScore;
+    }
+    public int BuildingScore() {
+        int maxScore = 0;
+        ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
+        // on parcous pour les hexagones visible de type building puis calculer pour chaque quartier et prendre le max
+        for (Hexagon hexagon : getTopHexagons()) {
+            if (hexagon.getType().equals("Building") ) {
+                int buildingScore = calculateBuildingScore(hexagon, visitedHexagons);
+                if (buildingScore > maxScore) {
+                    maxScore = buildingScore;
+                }
+            }
+        }
+        return maxScore;
+
     }
 
     /**
@@ -398,13 +409,14 @@ public class Grid extends Model{
      * @param hexagon the hexagon to calculate the score
      * @return the score of the building
      */
-    private int calculateBuildingScore(Hexagon hexagon) {
+    private int calculateBuildingScore(Hexagon hexagon , ArrayList<Hexagon> visitedHexagon) {
         return visitBuildingHex(hexagon , new ArrayList<>());
     }
     public int visitBuildingHex(Hexagon hexagone , ArrayList<Hexagon> visitedHexagone){
         if (hexagone.getType().equals("Building")&& !visitedHexagone.contains(hexagone)) {
             visitedHexagone.add(hexagone); // we add the hexagone to the visited hexagone
-            int score =1; // we add 1 point for each building
+            int score = hexagone.getElevation();
+            //int score =1; // we add 1 point for each building
             for (Hexagon neighbor : BuildingNeighbors(hexagone ,visitedHexagone)) {
                 score += visitBuildingHex(neighbor ,visitedHexagone); // we add the score of the neighbors
             }
