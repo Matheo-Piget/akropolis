@@ -3,26 +3,17 @@ package test;
 import model.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TestConnection {
     public static void main(String[] args) {
         try {
             // Start a server on port 1234
-            ServerPlayer server = new ServerPlayer("Server", 1234);
+            Server server = new Server(1234, 2);
             System.out.println("Server started");
             new Thread(() -> {
                 try {
-                    // Accept a client and receive a tile from it
-                    System.out.println("Waiting for client to connect...");
+                    // Accept a client and receive tiles from it
                     server.acceptClient();
-                    System.out.println("Client connected");
-
-                    // Create a list of players
-                    List<Player> players = new ArrayList<>();
-                    players.add(server);
-                    players.add(new Player("Client"));
-                    Board board = new Board(players);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -33,13 +24,20 @@ public class TestConnection {
 
             System.out.println("Creating client...");
             // Connect a client to the server
-            Client client = new Client("Client", new java.net.Socket("localhost", 1234));
+            Client client1 = new Client("Client1", new java.net.Socket("localhost", 1234));
+            Client client2 = new Client("Client2", new java.net.Socket("localhost",1234));
             System.out.println("Client connected");
-
+            // Create the list of players
+            ArrayList<Player> players = new ArrayList<Player>();
+            players.add(client1);
+            players.add(client2);
+            Board board = new Board(players);
             // Send a tile to the server
             Tile tile = new Tile(new Quarries(1, 1), new Quarries(1, 1), new Quarries(1, 1));
-            client.sendTile(tile);
-            System.out.println("Sent tile to server: " + tile);
+            client1.sendTile(tile);
+            System.out.println("Client 1 successfully sent tile to server: " + tile);
+            client2.sendTile(tile);
+            System.out.println("Client 2 successfully sent tile to server: " + tile);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

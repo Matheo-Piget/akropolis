@@ -7,13 +7,14 @@ import java.net.Socket;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ServerPlayer extends Player {
+public class Server {
     private ServerSocket serverSocket;
+    private int capacity;
     private ArrayList<ClientHandler> clients = new ArrayList<>(); // List of connected clients
 
-    public ServerPlayer(String name, int port) throws IOException {
-        super(name);
+    public Server(int port, int capacity) throws IOException {
         this.serverSocket = new ServerSocket(port);
+        this.capacity = capacity;
     }
 
     // Method to accept a new client connection
@@ -22,8 +23,12 @@ public class ServerPlayer extends Player {
         Socket clientSocket = serverSocket.accept();
         ClientHandler clientHandler = new ClientHandler(clientSocket);
         clients.add(clientHandler);
+        capacity--;
         clientHandler.start();
         System.out.println("Client connected in ServerPlayer");
+        if(capacity > 0){
+            acceptClient();
+        }
     }
 
     // Method to close the server
@@ -53,7 +58,7 @@ public class ServerPlayer extends Player {
                     System.out.println("Waiting for tile from client...");
                     Tile tile = receiveTile();
                     System.out.println("Received tile from client: " + tile);
-                    // Do something with the tile
+                    // Update all the boards except the one who has send the tile
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

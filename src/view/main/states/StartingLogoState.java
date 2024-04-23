@@ -60,7 +60,7 @@ public class StartingLogoState extends State {
         final ImageIcon[] logoUnivIcon = { null };
         try {
             imageUniv = ImageIO
-                    .read(Objects.requireNonNull(getClass().getResourceAsStream("/universiteParisCite_logo_horizontal_blanc_1000px.png")));
+                    .read(Objects.requireNonNull(getClass().getResource("/universiteParisCite_logo_horizontal_blanc_1000px.png")));
             logoUnivIcon[0] = new ImageIcon(imageUniv);
             logoUniv = new JLabel(logoUnivIcon[0]);
         } catch (IOException e) {
