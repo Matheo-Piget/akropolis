@@ -14,6 +14,10 @@ public class SoundEffect {
     public SoundEffect(String path) {
         try {
             URL url = this.getClass().getResource(path);
+            if (url == null) {
+                System.err.println("Resource not found: " + path);
+                throw new RuntimeException("Resource not found: " + path);
+            }
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -39,7 +43,6 @@ public class SoundEffect {
     }
 
     public void stop() {
-        if (clip.isRunning())
-            clip.stop();
+        if (clip != null && clip.isRunning()) clip.stop();
     }
 }
