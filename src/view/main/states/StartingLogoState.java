@@ -41,6 +41,8 @@ public class StartingLogoState extends State {
             public void keyPressed(java.awt.event.KeyEvent e) {
                 // Skip the logo animation if a key is pressed
                 System.out.println("Key pressed, skipping logo animation");
+                // Remove the key listener
+                blackScreen.removeKeyListener(this);
                 handleExit();
             }
 
