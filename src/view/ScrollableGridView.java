@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
+import view.main.App;
+
 public class ScrollableGridView extends JScrollPane implements View {
 
     private final GridView grid;
@@ -97,7 +99,7 @@ public class ScrollableGridView extends JScrollPane implements View {
         grid.addMouseMotionListener(ma);
 
         // Set the preferred size of the scrollable area
-        setPreferredSize(new Dimension(1300, 844));
+        setPreferredSize(new Dimension(App.getInstance().getWidth(), App.getInstance().getHeight()));
     }
 
     public GridView getGrid() {

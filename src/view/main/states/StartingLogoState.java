@@ -48,11 +48,12 @@ public class StartingLogoState extends State {
             public void keyReleased(java.awt.event.KeyEvent e) {
             }
         };
-        blackScreen.addKeyListener(keyListener);
         blackScreen.setFocusable(true);
-        blackScreen.requestFocus();
-        blackScreen.setBackground(java.awt.Color.BLACK);
         blackScreen.setOpaque(true);
+        blackScreen.requestFocus();
+        blackScreen.requestFocusInWindow();
+        blackScreen.addKeyListener(keyListener);
+        blackScreen.setBackground(java.awt.Color.BLACK);
         App.getInstance().getScreen().add(blackScreen, java.awt.BorderLayout.CENTER);
         App.getInstance().getScreen().validate();
         JLabel logoUniv = new JLabel("Université Paris Cité");
