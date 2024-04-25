@@ -126,6 +126,7 @@ public class BoardController extends Controller {
             // Update the player info in the view
             uiController.updatePlayerInfo();
             uiController.updateRemainingTilesInfo();
+            selectedTile = null;
         }
     }
 }

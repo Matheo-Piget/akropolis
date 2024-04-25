@@ -220,16 +220,19 @@ public class BoardView extends JPanel implements View, KeyListener {
         int index = gridViews.indexOf(currentGridView);
         // Play the end turn animation
         getGridView().removeSelectedTile();
-        endTurnPlayerLabel.play(playerNames[index]);
+        freeze();
+        endTurnPlayerLabel.play(playerNames[(index + 1) % gridViews.size()]);
     }
 
     public void freeze() {
         currentGridView.disableListeners();
+        siteView.disableListeners();
         this.setEnabled(false);
     }
 
     public void unfreeze() {
         currentGridView.enableListeners();
+        siteView.enableListeners();
         this.setEnabled(true);
         this.requestFocusInWindow();
         int index = gridViews.indexOf(currentGridView);
@@ -239,6 +242,7 @@ public class BoardView extends JPanel implements View, KeyListener {
 
     public void displayNextBoard() {
         cardLayout.show(cardPanel, String.valueOf(gridViews.indexOf(currentGridView)));
+        getGridView().removeSelectedTile();
     }
 
     /**

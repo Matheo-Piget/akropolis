@@ -22,7 +22,7 @@ class EndTurnPlayerLabel extends JLabel {
         super("Prochain Joueur:");
         setForeground(Color.BLACK);
         timeline = new Timeline(1);
-        setSize(200, 150);
+        setSize(400, 75);
         // Center the label
         setHorizontalAlignment(JLabel.CENTER);
     }
@@ -51,7 +51,6 @@ class EndTurnPlayerLabel extends JLabel {
         timeline.addKeyFrame(new Timeline.KeyFrame(ANIMATION_RATE, ANIMATION_REPEAT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boardView.freeze();
                 setVisible(true);
                 // Increase the label's opacity by a step each time the action is performed
                 int alpha = getForeground().getAlpha();
@@ -88,13 +87,17 @@ class EndTurnPlayerLabel extends JLabel {
         if (!isVisible()) {
             return;
         }
+        // Draw a blue rectangle with rounded corners
+        g.setColor(new Color(0, 0, 255, 100));
+        g.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
         String labelText = getText();
         String[] words = labelText.split("\\s+");
         Font labelFont = getFont();
         FontMetrics metrics = g.getFontMetrics(labelFont);
 
         int x = (getWidth() - metrics.stringWidth(words[0])) / 2;
-        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+        int totalTextHeight = words.length * metrics.getHeight();
+        int y = ((getHeight() - totalTextHeight) / 2) + metrics.getAscent();
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
@@ -109,7 +112,7 @@ class EndTurnPlayerLabel extends JLabel {
             y += g2d.getFontMetrics().getHeight();
         }
 
-        y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+        y = ((getHeight() - totalTextHeight) / 2) + metrics.getAscent();
         for (String word : words) {
             g2d.setColor(getForeground());
             g2d.drawString(word, x, y);

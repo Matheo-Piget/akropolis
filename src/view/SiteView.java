@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.awt.Graphics;
 
@@ -12,6 +13,7 @@ import java.awt.Graphics;
  */
 public class SiteView extends JPanel implements View {
     private final int capacity;
+    private MouseAdapter ma;
 
     public SiteView(int capacity) {
         setOpaque(true);
@@ -65,6 +67,24 @@ public class SiteView extends JPanel implements View {
         }
         revalidate();
         repaint();
+    }
+
+    public void disableListeners(){
+        if(ma == null){
+            // Get the mouse adapter
+            ma = (MouseAdapter) getMouseListeners()[0];
+        }
+        removeMouseListener(ma);
+        removeMouseMotionListener(ma);
+        setEnabled(false);
+    }
+
+    public void enableListeners(){
+        if(ma != null){
+            addMouseListener(ma);
+            addMouseMotionListener(ma);
+            setEnabled(true);
+        }
     }
 
     @Override
