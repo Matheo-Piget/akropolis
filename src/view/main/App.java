@@ -50,7 +50,9 @@ public class App extends JFrame{
     }
 
     public static void main(String[] args) {
-        App app = App.getInstance();
-        app.run();
+        SwingUtilities.invokeLater(() -> {
+            App app = App.getInstance();
+            app.run();
+        });
     }
 }
