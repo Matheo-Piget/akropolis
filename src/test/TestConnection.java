@@ -1,6 +1,8 @@
 package test;
 
 import model.*;
+import network.Client;
+import network.Server;
 import java.io.IOException;
 import java.util.ArrayList;
 

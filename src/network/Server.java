@@ -1,4 +1,4 @@
-package model;
+package network;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
 import java.util.ArrayList;
+import model.Tile;
 
 public class Server {
     private ServerSocket serverSocket;

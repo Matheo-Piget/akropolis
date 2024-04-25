@@ -1,10 +1,12 @@
-package model;
+package network;
 
 import java.net.Socket;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import model.Player;
+import model.Tile;
 
 /**
  * Represents a player in the Akropolis game.
