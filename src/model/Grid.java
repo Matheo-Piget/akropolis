@@ -47,7 +47,6 @@ public class Grid extends Model{
         }
     }
 
-
     public Map<Point3D, Hexagon> getHexagons() {
         return hexagons;
     }
@@ -328,7 +327,6 @@ public class Grid extends Model{
     public int calculateScore( ) {
         int totalScore = 0;
         int buildingScore=0;
-        int lastBuildingS = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Garden":
@@ -347,12 +345,12 @@ public class Grid extends Model{
                     break;
             }
            //calcul le score du batiment tout seule(le plus grand quartier tout seule)
-        buildingScore = BuildingScore();
+        buildingScore = calculateMaxBuildingScore();
         }
 
-        return totalScore+buildingScore;
+        return totalScore+buildingScore+player.getResources();
     }
-    public int BuildingScore() {
+    public int calculateMaxBuildingScore() {
         int maxScore = 0;
         ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
         // on parcous pour les hexagones visible de type building puis calculer pour chaque quartier et prendre le max
@@ -394,7 +392,7 @@ public class Grid extends Model{
      * @param hexagon the hexagon to get the building neighbors
      * @return the building neighbors of the hexagon
      */
-    private ArrayList<Hexagon> BuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ 
+    private ArrayList<Hexagon> getBuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ 
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
         for (Hexagon neighbor : getNeighbors(hexagon)) {
             if (neighbor.getType().equals("Building")&&!visitedHexagons.contains(neighbor)) {
@@ -417,7 +415,7 @@ public class Grid extends Model{
             visitedHexagone.add(hexagone); // we add the hexagone to the visited hexagone
             int score = hexagone.getElevation();
             //int score =1; // we add 1 point for each building
-            for (Hexagon neighbor : BuildingNeighbors(hexagone ,visitedHexagone)) {
+            for (Hexagon neighbor : getBuildingNeighbors(hexagone ,visitedHexagone)) {
                 score += visitBuildingHex(neighbor ,visitedHexagone); // we add the score of the neighbors
             }
             return score; 
