@@ -1,0 +1,711 @@
+@startuml
+
+!define TILE_SIZE 20
+!define BORDER_SIZE 1
+
+skinparam class {
+    BackgroundColor LightCyan
+    BorderColor Black
+    ArrowColor Black
+    FontName Arial
+    FontSize 20
+}
+
+skinparam stereotypeCBackgroundColor LightGray
+skinparam stereotypeCBorderColor Black
+
+skinparam package {
+            BackgroundColor LightSkyBlue
+            BorderColor DarkSlateGray
+            FontColor DarkSlateGray
+            ArrowColor DarkSlateGray
+            FontName Arial
+            FontSize 30
+}
+
+package model <<Node>>{
+
+    class Site extends Model{
+        - Tile[] tiles
+        - int capacity
+        ==
+        + Site(int capacity)
+        ==
+        + updateSite(StackTiles stackTiles) : void
+        + removeTile(Tile tile) : void
+        + reorderTiles() : int
+        + isEmpty() : boolean
+        + calculateCost(Tile tile) : int
+    }
+
+    class Board extends Model {
+        - ArrayList<Player> playerList
+        - StackTiles stackTiles
+        - Site site
+        - Player currentPlayer
+        - int manche
+        ==
+        + Board(List<Player> players) : void
+        ==
+        + setSelectedTile(Tile tile) : boolean
+        + startGame() : void
+        + startTurn(Player player) : void
+        + addTileToGrid() : void
+        + endTurn() : void
+        + getGrids() : ArrayList<Grid>
+        + getSite() : Site
+        + getStackTiles() : StackTiles
+        + getNextPlayer() : Player
+        + getManche() : int
+        + getNumberOfPlayers() : int
+        + switchSizePlayers() : int
+        + addTile(Tile tile) : boolean
+        + getHexagon(int x, int y): Hexagon
+        + getCurrentPlayer() : Player
+        + isGameOver() : boolean
+        + getWinner(): Player
+        + canChooseTile(Tile chosen) : boolean
+    }
+
+    enum DistrictColor {
+            RED
+            BLUE
+            GREEN
+            YELLOW
+            PURPLE
+        }
+
+    class District extends Hexagon{
+        - DistrictColor color
+        ==
+        + District(Point3D p, DistrictColor color)
+        + District(int x, int y, DistrictColor color)
+        ==
+        + getType(): String
+    }
+
+    class Hexagon {
+            - Point3D position
+            - Grid grid
+            - Hexagon below
+            ==
+            + Hexagon(Point3D p)
+            + Hexagon(Point3D p, Grid grid)
+            + Hexagon(int x, int y)
+            ==
+            + getType(): String
+            + setGrid(Grid grid): void
+            + generateRandomHexagon() : Hexagon
+            + getElevation(): int
+            + getX(): int
+            + getY(): int
+            + getZ(): int
+            + getPosition(): Point3D
+            + getBelow(): Hexagon
+            ==
+            + setAbove(Hexagon aboveTile): void
+            + setBelow(Hexagon belowTile): void
+            ==
+            + getNeighbors(): ArrayList<Hexagon>
+            + hasBelow(): boolean
+            + isAdjacent(Hexagon t): boolean
+            + toString() : String
+        }
+
+    abstract class Model {
+        #PropertyChangeSupport propertyChangeSupport
+        ==
+        + Model()
+        ==
+        +  addPropertyChangeListener(java.beans.PropertyChangeListener pcl) : void
+        + removePropertyChangeListener(java.beans.PropertyChangeListener pcl) : void
+        + firePropertyChange(String propertyName, Object oldValue, Object newValue) : void
+    }
+
+    class Player {
+        - List<Tile> ownedTiles
+        - Tile selectedTile
+        - int score
+        ==
+        + Player()
+        ==
+        + getOwnedTiles(): List<Tile>
+        + getSelectedTile(): Tile
+        + setOwnedTiles(List<Tile> ownedTiles): void
+        + setSelectedTile(Tile selectedTile): void
+        + getScore(): int
+        + setScore(int score): void
+    }
+
+    class Tile {
+        - ArrayList<Hexagon> hexagons
+        ==
+        + Tile(Hexagon tile1, Hexagon tile2, Hexagon tile3)
+        ==
+        + rotate(): void
+        + exchange(Hexagon hexagon1, Hexagon hexagon2): void
+        + getHexagons(): ArrayList<Hexagon>
+    }
+
+    class Grid extends Model{
+            - Map<Point3D, Hexagon> hexagons
+            - Player player
+            ==
+            + Grid(Player player) : void
+            ==
+            + gridInitialized() : void
+            + getHexagons(): Map<Point3D, Hexagon>
+            + canAdd(Hexagon hexagon, Point3D p): boolean
+            + addTile(Tile tile): boolean
+            + checkNeighborsAndSetBelowTile(Tile tile, Hexagon[] bellowHexagons) : boolean
+            + checkElevation(Tile t) : boolean
+            + countSameHexagons(Tile tile, Hexagon[] bellowHexagons) : int
+            + addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) : void
+            + isAValidTile(Tile t) : boolean
+            + getHexagon(int x, int y): Hexagon
+            + display(): void
+            + hexagonIsSurrounded(Hexagon hexagon): boolean
+            + clearGrid(): void
+            + getTopHexagons(): ArrayList<Hexagon>
+            + placeDeTypeS(String s): ArrayList<Place>
+            + numberOfStars(ArrayList<Place> place): int
+            ==
+            Cacule le score
+            + calculateScore(): int
+            + calculateGardenScore(Hexagon hexagon): int
+            + calculateBarrackScore(Hexagon hexagon): int
+            + calculateBuildingScore(Hexagon hexagon): int
+            + BuildingNeighbors(Hexagon hexagon): ArrayList<Hexagon>
+            + calculateTempleScore(Hexagon hexagon): int
+            + calculateMarketScore(Hexagon hexagon): int
+            + calculatePlaceScore(Place place): int
+    }
+
+    class Place extends Hexagon{
+        - starts : int
+        - DistrictColor color
+        ==
+        + Place(Point3D p, DistrictColor color, int stars)
+        ==
+        + getStars(): int
+        + getType(): String
+
+    }
+
+    class Quarrie extends Hexagon{
+        Quarrie(Point3D p, Grid grid)
+        Quarrie(Point3D p)
+        ==
+        + getType(): String
+    }
+
+    class StackTiles{
+        - int remainingTiles
+        ==
+        + StackTiles(int size)
+        ==
+        + generateTiles(): void
+        + addPlaceWithStars(DistrictColor color): void
+        + generateRandomTiles(): void
+        + getRandomDistrict(): Hexagon
+        + getRandomColor(): DistrictColor
+        + shuffle(): void
+    }
+
+
+
+
+}
+
+package util <<Node>>{
+
+    class OutlinedLabel{
+        - String text
+        ==
+        + OutlinedLabel(String text)
+        ==
+        + setText(String text) : void
+        + paintComponent(Graphics g) : void
+    }
+
+    class Point3D {
+        - int x
+        - int y
+        - int z
+        ==
+        + Point3D(int x, int y, int z)
+        ==
+        + getX(): int
+        + getY(): int
+        + getZ(): int
+        ==
+        + toString(): String
+    }
+
+    interface StateMethods{
+        + exit(): void
+        + transitionTo(State nextState): void
+        + enter(): void
+    }
+
+    interface StateMachine {
+        + getState(): State
+        + changState(State state): void
+    }
+
+    class State implements StateMethods{
+        - State INSTANCE
+        ==
+        + State()
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
+    class Timeline{
+        - Timer timer
+        - List<KeyFrame> keyFrames
+        - int currentKeyFrameIndex
+        - int repeatCount
+        ==
+        Timeline(int repeatCount)
+        ==
+        + addKeyFrame(KeyFrame keyFrame) : void
+        + start() : void
+        + stop() : void
+        + reset() : void
+        + record KeyFrame(int delay, ActionListener action)
+    }
+
+}
+
+package view <<Node>>{
+
+    class SiteView implements View{
+        - int capacity
+        ==
+        + SiteView(int capacity)
+        ==
+        + getTileClicked(int x, int y) : TileView
+        + getTileSize() : int
+        + getTiles() : ArrayList<TileView>
+        + update(ArrayList<TileView> tiles) : void
+        + setTilesInSite(ArrayList<TileView> tiles) : void
+        # paintComponent(Graphics g) : void
+    }
+
+    class TextureFactory{
+        + getTexture(String imageName) : TexturePaint
+    }
+
+    class AkropolisTitleLabel{
+        - BufferedImage titleImage
+        - Color color
+        - AlphaComposite[] alphas
+        - Queue<Particle> particles
+        - Random random
+        # int width
+        # int height
+        - int particleCount
+        - int particleLimit
+        - long lastTime
+        ==
+        + AkropolisTitleLabel()
+        ==
+        paintComponent(Graphics g) : void
+        - class Particle
+    }
+
+    class BoardUI implements View {
+        - PlayerLabel playerLabel
+        - RemainingTilesLabel remainingTilesLabel
+        - ArrayList<JLabel> rockImages
+        - float hue
+        - Timer timer
+        - Color bg
+        ==
+        + BoardUI()
+        ==
+       +  doLayout() : void
+       + setPlayer(String playerName) : void
+       + setRock(int rock) : void
+       + setRemainingTiles(int remainingTiles) : void
+       - applyStyle() ; void
+    }
+
+    class BoardView implements View{
+        - ScrollableGridView currentGridView
+        - ArrayList<ScrollableGridView> gridViews
+        - SiteView siteView
+        - BoardUI boardUI
+        - CardLayout cardLayout
+        - JPanel cardPanel
+        ==
+        + BoardView(int maxHexagons, int numPlayers, int siteCapacity)
+        ==
+        - CountDownLatch getCountDownLatch(int maxHexagons) : void
+        + setSelectedTile(TileView tile) : void
+        + nextTurn() : void
+        + getFilledHexagons() : HexagonView[]
+        + getGridView() : ScrollableGridView
+        + getSiteView() : SiteView
+        + getBoardUI() : BoardUI
+        + getGridViews() : ArrayList<ScrollableGridView>
+        - showPauseMenu() : void
+        - createStyledButton(String text) : JButton
+        + keyPressed(KeyEvent e) : void
+        + keyReleased(KeyEvent e) : void
+        + keyTyped(KeyEvent e) : void
+    }
+
+    class GridView {
+        - int xOffset
+        - int yOffset
+        + int hexagonSize
+        - HashMap<Point, HexagonView> hexagons
+        ==
+        + GridView(int maxHexagons)
+        ==
+        + convertGridPositionToPixelPosition(Point gridPosition) : Point2D
+        + getHexagonAtPixelPos(Point2D pixelPosition) : HexagonView
+        + getHexagonAtGridPos(Point gridPosition) : HexagonView
+        + getHexagonAtGridPos(int x, int y) : HexagonView
+        + convertPixelPositionToGridPosition(Point2D pixelPosition) : Point2D
+        - axialRound(double q, double r) : Point3D
+        + addHexagon(HexagonView hexagon) : void
+    }
+
+    class HexagonOutline extends HexagonView{
+        - final Color strokeColor
+        ==
+        + HexagonOutline(int x, int y, int z, int size)
+        ==
+        + unfilled() : void
+        # paintComponent(java.awt.Graphics g) : void
+    }
+
+    class MainMenuView{
+        - backgroundImage: BufferedImage
+        - Clip backgroundMusicClip
+        ==
+        + MainMenuView()
+        ==
+        - addTitleLabel() : void
+        - addButtonsPanel() : void
+        - createStyledButton(String text, ActionListener actionListener) : JButton
+        - playBackgroundMusic() : void
+        - stopBackgroundMusic() : void
+        + paintComponent(Graphics g)
+        - startNewGame() : void
+        - collectPlayerName(int playerNumber) : String
+        - showRulesPanel() : void
+        - showCreditsPanel() : void
+        - createStyledNavigationButton(String text) : JButton
+        - createStyledCreditLabel(String text) : JLabel
+    }
+
+    class HexagonView{
+        - BasicStroke stroke
+        # boolean isHovered
+        # TexturePaint texture
+        # Point pos
+        # int z
+        # Path2D.Double hexagon
+        # BufferedImage render
+        ==
+        + HexagonView(int x, int y, int z, int size)
+        + HexagonView(int x, int y, int z, BufferedImage img, int size)
+        + HexagonView(int x, int y, int z, Color color,int size)
+        ==
+        # processMouseEvent(MouseEvent e) : void
+        # processMouseMotionEvent(MouseEvent e) : void
+        + fill(HexagonView hexagon) : void
+        + unfilled() : void
+        + contains(x: int, y: int): boolean
+        # renderHexagon(Color strokeColor, TexturePaint texture) : void
+        + rotate() : void
+        + getRender() : BufferedImage
+        + getTexture() : TexturePaint
+        + setHovered(boolean hovered) : void
+        + contains(int x, int y) : boolean
+        + setPosition(Point3D position): void
+        + getPosition(): Point3D
+        + getZ() : int
+    }
+
+    class HexagonViewFactory{
+        - Map<Class<? extends Hexagon>, BiFunction<Hexagon, Integer, HexagonView>> hexagonViewCreators
+        - Map<Class<? extends HexagonView>, BiFunction<HexagonView, Integer, HexagonView>> hexagonViewCopyCreators
+        ==
+        + createHexagonView(Hexagon hexagon, int size) : HexagonView
+        + createHexagonView(HexagonView hexagonView, int size) : HexagonView
+    }
+
+    class QuarriesView extends HexagonView {
+        - Color strokeColor
+        ==
+        + QuarriesView(int x, int y, int z, int size)
+        ==
+        + paintComponent(Graphics g): void
+    }
+
+    class RemainingTilesLabel {
+        + RemainingTilesLabel()
+        ==
+        + setRemainingTiles(int remainingTiles) : void
+    }
+
+    class PlaceView extends HexagonView{
+        - Color strokeColor
+        - Place place
+        ==
+        + PlaceView(int x, int y, int z, Place place, int size)
+        ==
+        + paintComponent(Graphics g): void
+    }
+
+    class DistrictView extends HexagonView {
+        - District district
+        - Color strokeColor
+        ==
+        + DistrictView(int x, int y, int z, District d, int size)
+        ==
+        + paintComponent(Graphics g): void
+    }
+
+    class TileView{
+        - Boolean isHovered
+        # HexagonView hex1, hex2, hex3;
+        - boolean increasing
+        - float glow
+        - Timer glowTimer
+        - int rotation
+        ==
+        + TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3)
+        ==
+        + setHexagon(HexagonView hex1, HexagonView hex2, HexagonView hex3): void
+        + setHovered(boolean hovered) : void
+        ==
+        + rotate() : void
+        + paintComponent(Graphics g): void
+        + resetRotation() : void
+        - setupGlow() : void
+        + stopGlow() : void
+        # processMouseEvent(MouseEvent e) : void
+        # processMouseMotionEvent(MouseEvent e) : void
+        + doLayout() : void
+        + getHexagons() : ArrayList<HexagonView>
+        # paintComponent(java.awt.Graphics g) : void
+    }
+
+    class PlayerLabel{
+        + PlayerLabel(String playerName)
+        ==
+        + setPlayer(String playerName) : void
+    }
+
+    class TileViewFactory{
+        + createTileView(Tile tile, int size) : TileView
+    }
+
+    interface View{}
+
+    class RockLabel{
+        + RockLabel()
+        ==
+        + setRock(int rock): void
+    }
+
+    class TextureFactory {
+        + getTexture(String img): TexturePaint
+    }
+
+    class ScrollableGridView {
+        - GridView grid
+        - JScrollBar horizontalScrollBar
+        - JScrollBar verticalScrollBar
+        - TileView selectedTile
+        - HexagonView[] filledHexagonViews
+        - HexagonView hoveredHexagon
+        ==
+        + ScrollableGridView(GridView grid)
+        + ScrollableGridView(int maxHexagons)
+        ==
+        + getGrid() : GridView
+        + unfilledEachHexagons() : void
+        + getFilledHexagons() : HexagonView[]
+        + fillEachHexagons(TileView tile, HexagonView hoveredHexagon) : void
+        + addNotify() : void
+        + addHexagon(HexagonView hexagon) : void
+        + setSelectedTile(TileView tile) : void
+        + rotateSelectedTile() : void
+        + removeSelectedTile() : void
+    }
+
+}
+
+package view.main.states <<Node>>{
+    enum AppState implements util.StateMachine {
+        State currenState
+        ==
+        + AppState()
+        ==
+        + getState : State
+        changeState(State state): void
+    }
+
+    class PlayingState extends util.State {
+        - PlayingState INSTANCE
+        ==
+        + PlayingState()
+        ==
+        getInstance(): PlayingState
+        ==
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
+    class StartState extends util.State {
+        - StartState INSTANCE
+        ==
+        + StartState()
+        ==
+        getInstance(): StartState
+        ==
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
+}
+
+package view.main <<Node>>{
+    class App {
+        - int width
+        - int height
+        - JPanel screen
+        - App INSTANCE
+        ==
+        + App()
+        ==
+        + getInstance(): App
+        + getScreens(): JPanel
+        ==
+        + run(): void
+    }
+
+}
+
+package controller <<Node>>{
+    class BoardController extends Controller{
+        - UIController uiController
+        - List<GridController> GridControllers
+        - TileController tileController
+        ==
+        + BoardController(Board board, BoardView view)
+        ==
+        - initializeGridControllers(Board model, BoardView view) : void
+        - initializeListeners() : void
+        + propertyChange(PropertyChangeEvent evt) : void
+        + selectedTile(TileController tileController) : void
+        + sendEventToUIController(PropertyChangeEvent evt) : void
+        - handleUiUpdates(PropertyChangeEvent evt) : void
+    }
+
+    abstract class Controller implements ControllerInterface{
+        # Model model
+        # View view
+        ==
+        + Controller(Model model, View view)
+        ==
+        + setupListener(Model model, View view) : void
+    }
+
+    interface ControllerInterface extends PropertyChangeListener{
+        setupListener(Model model, View view) : void
+    }
+
+    class GridController extends Controller {
+        + GridController(Grid grid, ScrollableGridView gridView)
+        ==
+        + propertyChange(PropertyChangeEvent evt) : void
+    }
+
+    class SiteController extends Controller{
+        - ArrayList<TileController> tileControllers
+        - BoardController boardController
+        ==
+        + SiteController(Site model, SiteView view, BoardController boardController)
+        ==
+        + propertyChange(PropertyChangeEvent evt) : void
+    }
+
+    class TileController extends Controller{
+        + BoardController boardController
+        ==
+        + TileController(Tile model, TileView view, BoardController boardController) : void
+        ==
+        + propertyChange(PropertyChangeEvent evt) : void
+    }
+
+    class UIController extends Controller{
+        + UIController(Board model, BoardUI boardUI) : void
+        ==
+        + propertyChange(PropertyChangeEvent evt) : void
+        + updatePlayerInfo() : void
+        + updateRemainingTilesInfo() : void
+    }
+}
+
+HexagonView o-- TileView
+Place o-- PlaceView
+DistrictColor o-- DistrictView
+District o-- DistrictView
+PlayerLabel o-- BoardUI
+RemainingTilesLabel o-- BoardUI
+HexagonView o-- GridView
+ScrollableGridView o-- BoardView
+SiteView o-- BoardView
+BoardUI o-- BoardView
+HexagonView o-- HexagonViewFactory
+Hexagon o-- HexagonViewFactory
+
+View o-- Controller
+Model o-- Controller
+
+UIController o-- BoardController
+GridController o-- BoardController
+TileController o-- BoardController
+
+BoardController o-- TileController
+TileController o-- SiteController
+BoardController o-- SiteController
+
+Player o-- Board
+StackTiles o-- Board
+Site o-- Board
+
+Tile o-- Site
+
+
+Player o-- Grid
+
+Grid o-- Hexagon
+Player o-- Tile
+Hexagon o-- Grid
+TileView o-- HexagonView
+
+Hexagon o-- Tile
+
+Hexagon o-- Hexagon
+Hexagon o-- Tile
+
+District o-- DistrictColor
+
+Grid o-- Hexagon
+
+util.Point3D o-- Hexagon
+util.Point3D o-- Grid
+
+@enduml
