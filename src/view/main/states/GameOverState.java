@@ -13,6 +13,8 @@ public class GameOverState extends State {
     private Timeline timeline;
     private JPanel gameOverPanel;
 
+    private String winner;
+
     public static GameOverState getInstance() {
         return INSTANCE;
     }
@@ -52,7 +54,7 @@ public class GameOverState extends State {
 
     private void createGameOverComponentsWithFadeIn() {
         // Winner label
-        JLabel winnerLabel = new JLabel("Game Over");
+        JLabel winnerLabel = new JLabel("Jeu Fini ! \n le gagnant est : " + winner);
         winnerLabel.setFont(new Font("Arial", Font.BOLD, 20));
         winnerLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         winnerLabel.setAlignmentY(JLabel.CENTER_ALIGNMENT);
@@ -71,20 +73,6 @@ public class GameOverState extends State {
         gameOverPanel.add(Box.createVerticalStrut(10));
         gameOverPanel.add(quitButton);
         gameOverPanel.add(Box.createVerticalGlue());
-
-        // Fade in animation for components
-        float startAlpha = 0f;
-        float endAlpha = 1f;
-        for (Component component : gameOverPanel.getComponents()) {
-            if (component instanceof JComponent) {
-                ((JComponent) component).setOpaque(false);
-                component.setBackground(new Color(0, 0, 0, 0));
-                timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
-                    float alpha = startAlpha + e.getWhen() * (endAlpha - startAlpha) / 50f;
-                    component.setForeground(new Color(255, 255, 255, (int) (alpha * 255)));
-                }));
-            }
-        }
     }
 
     private JButton createStyledButton() {
@@ -131,7 +119,7 @@ public class GameOverState extends State {
             if (component instanceof JComponent) {
                 ((JComponent) component).setOpaque(false);
                 component.setBackground(new Color(0, 0, 0, 0));
-                component.setForeground(new Color(255, 255, 255, (int) (alpha * 255)));
+                component.setForeground(new Color(255, 255, 255, (int) (alpha * 100)));
             }
         }
     }
@@ -152,8 +140,13 @@ public class GameOverState extends State {
         timeline.setOnFinished(e -> {
             App.getInstance().getScreen().removeAll();
             App.getInstance().getScreen().revalidate();
-            App.getInstance().appState.changeState(StartState.getInstance());
         });
         timeline.start();
+    }
+
+    public void setWinner(String winner) {
+
+        this.winner = winner;
+
     }
 }

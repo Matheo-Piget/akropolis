@@ -36,7 +36,7 @@ public class StackTiles extends Stack<Tile> {
      */
     void generateTiles() {
         // Generate one place of each type with stars
-        int randomNumberOfPlaces = (int) (Math.random() * 20);
+        int randomNumberOfPlaces = (int) (Math.random() * (remainingTiles /3));
         for (DistrictColor color : DistrictColor.values()) {
             addPlaceWithStars(color);
             remainingTiles--;

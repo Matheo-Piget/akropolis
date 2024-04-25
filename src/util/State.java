@@ -26,8 +26,4 @@ public class State implements StatesMethods {
     public void transitionTo(State s) {
 
     }
-
-    public BoardController getBoardController() {
-        return null;
-    }
 }

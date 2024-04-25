@@ -12,7 +12,10 @@ public enum AppState implements StateMachine {
     // Definition of the application states with their initial instances
     START(StartState.getInstance()),
     LOGO(StartingLogoState.getInstance()),
-    PLAYING(PlayingState.getInstance());
+    PLAYING(PlayingState.getInstance()),
+    GAMEOVER(GameOverState.getInstance());
+
+
 
     // Current instance of the state
     private State currentState;

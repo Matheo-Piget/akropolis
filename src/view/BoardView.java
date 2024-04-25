@@ -354,6 +354,9 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     public void showGameOver(String winner) {
+
+        GameOverState.getInstance().setWinner(winner);
         App.getInstance().appState.changeState(GameOverState.getInstance());
+
     }
 }
