@@ -45,21 +45,17 @@ public class BoardUI extends JPanel implements View {
      * Constructor for the BoardUI class.
      * Initializes the player name label, the rock label, and the remaining tiles label.
      */
-    public BoardUI() {
+    public BoardUI(int numberOfPlayers) {
         setOpaque(true);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
 
         try{
-            // Load all the player icons
-            Image icon1 = ImageIO.read(getClass().getResource("/Icons_01.png"));
-            playerIcons.add(new ImageIcon(icon1));
-            Image icon2 = ImageIO.read(getClass().getResource("/Icons_02.png"));
-            playerIcons.add(new ImageIcon(icon2));
-            Image icon3 = ImageIO.read(getClass().getResource("/Icons_03.png"));
-            playerIcons.add(new ImageIcon(icon3));
-            Image icon4 = ImageIO.read(getClass().getResource("/Icons_04.png"));
-            playerIcons.add(new ImageIcon(icon4));
+            // Load all the player icons for each player
+            for (int i = 0; i < numberOfPlayers; i++){
+                Image icon = ImageIO.read(getClass().getResource("/Icons_0" + (i + 1) + ".png"));
+                playerIcons.add(new ImageIcon(icon));
+            }
             playerImageLabel = new JLabel(playerIcons.get(0));
             playerLabel.add(playerImageLabel);
             Image img2 = ImageIO.read(getClass().getResource("/rock.png")).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
