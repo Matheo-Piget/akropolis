@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
@@ -26,7 +28,8 @@ import view.View;
  */
 public class BoardUI extends JPanel implements View {
     private PlayerLabel playerLabel = new PlayerLabel("Player");
-    private ScoreLabel scorelabel =new ScoreLabel(0);
+    private ArrayList<ImageIcon > playerIcons = new ArrayList<ImageIcon>();
+    private ScoreLabel scorelabel = new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
     private ImageIcon playerIcon = null;
     private JLabel playerImageLabel = new JLabel(playerIcon);
@@ -48,9 +51,16 @@ public class BoardUI extends JPanel implements View {
         setPreferredSize(new Dimension(100, 75));
 
         try{
-            Image img1 = ImageIO.read(getClass().getResource("/play.png"));
-            playerIcon = new ImageIcon(img1);
-            playerImageLabel = new JLabel(playerIcon);
+            // Load all the player icons
+            Image icon1 = ImageIO.read(getClass().getResource("/Icons_01.png"));
+            playerIcons.add(new ImageIcon(icon1));
+            Image icon2 = ImageIO.read(getClass().getResource("/Icons_02.png"));
+            playerIcons.add(new ImageIcon(icon2));
+            Image icon3 = ImageIO.read(getClass().getResource("/Icons_03.png"));
+            playerIcons.add(new ImageIcon(icon3));
+            Image icon4 = ImageIO.read(getClass().getResource("/Icons_04.png"));
+            playerIcons.add(new ImageIcon(icon4));
+            playerImageLabel = new JLabel(playerIcons.get(0));
             playerLabel.add(playerImageLabel);
             Image img2 = ImageIO.read(getClass().getResource("/rock.png")).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
             rockIcon = new ImageIcon(img2);
@@ -130,6 +140,17 @@ public class BoardUI extends JPanel implements View {
 
     public void setPlayer(String playerName){
         playerLabel.setPlayer(playerName);
+        System.out.println(playerName);
+        if (playerIcons.size() > 0){
+            nextPlayerIcon();
+        }
+    }
+
+    private void nextPlayerIcon(){
+        int index = playerIcons.indexOf(playerImageLabel.getIcon());
+        index = (index + 1) % playerIcons.size();
+        playerImageLabel.setIcon(playerIcons.get(index));
+        playerImageLabel.repaint();
     }
 
     public void setscore (int score){

@@ -89,15 +89,11 @@ public class Board extends Model {
      */
     public void endTurn() {
         System.out.println("End of turn : " + currentPlayer.getName());
-
         // Logic to end a turn
         manche++;
         currentPlayer = getNextPlayer(); // Switch to the next player
         currentPlayer.setSelectedTile(null); // Reset the selected tile
-
         System.out.println("Next turn : " + getNextPlayer().getName());
-        firePropertyChange("nextTurn", null, currentPlayer);
-
         startTurn(currentPlayer); // Start the next player's turn
     }
 
