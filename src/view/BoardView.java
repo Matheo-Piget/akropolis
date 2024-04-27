@@ -113,6 +113,11 @@ public class BoardView extends JPanel implements View, KeyListener {
 
     private CountDownLatch addHexagonOulineInBackground(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
+        ArrayList<Color> playerColors = new ArrayList<>();
+        playerColors.add(Color.BLUE);
+        playerColors.add(Color.RED);
+        playerColors.add(Color.GREEN.darker());
+        playerColors.add(Color.MAGENTA);
         // Create a SwingWorker for each GridView
         for (ScrollableGridView gridView : gridViews) {
             SwingWorker<Void, HexagonOutline> worker = new SwingWorker<>() {
@@ -122,7 +127,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
-                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize);
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize, playerColors.get(gridViews.indexOf(gridView)));
                                 publish(hexagon);
                             }
                         }

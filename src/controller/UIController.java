@@ -27,7 +27,7 @@ public class UIController extends Controller {
         int score=currentPlayer.getGrid().calculateScore();
         currentPlayer.setScore(score);
         System.out.println("Le score est "+score);
-        boardUI.setscore(currentPlayer.getScore());
+        boardUI.setScore(currentPlayer.getScore());
     }
 
     /**

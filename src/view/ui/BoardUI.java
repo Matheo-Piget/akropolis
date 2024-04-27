@@ -12,14 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-
 import view.View;
 
 /**
@@ -28,6 +23,7 @@ import view.View;
  */
 public class BoardUI extends JPanel implements View {
     private PlayerLabel playerLabel = new PlayerLabel("Player");
+    private final ArrayList<Color> playerColors = new ArrayList<Color>();
     private ArrayList<ImageIcon > playerIcons = new ArrayList<ImageIcon>();
     private ScoreLabel scorelabel = new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
@@ -36,10 +32,8 @@ public class BoardUI extends JPanel implements View {
     private RockLabel rockLabel = new RockLabel();
     private ImageIcon rockIcon;
     private JLabel rockImageLabel = new JLabel();
+    private boolean firstTurn = true;
     private JProgressBar remainingTilesBar ;
-    private float hue = 0.0f;
-    private Timer timer;
-    private Color bg = new Color(255,229,180);
 
     /**
      * Constructor for the BoardUI class.
@@ -49,7 +43,10 @@ public class BoardUI extends JPanel implements View {
         setOpaque(true);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
-
+        playerColors.add(Color.BLUE);
+        playerColors.add(Color.RED);
+        playerColors.add(Color.GREEN.darker());
+        playerColors.add(Color.MAGENTA);
         try{
             // Load all the player icons for each player
             for (int i = 0; i < numberOfPlayers; i++){
@@ -94,7 +91,7 @@ public class BoardUI extends JPanel implements View {
 
         add(topPanel, BorderLayout.NORTH);
     
-        setBackground(bg);
+        setBackground(playerColors.get(0));
         applyStyle();
     }
 
@@ -114,31 +111,15 @@ public class BoardUI extends JPanel implements View {
         remainingTilesBar.setString("Tuiles restantes: " + remainingTiles);
     }
 
-    @Override
-    public void doLayout(){
-        super.doLayout();
-        if (timer == null) {
-            timer = new Timer(70, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    hue += 0.005f;
-                    if (hue > 1.0f) {
-                        hue = 0.0f;
-                    }
-                    bg = Color.getHSBColor(hue, 0.5f, 0.5f);
-                    setBackground(bg);
-                    repaint();
-                }
-            });
-            timer.start();
-        }
-    }
-
     public void setPlayer(String playerName){
         playerLabel.setPlayer(playerName);
         System.out.println(playerName);
-        if (playerIcons.size() > 0){
+        if (playerIcons.size() > 0 && !firstTurn){
             nextPlayerIcon();
+            setBackground(playerColors.get(playerIcons.indexOf(playerImageLabel.getIcon())));
+        }
+        else{
+            firstTurn = false;
         }
     }
 
@@ -149,7 +130,7 @@ public class BoardUI extends JPanel implements View {
         playerImageLabel.repaint();
     }
 
-    public void setscore (int score){
+    public void setScore(int score){
         scorelabel.setScore(score);
     }
 
