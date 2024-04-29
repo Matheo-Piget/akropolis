@@ -362,7 +362,8 @@ public class Grid extends Model{
                 }
             }
         }
-        return maxScore;
+        int nbEtoile = numberOfStars("Building Place");
+        return maxScore *nbEtoile;
 
     }
 
@@ -444,6 +445,15 @@ public class Grid extends Model{
             if (neighbor.getType().equals("Market")) {
                 return 0;
             }
+        }
+        return nb;
+    }
+    // pour le score bien détaillé 
+    public int numberOfStars(String Place){
+        int nb = 0 ;
+        ArrayList <Place> places = placeDeTypeS(Place);
+        for (Place p : places) {
+            nb += p.getStars();
         }
         return nb;
     }
