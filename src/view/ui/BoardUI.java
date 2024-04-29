@@ -71,8 +71,8 @@ public class BoardUI extends JPanel implements View {
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 200));
-        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
+        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 300));
+        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 450));
         topPanel.add(playerLabel, gbc);        
         topPanel.add(playerImageLabel, gbc);        
         gbc.gridx = 2;
@@ -130,8 +130,8 @@ public class BoardUI extends JPanel implements View {
         playerImageLabel.repaint();
     }
 
-    public void setScore(int score){
-        scorelabel.setScore(score);
+    public void setScore(int score , int arg1, int arg2 , int arg3 , int arg4, int arg5, int arg11, int arg22 , int arg33 , int arg44, int arg55) {
+        scorelabel.setScore(score, arg1, arg2, arg3, arg4, arg5, arg11, arg22, arg33, arg44, arg55);
     }
 
     public void setRock(int rock){

@@ -457,5 +457,59 @@ public class Grid extends Model{
         }
         return nb;
     }
+    public int calculateScoreMarchee( ) {
+        int totalScore = 0;
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
+                case "Market":
+                    totalScore += calculateMarketScore(hexagon);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return totalScore;
+    }
+    public int calculateScoreCaserne( ) {
+        int totalScore = 0;
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
+                case "Barrack":
+                    totalScore += calculateBarrackScore(hexagon);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return totalScore;
+    }
+    public int calculateScoreTemples( ) {
+        int totalScore = 0;
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
+                case "Temple":
+                    totalScore += calculateTempleScore(hexagon);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return totalScore;
+    }
+    public int calculateScoreJardins( ) {
+        int totalScore = 0;
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
+                case "Garden":
+                    totalScore += calculateGardenScore(hexagon);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return totalScore;
+    }
+
+    
     
 }
