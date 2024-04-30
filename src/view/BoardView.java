@@ -38,9 +38,10 @@ public class BoardView extends JPanel implements View, KeyListener {
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private SiteView siteView;
     private JPanel gamePanel = new JPanel(new BorderLayout());
-    private final CardLayout gameToPause = new CardLayout();
+    private final CardLayout gameSwitch = new CardLayout();
     private BoardUI boardUI;
     private JButton pauseButton;
+    private JButton infoButton;
     private final CardLayout switchGrids = new CardLayout();
     private final JPanel cardPanel = new JPanel(switchGrids);
     private SoundEffect pauseButtonClickSound;
@@ -154,10 +155,12 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     private void setupView() {
-        setLayout(gameToPause);
+        setLayout(gameSwitch);
+        this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
         this.add(gamePanel, "game");
         this.add(new PausePanel(this), "pause");
-        gameToPause.show(this, "game");
+        this.add(new ScoreDetails(this), "score");
+        gameSwitch.show(this, "game");
         setOpaque(true);
         setFocusable(true);
         pauseButtonClickSound = new SoundEffect("/GameButton.wav");
@@ -195,17 +198,23 @@ public class BoardView extends JPanel implements View, KeyListener {
         bottomPanel.setOpaque(false);
         boardUI = new BoardUI(numPlayers);
         bottomPanel.add(boardUI, BorderLayout.CENTER);
-        JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pausePanel.setOpaque(false);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setOpaque(false);
+        infoButton = createStyledButton("?");
+        infoButton.setPreferredSize(new Dimension(85, 85));
+        infoButton.addActionListener(e -> {
+            pauseButtonClickSound.play();
+            gameSwitch.show(this, "score");
+        });
         pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> {
             pauseButtonClickSound.play();
             showPauseMenu();
         });
-        pausePanel.add(pauseButton);
-
-        bottomPanel.add(pausePanel, BorderLayout.EAST);
+        buttonPanel.add(infoButton);
+        buttonPanel.add(pauseButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
         gamePanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -221,7 +230,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     public void resumeGame(){
-        gameToPause.show(this, "game");
+        gameSwitch.show(this, "game");
     }
 
     /**
@@ -239,6 +248,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView.disableListeners();
         siteView.disableListeners();
         pauseButton.setEnabled(false);
+        infoButton.setEnabled(false);
         this.setEnabled(false);
     }
 
@@ -246,6 +256,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView.enableListeners();
         siteView.enableListeners();
         pauseButton.setEnabled(true);
+        infoButton.setEnabled(true);
         this.setEnabled(true);
         this.requestFocusInWindow();
         int index = gridViews.indexOf(currentGridView);
@@ -297,7 +308,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     private void showPauseMenu() {
         System.out.println("Showing pause menu");
         SwingUtilities.invokeLater(() -> {
-            gameToPause.show(this, "pause");
+            gameSwitch.show(this, "pause");
         });
     }
 
