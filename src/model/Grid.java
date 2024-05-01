@@ -457,7 +457,7 @@ public class Grid extends Model{
         }
         return nb;
     }
-    public int calculateScoreMarchee( ) {
+    public int calculateMarketScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
@@ -470,7 +470,7 @@ public class Grid extends Model{
         }
         return totalScore;
     }
-    public int calculateScoreCaserne( ) {
+    public int calculateBarrackScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
@@ -483,7 +483,7 @@ public class Grid extends Model{
         }
         return totalScore;
     }
-    public int calculateScoreTemples( ) {
+    public int calculateTempleScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
@@ -496,7 +496,7 @@ public class Grid extends Model{
         }
         return totalScore;
     }
-    public int calculateScoreJardins( ) {
+    public int calculateGardenScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {

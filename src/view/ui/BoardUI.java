@@ -71,8 +71,8 @@ public class BoardUI extends JPanel implements View {
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 300));
-        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 450));
+        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 450));
+        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 600));
         topPanel.add(playerLabel, gbc);        
         topPanel.add(playerImageLabel, gbc);        
         gbc.gridx = 2;

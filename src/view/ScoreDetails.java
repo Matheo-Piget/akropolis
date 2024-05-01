@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Dimension;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -12,5 +14,10 @@ public class ScoreDetails extends JPanel {
             boardView.resumeGame();
         });
         add(back);
+    }
+    
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(300, 10); // Remplacez 300, 200 par la largeur et la hauteur souhaitées
     }
 }

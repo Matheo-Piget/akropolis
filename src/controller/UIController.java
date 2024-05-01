@@ -25,21 +25,19 @@ public class UIController extends Controller {
         boardUI.setPlayer(currentPlayer.getName());
         boardUI.setRock(currentPlayer.getResources());
         int score=currentPlayer.getGrid().calculateScore();
-        int placeHabitation =  currentPlayer.getGrid().numberOfStars("Building Place");
-        int placeMarché =currentPlayer.getGrid().numberOfStars("Market Place");
-        int placeCaserne =currentPlayer.getGrid().numberOfStars("Barrack Place");
-        int placeTemples = currentPlayer.getGrid().numberOfStars("Temple Place");
-        int placeJardins =currentPlayer.getGrid().numberOfStars("Garden Place");
-        int habitation = currentPlayer.getGrid().calculateMaxBuildingScore();
-        int marchee = currentPlayer.getGrid().calculateScoreMarchee(); 
-        int caserne = currentPlayer.getGrid().calculateScoreCaserne();
-        int temple = currentPlayer.getGrid().calculateScoreTemples();
-        int jardin = currentPlayer.getGrid().calculateScoreJardins();       currentPlayer.setScore(score);
-
-        System.out.println("Le score est "+score);
-        boardUI.setScore(currentPlayer.getScore(), placeHabitation,placeMarché , placeCaserne,placeTemples, placeJardins, habitation,marchee,caserne,temple,jardin);
-    }
-
+        int starsBuildingPlace = currentPlayer.getGrid().numberOfStars("Building Place");
+        int starsMarketPlace = currentPlayer.getGrid().numberOfStars("Market Place");
+        int starsBarrackPlace = currentPlayer.getGrid().numberOfStars("Barrack Place");
+        int starsTemplePlace = currentPlayer.getGrid().numberOfStars("Temple Place");
+        int starsGardenPlace = currentPlayer.getGrid().numberOfStars("Garden Place");
+        int buildingScore = currentPlayer.getGrid().calculateMaxBuildingScore();
+        int marketScore = currentPlayer.getGrid().calculateMarketScore(); 
+        int barrackScore = currentPlayer.getGrid().calculateBarrackScore();
+        int templeScore = currentPlayer.getGrid().calculateTempleScore();
+        int gardenScore = currentPlayer.getGrid().calculateGardenScore();       
+        currentPlayer.setScore(score);
+        System.out.println("Le score est " + score);
+        boardUI.setScore(currentPlayer.getScore(), starsBuildingPlace, starsMarketPlace, starsBarrackPlace, starsTemplePlace, starsGardenPlace, buildingScore, marketScore, barrackScore, templeScore, gardenScore);}
     /**
      * update the remaining tiles in the view
      */

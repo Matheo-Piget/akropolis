@@ -16,19 +16,21 @@ class ScoreLabel extends JLabel {
         setForeground(java.awt.Color.WHITE);
     }
 
-    public void setScore(int score , int arg1,int arg2 , int arg3 ,int arg4,int arg5, int arg11,int arg22 , int arg33 ,int arg44,int arg55) {
-        int res1 = arg1 * arg11;
-        int res2 = arg2 * arg22;
-        int res3 = arg3 * arg33;
-        int res4 = arg4 * arg44;
-        int res5 = arg5 * arg55;
+    public void setScore(int score, int starsBuildingPlace, int starsMarketPlace, int starsBarrackPlace, int starsTemplePlace, int starsGardenPlace, int buildingScore, int marketScore, int barrackScore, int templeScore, int gardenScore) {
+        int res1 = starsBuildingPlace * buildingScore;
+        int res2 = starsMarketPlace * marketScore;
+        int res3 = starsBarrackPlace * barrackScore;
+        int res4 = starsTemplePlace * templeScore;
+        int res5 = starsGardenPlace * gardenScore;
     
         //int finalScore = res1 + res2 + res3 + res4 + res5;
         int finalScore = score;
-        this.setText("<html>Score final : " + finalScore + "<br>" + arg1 + " × " + arg11 + " = " + res1 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + arg2 + " × " + arg22 + " = " + res2 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + arg3 + " × " + arg33 + " = " + res3 + "<br>" + arg4 + " × " + arg44 + " = " + res4 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + arg5 + " × " + arg55 + " = " + res5 + "</html>");        validate();
+        this.setText("<html>Final score : " + finalScore + "<br>" + starsBuildingPlace + " × " + buildingScore + " = " + res1 + "        " + starsMarketPlace + " × " + marketScore + " = " + res2 + "        " + starsBarrackPlace + " × " + barrackScore + " = " + res3 + "<br>" + starsTemplePlace + " × " + templeScore + " = " + res4 + "        " + starsGardenPlace + " × " + gardenScore + " = " + res5 + "</html>");        
+        validate();
         startBlinking();
         repaint();
     }
+    
 
     private void startBlinking() {
         if (timer != null && timer.isRunning()) {
