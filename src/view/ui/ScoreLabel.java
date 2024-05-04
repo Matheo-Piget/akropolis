@@ -32,6 +32,9 @@ class ScoreLabel extends JLabel {
     }
     
 
+    /**
+     * Starts the blinking animation.
+     */
     private void startBlinking() {
         if (timer != null && timer.isRunning()) {
             return;

@@ -2,15 +2,15 @@ package view.main.states;
 
 import util.State;
 import view.main.App;
-import util.Timeline;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GameOverState extends State {
 
     private static final GameOverState INSTANCE = new GameOverState();
-    private Timeline timeline;
     private JPanel gameOverPanel;
 
     private String winner;
@@ -23,130 +23,83 @@ public class GameOverState extends State {
     public void enter() {
         System.out.println("Entering Game Over State");
 
-        gameOverPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                // Draw a semi-transparent overlay to create a fade-in effect
-                g2d.setColor(new Color(0, 0, 0, 150));
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.dispose();
-            }
-        };
+        gameOverPanel = new JPanel(new BorderLayout());
+        gameOverPanel.setBackground(new Color(50, 50, 50));
         App.getInstance().getScreen().add(gameOverPanel);
-        gameOverPanel.setLayout(new BoxLayout(gameOverPanel, BoxLayout.Y_AXIS));
 
-        // Create and add game over components with fade-in effect
-        createGameOverComponentsWithFadeIn();
+        // Create and add game over components
+        createGameOverComponents();
 
-        // Start animation
-        startAnimation();
+        // Revalidate screen
+        App.getInstance().getScreen().revalidate();
     }
 
     @Override
     public void exit() {
         System.out.println("Exiting Game Over State");
 
-        // Start exit animation
-        startExitAnimation();
+        // Remove all components from the screen
+        App.getInstance().getScreen().removeAll();
     }
 
-    private void createGameOverComponentsWithFadeIn() {
+    /**
+     * Creates the game over components.
+     */
+    private void createGameOverComponents() {
         // Winner label
-        JLabel winnerLabel = new JLabel("Jeu Fini ! \n le gagnant est : " + winner);
-        winnerLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        winnerLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        winnerLabel.setAlignmentY(JLabel.CENTER_ALIGNMENT);
+        JLabel winnerLabel = new JLabel("Game Over! Winner: " + winner);
+        winnerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        winnerLabel.setHorizontalAlignment(JLabel.CENTER);
         winnerLabel.setForeground(Color.WHITE);
+        winnerLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        gameOverPanel.add(winnerLabel, BorderLayout.CENTER);
 
-        // Quit button
-        JButton quitButton = createStyledButton();
-        quitButton.addActionListener(e -> {
-            timeline.stop(); // Stop animation
-            App.getInstance().exitToMainMenu();
-        });
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
 
-        // Add components to panel
-        gameOverPanel.add(Box.createVerticalGlue());
-        gameOverPanel.add(winnerLabel);
-        gameOverPanel.add(Box.createVerticalStrut(10));
-        gameOverPanel.add(quitButton);
-        gameOverPanel.add(Box.createVerticalGlue());
+        // Quit to Main Menu button
+        JButton quitButton = createStyledButton("Quit to Main Menu");
+        quitButton.addActionListener(e -> App.getInstance().exitToMainMenu());
+        buttonPanel.add(quitButton);
+
+        gameOverPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createStyledButton() {
-        JButton button = new JButton("Quit to Main Menu");
-        button.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        button.setBackground(new java.awt.Color(255, 215, 0));
-        button.setForeground(java.awt.Color.BLACK);
+    /**
+     * Creates a styled button.
+     *
+     * @param text the text of the button
+     * @return the styled button
+     */
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(new Color(255, 215, 0));
+        button.setForeground(Color.BLACK);
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 2));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new java.awt.Color(255, 235, 59));
-                button.setForeground(java.awt.Color.BLACK);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 215, 0), 2),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)
+        ));
+        button.setPreferredSize(new Dimension(200, 40));
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(255, 235, 59));
+                button.setForeground(Color.BLACK);
             }
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new java.awt.Color(255, 215, 0));
-                button.setForeground(java.awt.Color.BLACK);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(new Color(255, 215, 0));
+                button.setForeground(Color.BLACK);
             }
         });
         return button;
     }
 
-    private void startAnimation() {
-        timeline = new Timeline(0);
-        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, e -> {
-            // Initial delay
-        }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(2000, 50, e -> {
-            // Animation steps
-            float alpha = (float) e.getWhen() / 2000f;
-            applyAlphaToPanel(alpha);
-            gameOverPanel.repaint();
-        }));
-        timeline.setOnFinished(e -> {
-            // Animation finished
-        });
-        timeline.start();
-    }
-
-    private void applyAlphaToPanel(float alpha) {
-        for (Component component : gameOverPanel.getComponents()) {
-            if (component instanceof JComponent) {
-                ((JComponent) component).setOpaque(false);
-                component.setBackground(new Color(0, 0, 0, 0));
-                component.setForeground(new Color(255, 255, 255, (int) (alpha * 100)));
-            }
-        }
-    }
-
-    private void startExitAnimation() {
-        // Fade out animation for components
-        float startAlpha = 1f;
-        float endAlpha = 0f;
-        timeline = new Timeline(0);
-        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
-            for (Component component : gameOverPanel.getComponents()) {
-                if (component instanceof JComponent) {
-                    float alpha = startAlpha - e.getWhen() * (startAlpha - endAlpha) / 50f;
-                    component.setForeground(new Color(255, 255, 255, (int) (alpha * 255)));
-                }
-            }
-        }));
-        timeline.setOnFinished(e -> {
-            App.getInstance().getScreen().removeAll();
-            App.getInstance().getScreen().revalidate();
-        });
-        timeline.start();
-    }
-
     public void setWinner(String winner) {
-
         this.winner = winner;
-
     }
 }

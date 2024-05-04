@@ -350,6 +350,11 @@ public class Grid extends Model{
 
         return totalScore+buildingScore+player.getResources();
     }
+
+    /**
+     * Calculate the score of the building
+     * @return the score of the building
+     */
     public int calculateMaxBuildingScore() {
         int maxScore = 0;
         ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
@@ -448,7 +453,12 @@ public class Grid extends Model{
         }
         return nb;
     }
-    // pour le score bien détaillé 
+
+    /**
+     * Get the number of stars of the places
+     * @param Place the places to get the number of stars
+     * @return the number of stars of the places
+     */
     public int numberOfStars(String Place){
         int nb = 0 ;
         ArrayList <Place> places = placeDeTypeS(Place);
@@ -457,6 +467,11 @@ public class Grid extends Model{
         }
         return nb;
     }
+
+    /**
+     * calculate the score of the market
+     * @return the score of the market
+     */
     public int calculateMarketScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
@@ -470,6 +485,11 @@ public class Grid extends Model{
         }
         return totalScore;
     }
+
+    /**
+     * calculate the score of the barrack
+     * @return the score of the barrack
+     */
     public int calculateBarrackScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
@@ -483,6 +503,11 @@ public class Grid extends Model{
         }
         return totalScore;
     }
+
+    /**
+     * calculate the score of the temple
+     * @return the score of the temple
+     */
     public int calculateTempleScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
@@ -496,6 +521,11 @@ public class Grid extends Model{
         }
         return totalScore;
     }
+
+    /**
+     * calculate the score of the garden
+     * @return the score of the garden
+     */
     public int calculateGardenScore( ) {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {

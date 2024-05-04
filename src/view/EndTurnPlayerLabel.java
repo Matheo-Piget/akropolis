@@ -125,6 +125,8 @@ class EndTurnPlayerLabel extends JLabel {
         setText("Prochain Joueur: " + playerName);
     }
 
+
+    // Start the animation
     public void play(String playerName) {
         setPlayerName(playerName);
         timeline.start();

@@ -29,6 +29,10 @@ public class RockLabel extends JLabel {
         validate();
         repaint();
     }
+
+    /**
+     * Starts the blinking animation.
+     */
     private void startBlinking() {
         if (timer != null && timer.isRunning()) {
             return;

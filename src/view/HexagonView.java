@@ -64,6 +64,11 @@ public abstract class HexagonView extends JComponent {
         repaint();
     }
 
+    /**
+     * render hexagon
+     * @param strokeColor
+     * @param h
+     */
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
         if (render != null) {
             render.flush();

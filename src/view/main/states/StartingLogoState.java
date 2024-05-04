@@ -136,6 +136,9 @@ public class StartingLogoState extends State {
         timeline.start();
     }
 
+    /**
+     * Handles the exit of the state
+     */
     private void handleExit() {
         timeline.stop();
         // Make a smooth transition to the next state by loading the bg image

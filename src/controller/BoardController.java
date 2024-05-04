@@ -22,6 +22,12 @@ public class BoardController extends Controller {
     private TileController selectedTile;
     private SoundEffect tilePlacementSound; 
 
+    /**
+     * Constructor for the BoardController class.
+     * Initializes the board controller with the given model and view.
+     * @param model The model to associate with the board controller.
+     * @param view The view to associate with the board controller.
+     */
     public BoardController(Board model, BoardView view) {
         super(model, view);
         try {
@@ -38,6 +44,11 @@ public class BoardController extends Controller {
         model.startGame();
     }
 
+    /**
+     * Initialize the grid controllers
+     * @param model the model
+     * @param view the view
+     */
     private void initializeGridControllers(Board model, BoardView view) {
         gridControllers = new ArrayList<>();
         for (int i = 0; i < model.getGrids().size(); i++) {
@@ -49,6 +60,9 @@ public class BoardController extends Controller {
 
     }
 
+    /**
+     * Initialize the listeners
+     */
     private void initializeListeners() {
         for (GridController gridController : gridControllers) {
             MouseAdapter ms = new MouseAdapter() {

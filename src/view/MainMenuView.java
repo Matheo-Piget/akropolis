@@ -124,6 +124,13 @@ public class MainMenuView extends JPanel {
         buttonClickSound = new SoundEffect("/GameButton.wav"); // Assurez-vous que le chemin est correct
     }
 
+    /**
+     * Create a styled button
+     *
+     * @param text           the text to display on the button
+     * @param actionListener the action listener for the button
+     * @return a styled button
+     */
     private JButton createStyledButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(150, 50));
@@ -173,6 +180,9 @@ public class MainMenuView extends JPanel {
         }
     }
 
+    /**
+     * Start a new game
+     */
     private void startNewGame() {
         stopBackgroundMusic();
         System.out.println("Nouvelle partie démarrée");
@@ -220,6 +230,12 @@ public class MainMenuView extends JPanel {
         }
     }
 
+    /**
+     * Collect the player name
+     *
+     * @param playerNumber the player number
+     * @return the player name
+     */
     private String collectPlayerName(int playerNumber) {
         String playerName;
         do {
@@ -242,6 +258,9 @@ public class MainMenuView extends JPanel {
         return playerName.trim();
     }
 
+    /**
+     * showRulesPanel
+     */
     private void showRulesPanel() {
         // Création d'un nouveau dialogue
         JDialog rulesDialog = new JDialog();
@@ -314,6 +333,9 @@ public class MainMenuView extends JPanel {
         rulesDialog.setVisible(true);
     }
 
+    /**
+     * showCreditsPanel
+     */
     private void showCreditsPanel() {
         // Création du dialogue pour les crédits
         JDialog creditsDialog = new JDialog();
@@ -348,6 +370,12 @@ public class MainMenuView extends JPanel {
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
     }
 
+    /**
+     * Create a styled navigation button
+     *
+     * @param text  the text to display on the button
+     * @return a styled navigation button
+     */
     private JButton createStyledNavigationButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(50, 50));

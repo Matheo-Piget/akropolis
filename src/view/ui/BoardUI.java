@@ -95,6 +95,10 @@ public class BoardUI extends JPanel implements View {
         applyStyle();
     }
 
+    /**
+     * Creates a progress bar to display the remaining tiles.
+     * @return the progress bar
+     */
     private JProgressBar createRemainingTilesBar() {
         JProgressBar bar = new JProgressBar();
         bar.setMinimum(0);
@@ -111,6 +115,10 @@ public class BoardUI extends JPanel implements View {
         remainingTilesBar.setString("Tuiles restantes: " + remainingTiles);
     }
 
+    /**
+     * Sets the player name label to the specified player name.
+     * @param playerName the name of the player
+     */
     public void setPlayer(String playerName){
         playerLabel.setPlayer(playerName);
         System.out.println(playerName);
@@ -123,6 +131,9 @@ public class BoardUI extends JPanel implements View {
         }
     }
 
+    /**
+     * Changes the player icon to the next one in the list.
+     */
     private void nextPlayerIcon(){
         int index = playerIcons.indexOf(playerImageLabel.getIcon());
         index = (index + 1) % playerIcons.size();

@@ -42,6 +42,13 @@ public class LeaderBoard {
         }
     }
 
+    /**
+     * Adds a score to the leaderboard.
+     *
+     * @param mode       The mode of the game.
+     * @param score      The score to add.
+     * @param playerName The name of the player.
+     */
     public void addScore(String mode, int score, String playerName) {
         if (!scores.containsKey(mode)) {
             scores.put(mode, new LinkedHashMap<>());
@@ -59,6 +66,9 @@ public class LeaderBoard {
         saveScores();
     }
 
+    /**
+     * Saves the scores to a file.
+     */
     private void saveScores() {
         try {
             File file = new File("./res/save/leaderBoard.save");
@@ -82,6 +92,12 @@ public class LeaderBoard {
         }
     }
 
+    /**
+     * Gets the scores for a specific mode.
+     *
+     * @param mode The mode of the game.
+     * @return The scores for the mode.
+     */
     public LinkedHashMap<String, Integer> getScores(String mode) {
         return scores.get(mode);
     }
