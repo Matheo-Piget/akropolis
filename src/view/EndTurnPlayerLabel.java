@@ -33,7 +33,7 @@ class EndTurnPlayerLabel extends JLabel {
         super.addNotify();
         Container parent = getParent();
         // Ugly code but hey, it works
-        BoardView boardView = (BoardView) parent.getParent().getParent();
+        BoardView boardView = (BoardView) parent.getParent().getParent().getParent();
         setFont(new Font("Serif", Font.BOLD, 25));
         timeline = new Timeline(0);
 

@@ -1,7 +1,9 @@
 package view.main;
 
-import javax.swing.*;
-
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import util.SettingsParser;
 import view.main.states.AppState;
 import view.main.states.StartState;

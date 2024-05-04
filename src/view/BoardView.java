@@ -37,7 +37,9 @@ public class BoardView extends JPanel implements View, KeyListener {
     private EndTurnPlayerLabel endTurnPlayerLabel;
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private SiteView siteView;
-    private JPanel gamePanel = new JPanel(new BorderLayout());
+    private JLayeredPane gamePanel = new JLayeredPane();
+    private JPanel borderGamePanel = new JPanel(new BorderLayout());
+    private ScoreDetails scoreDetails;
     private final CardLayout gameSwitch = new CardLayout();
     private BoardUI boardUI;
     private JButton pauseButton;
@@ -154,16 +156,27 @@ public class BoardView extends JPanel implements View, KeyListener {
         return latch;
     }
 
+    @SuppressWarnings("removal")
     private void setupView() {
         setLayout(gameSwitch);
         this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
+        gamePanel.setOpaque(false);
+        scoreDetails = new ScoreDetails();
+        // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS BUT NOT WITH AN INT ???
+        gamePanel.add(scoreDetails, new Integer(1));
+        scoreDetails.setLocation(App.getInstance().getWidth() - App.getInstance().getScreen().getWidth() / 5, 0);
+        gamePanel.add(borderGamePanel, new Integer(0));
+        borderGamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
+        borderGamePanel.setOpaque(false);
         this.add(gamePanel, "game");
+        gamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
         this.add(new PausePanel(this), "pause");
-        this.add(new ScoreDetails(this), "score");
         gameSwitch.show(this, "game");
         setOpaque(true);
         setFocusable(true);
         pauseButtonClickSound = new SoundEffect("/GameButton.wav");
+        gamePanel.moveToFront(scoreDetails);
+        gamePanel.moveToBack(borderGamePanel);
     }
 
     private void initializeGridViews(int maxHexagons, int numPlayers) {
@@ -177,7 +190,7 @@ public class BoardView extends JPanel implements View, KeyListener {
 
     private void initializeSiteView(int siteCapacity) {
         siteView = new SiteView(siteCapacity);
-        gamePanel.add(siteView, BorderLayout.WEST);
+        borderGamePanel.add(siteView, BorderLayout.WEST);
     }
 
     private void setupLayeredPane() {
@@ -187,10 +200,8 @@ public class BoardView extends JPanel implements View, KeyListener {
         cardPanel.setBounds(0, 0, cardPanel.getPreferredSize().width, cardPanel.getPreferredSize().height);
         endTurnPlayerLabel = new EndTurnPlayerLabel();
         layeredPane.add(endTurnPlayerLabel, 1);
-        // For some stupid reason, the label is not visible if I DONT FORCIBLY MOVE IT
-        // TO THE FRONT
         layeredPane.moveToFront(endTurnPlayerLabel);
-        gamePanel.add(layeredPane, BorderLayout.CENTER);
+        borderGamePanel.add(layeredPane, BorderLayout.CENTER);
     }
 
     private void setupBottomPanel(int numPlayers) {
@@ -204,7 +215,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         infoButton.setPreferredSize(new Dimension(85, 85));
         infoButton.addActionListener(e -> {
             pauseButtonClickSound.play();
-            gameSwitch.show(this, "score");
+            scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5, App.getInstance().getScreen().getHeight());
+            scoreDetails.validate();
+            scoreDetails.repaint();
         });
         pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
@@ -215,7 +228,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         buttonPanel.add(infoButton);
         buttonPanel.add(pauseButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        gamePanel.add(bottomPanel, BorderLayout.SOUTH);
+        borderGamePanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // Methods
