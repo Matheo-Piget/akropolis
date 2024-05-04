@@ -113,7 +113,30 @@ public class BoardView extends JPanel implements View, KeyListener {
         };
         worker.execute(); // Start the SwingWorker
     }
+    // Getter methods
+    public ScrollableGridView getGridView() {
+        return currentGridView;
+    }
 
+    public SiteView getSiteView() {
+        return siteView;
+    }
+
+    public BoardUI getBoardUI() {
+        return boardUI;
+    }
+
+    public ArrayList<ScrollableGridView> getGridViews() {
+        return gridViews;
+    }
+
+    /**
+     * Add hexagon outlines to the grid views in the background.
+     *
+     * @param maxHexagons The maximum number of hexagons to be displayed on the
+     *                    board.
+     * @return A CountDownLatch to wait for the workers to finish.
+     */
     private CountDownLatch addHexagonOulineInBackground(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
         ArrayList<Color> playerColors = new ArrayList<>();
@@ -156,6 +179,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         return latch;
     }
 
+    /**
+     * Setup the view.
+     */
     @SuppressWarnings("removal")
     private void setupView() {
         setLayout(gameSwitch);
@@ -179,6 +205,11 @@ public class BoardView extends JPanel implements View, KeyListener {
         gamePanel.moveToBack(borderGamePanel);
     }
 
+    /**
+     * initialize the grisviews
+     * @param maxHexagons max hexagons in the gridview
+     * @param numPlayers number of players
+     */
     private void initializeGridViews(int maxHexagons, int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
@@ -296,23 +327,6 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         }
         return filledHexagons;
-    }
-
-    // Getter methods
-    public ScrollableGridView getGridView() {
-        return currentGridView;
-    }
-
-    public SiteView getSiteView() {
-        return siteView;
-    }
-
-    public BoardUI getBoardUI() {
-        return boardUI;
-    }
-
-    public ArrayList<ScrollableGridView> getGridViews() {
-        return gridViews;
     }
 
     /**
