@@ -45,24 +45,52 @@
 
     \subsection{Méthode}\label{subsec:methode}
 
+    Pour la gestion du projet, nous avons opté pour une méthode de développement agile, basée sur des itérations courtes et des réunions régulières pour faire le point sur l'avancement du projet et discuter des problèmes rencontrés.
+    Nous avons également utilisé un dépôt Git pour gérer les différentes versions, ce qui nous a permis de travailler en parallèle sur les différentes parties du jeu et de fusionner nos modifications facilement.
+
+
     \subsection{Répartition des taches}\label{subsec:repartition-des-taches}
+    Pour la réalisation du projet, nous avons réparti les tâches en fonction des compétences de chacun, la polyvalence de chacun nous a permis de travailler sur plusieurs aspects du jeu.
+    Nous avons également organisé des réunions régulières (plus ou moins obligatoire grace a ce cours) pour discuter de l'avancement du projet et des problèmes rencontrés (voir section \ref{sec:difficultes-rencontrees}).
 
 
     \subsection{Architecture du Projet}\label{subsec:architecture-du-projet}
     Pour ce projet, nous avons opté pour une architecture orientée objet, avec une séparation claire entre les différentes parties du jeu, basé sur un modèle MVC (Modèle-Vue-Contrôleur) car beaucoup plus modulable et facile à maintenir, pour faire des modifications ou ajouter des fonctionnalités.
+    Nous avons également utilisé des classes utilitaires pour gérer le jeu.
+    La partie graphique du jeu est gérée par la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
+    Avec une grande partie assez abstraite, le jeu est facilement modifiable et extensible, principalement pour les jeux de société.
+
 
 
     \section{Développement et Fonctionnalités}\label{sec:developpement-et-fonctionnalites}
 
+    Le développement du jeu a été réalisé en plusieurs mois, en plusieurs étapes, en commençant par la réalisation des mécaniques de jeu de base, puis en ajoutant des fonctionnalités supplémentaires et en améliorant l'interface graphique.
+    Dans un premier temps, étant donné que le modèle de conception du jeu est basé sur le modèle MVC, nous avons commencé par la réalisation du modèle, la vue et le contrôleur plus ou moins en même temps.
+    Parallèlement à cela, nous avons travaillé sur les tâches annexes comme la gestion des images, des sons, mais également sur des scripts bash et powershell.
+    Mais également sur des tests unitaires pour vérifier le bon fonctionnement de notre code.
+
+
     \subsection{Organisation du Code}\label{subsec:organisation-du-code}
+
+    Le code du jeu est organisé en plusieurs packages, chacun regroupant des classes ayant un rôle adéquat.
+    Le modèle du jeu est regroupé dans le package \texttt{model}, la vue dans le package \texttt{view} et le contrôleur dans le package \texttt{controller}, eux même contenant certain d'autre package pour une meilleure organisation.
+    Les classes utilitaires sont regroupées dans le package \texttt{test}.
+    Les ressources du jeu (images, sons, etc.) sont stockées dans le package \texttt{res}.
+    Pour rentrer dans les détails, le modèle est composé de plusieurs classes, chacune représentant un élément du jeu (joueur, plateau, bâtiment, etc.).
+    La vue est composée de plusieurs classes, chacune représentant un élément graphique du jeu (fenêtre principale, plateau de jeu, etc.).
+    Pour plus de lisibilité et de claireté, nous avons décidé de faire un schéma UML de notre projet, que vous pouvez retrouver en annexe, voir section \ref{sec:annexes}.
 
     \subsection{Fonctionnalités Principales}\label{subsec:fonctionnalites-principales}
 
-    \subsubsection{Mécaniques de Jeu}
+    Le jeu dispose d'un menu principal, qui permet de lancer une nouvelle partie, de voir les règles, de voir les crédits, ou de quitter le jeu.
+    Une fois une partie lancée, le jeu se déroule en tours par tours.
+    Le jeu suit les règles du jeu Akropolis, avec des bâtiments à construire, des ressources à gérer, et des points de victoire à accumuler.
+    Le jeu se termine lorsqu'il n'y a plus de tuiles dans la pioche, et le joueur avec le plus de points de victoire est alors déclaré vainqueur.
 
-    \subsubsection*{Interactions Utilisateur}
-
-    \subsection{Gestion des Ressources}\label{subsec:gestion-des-ressources}
+    Etant donné que le jeu est un jeu de société, les fonctionnalités principales sont les suivantes :
+    \begin{itemize}
+        \item \textbf{Plateau de Jeu :} Le plateau de jeu est composé de cases hexagonales, sur lesquelles les joueurs peuvent placer de tuiles.
+        \item \textbf{Ressources :} Chaque joueur possède un certain nombre de pierres qu'il peut utiliser pour construire des tuiles. \end{itemize}
 
     \subsubsection*{Images et Textures}
 
@@ -85,12 +113,14 @@
 
     \subsection{Logique de Jeu}\label{subsec:logique-de-jeu}
 
-
     \section{Difficultés Rencontrées}\label{sec:difficultes-rencontrees}
-    \newpage
+
     \section{Conclusion}\label{sec:conclusion}
 
+    \section{Annexes}\label{sec:annexes}
 
 
+
+    \tableofcontents
 
 \end{document}
