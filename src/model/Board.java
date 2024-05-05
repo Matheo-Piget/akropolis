@@ -146,7 +146,6 @@ public class Board extends Model {
         return switch (getNumberOfPlayers()) {
             case 1, 2 -> 30;
             case 3 -> 40;
-            case 4 -> 60;
             default -> 60;
         };
     }
