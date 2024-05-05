@@ -22,7 +22,6 @@ public class TileView extends JComponent implements View {
     private boolean increasing = true;
     private Timer glowTimer;
     private int rotation = 0;
-    private int cost = 0;
 
     public TileView(HexagonView hex1, HexagonView hex2, HexagonView hex3) {
         setOpaque(false);
@@ -38,14 +37,6 @@ public class TileView extends JComponent implements View {
         setupGlow();
         this.revalidate();
         this.repaint();
-    }
-
-    /**
-     * This method is used to set the cost of the tile in the shop
-     * @param cost The cost of the tile
-     */
-    public void setCost(int cost) {
-        this.cost = cost;
     }
 
     public void rotate() {
@@ -177,9 +168,6 @@ public class TileView extends JComponent implements View {
                 repaint();
             }
         }
-        // Draw the price of the tile
-        g2.setColor(Color.WHITE);
-        g2.drawString("Coût : "+ cost, getWidth() - 60, 20);
         g2.dispose();
     }
 }

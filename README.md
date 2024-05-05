@@ -11,12 +11,6 @@ Akropolis est un projet de jeu de stratégie développé par une équipe de cinq
 
 Pour installer et exécuter Akropolis sur votre machine, suivez ces étapes :
 
-
-### Prérequis 
-
-Pour profiter du jeu, merci de réaliser l'installation de Java (version 16 ou ultérieur). Egalement assurez-vous d'avoir Git installé sur votre machine.
-
-
 1. Clonez ce dépôt sur votre machine locale :
 
 ```bash
@@ -27,18 +21,15 @@ git clone https://gaufre.informatique.univ-paris-diderot.fr/moussan/akropolis.gi
 
 ```bash 
 cd akropolis
-```
+``` 
+3. Prérequis, 
+   Pour profiter du jeu, merci de réaliser l'installation de Java (version 16 ou ultérieur).
 
-3. Utilisez le script bash fourni pour lancer le jeu :
+
+4. Utilisez le script bash fourni pour lancer le jeu :
 
 ````bash
 ./run.sh
-````
-
-ou powershell si vous êtes sous Windows:
-
-````powershell
-.\run.ps1
 ````
 
 ## 🤝 Équipe

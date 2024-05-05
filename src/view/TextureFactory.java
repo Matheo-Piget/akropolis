@@ -23,7 +23,7 @@ public class TextureFactory {
         switch (imageName) {
             case "quarries":
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/quarries.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/quarries.png")));
                 } catch (IOException e) {
                     Color gray = new Color(128, 128, 128);
                     // Then fill a TexturePaint with the color
@@ -33,7 +33,7 @@ public class TextureFactory {
                 break;
             case "barrack":
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/barrack.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/barrack.png")));
                 } catch (IOException e) {
                     Color red = new Color(255, 0, 0);
                     // Then fill a TexturePaint with the color
@@ -44,7 +44,7 @@ public class TextureFactory {
                 break;
             case "building":
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/building.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/building.png")));
                 } catch (IOException e) {
                     Color blue = new Color(0, 0, 255);
                     // Then fill a TexturePaint with the color
@@ -54,7 +54,7 @@ public class TextureFactory {
                 break;
             case "garden":
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/garden.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/garden.png")));
                 } catch (IOException e) {
                     e.printStackTrace();
                     Color green = new Color(0, 255, 0);
@@ -66,7 +66,7 @@ public class TextureFactory {
             case "market":
                 // Load the image
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/market.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/market.png")));
                 } catch (IOException e) {
                     e.printStackTrace();
                     Color yellow = new Color(255, 255, 0);
@@ -77,7 +77,7 @@ public class TextureFactory {
                 break;
             case "temple":
                 try {
-                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/temple.png")));
+                    img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/temple.png")));
                 } catch (IOException e) {
                     Color purple = new Color(255, 0, 255);
                     // Then fill a TexturePaint with the color

@@ -18,6 +18,8 @@ public class SiteView extends JPanel implements View {
     public SiteView(int capacity) {
         setOpaque(true);
         setLayout(new GridLayout(capacity, 1));
+        // It needs to take slightly less space than the grid view which is 1500x844
+        // To have a nice padding on the top and bottom
         setPreferredSize(new java.awt.Dimension(200, 800));
         this.capacity = capacity;
     }
@@ -29,6 +31,11 @@ public class SiteView extends JPanel implements View {
             }
         }
         return null;
+    }
+
+    public int getTileSize(){
+        // Calculate the size of the tiles
+        return getPreferredSize().height / capacity;
     }
 
     public ArrayList<TileView> getTiles() {
@@ -54,7 +61,7 @@ public class SiteView extends JPanel implements View {
         // Don't add more tiles than the capacity
         for (int i = 0; i < capacity; i++) {
             if (i < tiles.size()) {
-                tiles.get(i).setCost(i);
+                tiles.get(i).setSize(new java.awt.Dimension(200, 800 / capacity));
                 add(tiles.get(i));
             }
         }

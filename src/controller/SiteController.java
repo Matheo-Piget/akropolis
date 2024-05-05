@@ -84,7 +84,7 @@ public class SiteController extends Controller {
             for (Tile tile : tiles) {
                 if (tile == null)
                     continue;
-                TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile),
+                TileController tileController = new TileController(tile, TileViewFactory.createTileView(tile, siteView.getTileSize()),
                         boardController);
                 tileControllers.add(tileController);
                 tileViews.add((TileView) tileController.view);

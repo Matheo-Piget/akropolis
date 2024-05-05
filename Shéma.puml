@@ -38,15 +38,6 @@ package model <<Node>>{
         + calculateCost(Tile tile) : int
     }
 
-    class LeaderBoard{
-        - LinkedHashMap<String, LinkedHashMap<String, Integer>> scores
-        ==
-        + LeaderBoard()
-        ==
-        + addScore(String mode, int score, String PlayerName) : void
-        + getScore() : LinkedHashMap<String, LinkedHashMap<String, Integer>>
-    }
-
     class Board extends Model {
         - ArrayList<Player> playerList
         - StackTiles stackTiles
@@ -228,11 +219,13 @@ package model <<Node>>{
 
 package util <<Node>>{
 
-    class SettingsParser{
-        - Properties properties
-        + getProperty(String key) : String
-        + setProperty(String key, String value) : void
-        + save() : void
+    class OutlinedLabel{
+        - String text
+        ==
+        + OutlinedLabel(String text)
+        ==
+        + setText(String text) : void
+        + paintComponent(Graphics g) : void
     }
 
     class Point3D {
@@ -321,6 +314,23 @@ package view <<Node>>{
         ==
         paintComponent(Graphics g) : void
         - class Particle
+    }
+
+    class BoardUI implements View {
+        - PlayerLabel playerLabel
+        - RemainingTilesLabel remainingTilesLabel
+        - ArrayList<JLabel> rockImages
+        - float hue
+        - Timer timer
+        - Color bg
+        ==
+        + BoardUI()
+        ==
+       +  doLayout() : void
+       + setPlayer(String playerName) : void
+       + setRock(int rock) : void
+       + setRemainingTiles(int remainingTiles) : void
+       - applyStyle() ; void
     }
 
     class BoardView implements View{
@@ -439,6 +449,12 @@ package view <<Node>>{
         + paintComponent(Graphics g): void
     }
 
+    class RemainingTilesLabel {
+        + RemainingTilesLabel()
+        ==
+        + setRemainingTiles(int remainingTiles) : void
+    }
+
     class PlaceView extends HexagonView{
         - Color strokeColor
         - Place place
@@ -482,11 +498,23 @@ package view <<Node>>{
         # paintComponent(java.awt.Graphics g) : void
     }
 
+    class PlayerLabel{
+        + PlayerLabel(String playerName)
+        ==
+        + setPlayer(String playerName) : void
+    }
+
     class TileViewFactory{
         + createTileView(Tile tile, int size) : TileView
     }
 
     interface View{}
+
+    class RockLabel{
+        + RockLabel()
+        ==
+        + setRock(int rock): void
+    }
 
     class TextureFactory {
         + getTexture(String img): TexturePaint
@@ -549,56 +577,6 @@ package view.main.states <<Node>>{
         + exit(): void
         + transitionTo(State nextState): void
     }
-
-}
-
-package view.ui <<Node>>{
-
-    class RockLabel{
-            + RockLabel()
-            ==
-            + setRock(int rock): void
-        }
-
-
-    class PlayerLabel{
-        + PlayerLabel(String playerName)
-        ==
-        + setPlayer(String playerName) : void
-    }
-
-
-
-    class BoardUI implements View {
-        - PlayerLabel playerLabel
-        - RemainingTilesLabel remainingTilesLabel
-        - ArrayList<JLabel> rockImages
-        - float hue
-        - Timer timer
-        - Color bg
-        ==
-        + BoardUI()
-        ==
-       +  doLayout() : void
-       + setPlayer(String playerName) : void
-       + setRock(int rock) : void
-       + setRemainingTiles(int remainingTiles) : void
-       - applyStyle() ; void
-    }
-
-
-    class RemainingTilesLabel {
-        + RemainingTilesLabel()
-        ==
-        + setRemainingTiles(int remainingTiles) : void
-    }
-
-    class ScoreLabel{
-        + ScoreLabel()
-        ==
-        + setScore(int score) : void
-    }
-
 
 }
 
@@ -729,8 +707,5 @@ Grid o-- Hexagon
 
 util.Point3D o-- Hexagon
 util.Point3D o-- Grid
-
-RockLabel o-- BoardUI
-ScoreLabel o-- BoardUI
 
 @enduml

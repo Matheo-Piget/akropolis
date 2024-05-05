@@ -79,12 +79,6 @@ public class GridView extends JPanel {
 
     }
 
-    /**
-     * Round the axial coordinates to the nearest hexagon
-     * @param q The q coordinate
-     * @param r The r coordinate
-     * @return The rounded coordinates
-     */
     private Point3D axialRound(double q, double r) {
         double s = -q - r;
         double rq = Math.round(q);
@@ -104,10 +98,6 @@ public class GridView extends JPanel {
         return new Point3D((int) rq, (int) rr, 0);
     }
 
-    /**
-     * Add a hexagon to the grid
-     * @param hexagon The hexagon to add
-     */
     public void addHexagon(HexagonView hexagon) {
         boolean contains = hexagons.containsKey(hexagon.getPosition());
         if(contains && hexagon.z == 0){

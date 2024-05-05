@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
@@ -37,15 +38,9 @@ public class BoardView extends JPanel implements View, KeyListener {
     private EndTurnPlayerLabel endTurnPlayerLabel;
     private final ArrayList<ScrollableGridView> gridViews = new ArrayList<>();
     private SiteView siteView;
-    private JLayeredPane gamePanel = new JLayeredPane();
-    private JPanel borderGamePanel = new JPanel(new BorderLayout());
-    private ScoreDetails scoreDetails;
-    private final CardLayout gameSwitch = new CardLayout();
     private BoardUI boardUI;
-    private JButton pauseButton;
-    private JButton infoButton;
-    private final CardLayout switchGrids = new CardLayout();
-    private final JPanel cardPanel = new JPanel(switchGrids);
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel cardPanel = new JPanel(cardLayout);
     private SoundEffect pauseButtonClickSound;
     private String[] playerNames;
 
@@ -62,7 +57,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         initializeGridViews(maxHexagons, numPlayers);
         initializeSiteView(siteCapacity);
         setupLayeredPane();
-        setupBottomPanel(numPlayers);
+        setupBottomPanel();
         playerNames = new String[players.size()];
         for (Player player : players) {
             playerNames[players.indexOf(player)] = player.getName();
@@ -113,37 +108,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         };
         worker.execute(); // Start the SwingWorker
     }
-    // Getter methods
-    public ScrollableGridView getGridView() {
-        return currentGridView;
-    }
 
-    public SiteView getSiteView() {
-        return siteView;
-    }
-
-    public BoardUI getBoardUI() {
-        return boardUI;
-    }
-
-    public ArrayList<ScrollableGridView> getGridViews() {
-        return gridViews;
-    }
-
-    /**
-     * Add hexagon outlines to the grid views in the background.
-     *
-     * @param maxHexagons The maximum number of hexagons to be displayed on the
-     *                    board.
-     * @return A CountDownLatch to wait for the workers to finish.
-     */
     private CountDownLatch addHexagonOulineInBackground(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
-        ArrayList<Color> playerColors = new ArrayList<>();
-        playerColors.add(Color.BLUE);
-        playerColors.add(Color.RED);
-        playerColors.add(Color.GREEN.darker());
-        playerColors.add(Color.MAGENTA);
         // Create a SwingWorker for each GridView
         for (ScrollableGridView gridView : gridViews) {
             SwingWorker<Void, HexagonOutline> worker = new SwingWorker<>() {
@@ -153,7 +120,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
-                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize, playerColors.get(gridViews.indexOf(gridView)));
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize);
                                 publish(hexagon);
                             }
                         }
@@ -179,37 +146,13 @@ public class BoardView extends JPanel implements View, KeyListener {
         return latch;
     }
 
-    /**
-     * Setup the view.
-     */
-    @SuppressWarnings("removal")
     private void setupView() {
-        setLayout(gameSwitch);
-        this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
-        gamePanel.setOpaque(false);
-        scoreDetails = new ScoreDetails();
-        // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS BUT NOT WITH AN INT ???
-        gamePanel.add(scoreDetails, new Integer(1));
-        scoreDetails.setLocation(App.getInstance().getWidth() - App.getInstance().getScreen().getWidth() / 5, 0);
-        gamePanel.add(borderGamePanel, new Integer(0));
-        borderGamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
-        borderGamePanel.setOpaque(false);
-        this.add(gamePanel, "game");
-        gamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
-        this.add(new PausePanel(this), "pause");
-        gameSwitch.show(this, "game");
+        setLayout(new BorderLayout());
         setOpaque(true);
         setFocusable(true);
-        pauseButtonClickSound = new SoundEffect("/sound/GameButton.wav");
-        gamePanel.moveToFront(scoreDetails);
-        gamePanel.moveToBack(borderGamePanel);
+        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
     }
 
-    /**
-     * initialize the grisviews
-     * @param maxHexagons max hexagons in the gridview
-     * @param numPlayers number of players
-     */
     private void initializeGridViews(int maxHexagons, int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             ScrollableGridView gridView = new ScrollableGridView(maxHexagons);
@@ -221,12 +164,9 @@ public class BoardView extends JPanel implements View, KeyListener {
 
     private void initializeSiteView(int siteCapacity) {
         siteView = new SiteView(siteCapacity);
-        borderGamePanel.add(siteView, BorderLayout.WEST);
+        add(siteView, BorderLayout.WEST);
     }
 
-    /**
-     * Setup the layered pane.
-     */
     private void setupLayeredPane() {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.add(cardPanel, 0);
@@ -234,40 +174,32 @@ public class BoardView extends JPanel implements View, KeyListener {
         cardPanel.setBounds(0, 0, cardPanel.getPreferredSize().width, cardPanel.getPreferredSize().height);
         endTurnPlayerLabel = new EndTurnPlayerLabel();
         layeredPane.add(endTurnPlayerLabel, 1);
+        // For some stupid reason, the label is not visible if I DONT FORCIBLY MOVE IT
+        // TO THE FRONT
         layeredPane.moveToFront(endTurnPlayerLabel);
-        borderGamePanel.add(layeredPane, BorderLayout.CENTER);
+        add(layeredPane, BorderLayout.CENTER);
     }
 
-    /**
-     * Setup the bottom panel.
-     *
-     * @param numPlayers The number of players.
-     */
-    private void setupBottomPanel(int numPlayers) {
+    private void setupBottomPanel() {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setOpaque(false);
-        boardUI = new BoardUI(numPlayers);
+
+        boardUI = new BoardUI();
         bottomPanel.add(boardUI, BorderLayout.CENTER);
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setOpaque(false);
-        infoButton = createStyledButton("?");
-        infoButton.setPreferredSize(new Dimension(85, 85));
-        infoButton.addActionListener(e -> {
-            pauseButtonClickSound.play();
-            scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5, App.getInstance().getScreen().getHeight());
-            scoreDetails.validate();
-            scoreDetails.repaint();
-        });
-        pauseButton = createStyledButton("||");
+
+        JPanel pausePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pausePanel.setOpaque(false);
+
+        JButton pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> {
             pauseButtonClickSound.play();
             showPauseMenu();
         });
-        buttonPanel.add(infoButton);
-        buttonPanel.add(pauseButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        borderGamePanel.add(bottomPanel, BorderLayout.SOUTH);
+        pausePanel.add(pauseButton);
+
+        bottomPanel.add(pausePanel, BorderLayout.EAST);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // Methods
@@ -281,10 +213,6 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView.setSelectedTile(tile);
     }
 
-    public void resumeGame(){
-        gameSwitch.show(this, "game");
-    }
-
     /**
      * Show the next GridView and pass turn.
      */
@@ -296,25 +224,15 @@ public class BoardView extends JPanel implements View, KeyListener {
         endTurnPlayerLabel.play(playerNames[(index + 1) % gridViews.size()]);
     }
 
-    /**
-     * Freeze the game.
-     */
     public void freeze() {
         currentGridView.disableListeners();
         siteView.disableListeners();
-        pauseButton.setEnabled(false);
-        infoButton.setEnabled(false);
         this.setEnabled(false);
     }
 
-    /**
-     * Unfreeze the game.
-     */
     public void unfreeze() {
         currentGridView.enableListeners();
         siteView.enableListeners();
-        pauseButton.setEnabled(true);
-        infoButton.setEnabled(true);
         this.setEnabled(true);
         this.requestFocusInWindow();
         int index = gridViews.indexOf(currentGridView);
@@ -323,7 +241,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     public void displayNextBoard() {
-        switchGrids.show(cardPanel, String.valueOf(gridViews.indexOf(currentGridView)));
+        cardLayout.show(cardPanel, String.valueOf(gridViews.indexOf(currentGridView)));
         getGridView().removeSelectedTile();
     }
 
@@ -341,16 +259,50 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         }
         return filledHexagons;
-     }
+    }
+
+    // Getter methods
+    public ScrollableGridView getGridView() {
+        return currentGridView;
+    }
+
+    public SiteView getSiteView() {
+        return siteView;
+    }
+
+    public BoardUI getBoardUI() {
+        return boardUI;
+    }
+
+    public ArrayList<ScrollableGridView> getGridViews() {
+        return gridViews;
+    }
 
     /**
      * Show the pause menu.
      */
     private void showPauseMenu() {
-        System.out.println("Showing pause menu");
-        SwingUtilities.invokeLater(() -> {
-            gameSwitch.show(this, "pause");
+        // Create pause dialog
+        JDialog pauseMenu = new JDialog(App.getInstance(), "Pause", true);
+        pauseMenu.setLayout(new GridLayout(2, 1));
+        pauseMenu.setSize(200, 100);
+        pauseMenu.setLocationRelativeTo(this);
+
+        // Resume button
+        JButton resumeButton = createStyledButton("Resume");
+        resumeButton.addActionListener(e -> pauseMenu.dispose());
+
+        // Quit button
+        JButton quitButton = createStyledButton("Quit");
+        quitButton.addActionListener(e -> {
+            pauseMenu.dispose();
+            App.getInstance().exitToMainMenu();
         });
+
+        // Add buttons to dialog
+        pauseMenu.add(resumeButton);
+        pauseMenu.add(quitButton);
+        pauseMenu.setVisible(true); // Show dialog
     }
 
     /**
@@ -372,6 +324,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                 button.setBackground(new Color(255, 235, 59));
                 button.setForeground(Color.BLACK);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 215, 0));
                 button.setForeground(Color.BLACK);
@@ -405,7 +358,9 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     public void showGameOver(String winner) {
+
         GameOverState.getInstance().setWinner(winner);
         App.getInstance().appState.changeState(GameOverState.getInstance());
+
     }
 }

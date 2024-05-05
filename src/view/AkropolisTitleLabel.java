@@ -35,7 +35,7 @@ class AkropolisTitleLabel extends JPanel {
 
         // Load the title image
         try {
-            titleImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/menu/akropolisTitle.png")));
+            titleImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/akropolisTitle.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

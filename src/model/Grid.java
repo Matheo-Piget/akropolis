@@ -350,11 +350,6 @@ public class Grid extends Model{
 
         return totalScore+buildingScore+player.getResources();
     }
-
-    /**
-     * Calculate the score of the building
-     * @return the score of the building
-     */
     public int calculateMaxBuildingScore() {
         int maxScore = 0;
         ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
@@ -367,8 +362,7 @@ public class Grid extends Model{
                 }
             }
         }
-        int nbEtoile = numberOfStars("Building Place");
-        return maxScore *nbEtoile;
+        return maxScore;
 
     }
 
@@ -453,93 +447,5 @@ public class Grid extends Model{
         }
         return nb;
     }
-
-    /**
-     * Get the number of stars of the places
-     * @param Place the places to get the number of stars
-     * @return the number of stars of the places
-     */
-    public int numberOfStars(String Place){
-        int nb = 0 ;
-        ArrayList <Place> places = placeDeTypeS(Place);
-        for (Place p : places) {
-            nb += p.getStars();
-        }
-        return nb;
-    }
-
-    /**
-     * calculate the score of the market
-     * @return the score of the market
-     */
-    public int calculateMarketScore( ) {
-        int totalScore = 0;
-        for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Market":
-                    totalScore += calculateMarketScore(hexagon);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return totalScore;
-    }
-
-    /**
-     * calculate the score of the barrack
-     * @return the score of the barrack
-     */
-    public int calculateBarrackScore( ) {
-        int totalScore = 0;
-        for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Barrack":
-                    totalScore += calculateBarrackScore(hexagon);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return totalScore;
-    }
-
-    /**
-     * calculate the score of the temple
-     * @return the score of the temple
-     */
-    public int calculateTempleScore( ) {
-        int totalScore = 0;
-        for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Temple":
-                    totalScore += calculateTempleScore(hexagon);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return totalScore;
-    }
-
-    /**
-     * calculate the score of the garden
-     * @return the score of the garden
-     */
-    public int calculateGardenScore( ) {
-        int totalScore = 0;
-        for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Garden":
-                    totalScore += calculateGardenScore(hexagon);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return totalScore;
-    }
-
-    
     
 }
