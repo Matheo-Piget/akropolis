@@ -13,12 +13,7 @@ public class UIController extends Controller {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-        if (propertyName.equals("playerUpdated")) {
-            updatePlayerInfo();
-        } else if (propertyName.equals("tilesRemainingUpdated")) {
-            updateRemainingTilesInfo();
-        }
+        // Do nothing
     }
 
     /**
@@ -30,11 +25,19 @@ public class UIController extends Controller {
         boardUI.setPlayer(currentPlayer.getName());
         boardUI.setRock(currentPlayer.getResources());
         int score=currentPlayer.getGrid().calculateScore();
+        int starsBuildingPlace = currentPlayer.getGrid().numberOfStars("Building Place");
+        int starsMarketPlace = currentPlayer.getGrid().numberOfStars("Market Place");
+        int starsBarrackPlace = currentPlayer.getGrid().numberOfStars("Barrack Place");
+        int starsTemplePlace = currentPlayer.getGrid().numberOfStars("Temple Place");
+        int starsGardenPlace = currentPlayer.getGrid().numberOfStars("Garden Place");
+        int buildingScore = currentPlayer.getGrid().calculateMaxBuildingScore();
+        int marketScore = currentPlayer.getGrid().calculateMarketScore(); 
+        int barrackScore = currentPlayer.getGrid().calculateBarrackScore();
+        int templeScore = currentPlayer.getGrid().calculateTempleScore();
+        int gardenScore = currentPlayer.getGrid().calculateGardenScore();       
         currentPlayer.setScore(score);
-        System.out.println("Le score est "+score);
-        boardUI.setscore(currentPlayer.getScore());
-    }
-
+        System.out.println("Le score est " + score);
+        boardUI.setScore(currentPlayer.getScore(), starsBuildingPlace, starsMarketPlace, starsBarrackPlace, starsTemplePlace, starsGardenPlace, buildingScore, marketScore, barrackScore, templeScore, gardenScore);}
     /**
      * update the remaining tiles in the view
      */

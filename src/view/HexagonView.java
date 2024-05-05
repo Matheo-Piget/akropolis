@@ -64,6 +64,11 @@ public abstract class HexagonView extends JComponent {
         repaint();
     }
 
+    /**
+     * render hexagon
+     * @param strokeColor
+     * @param h
+     */
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
         if (render != null) {
             render.flush();
@@ -149,6 +154,7 @@ public abstract class HexagonView extends JComponent {
             int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
             int x = (getWidth() - stringWidth) / 2;
             int y = getHeight() / 2 + fontSize / 3;
+            assert texture != null;
             Color hexagonColor = texture.getGraphics().getColor();
             Color outlineColor = hexagonColor.darker();
 

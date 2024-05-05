@@ -63,7 +63,7 @@ public class StartingLogoState extends State {
         final ImageIcon[] logoUnivIcon = { null };
         try {
             imageUniv = ImageIO
-                    .read(Objects.requireNonNull(getClass().getResource("/universiteParisCite_logo_horizontal_blanc_1000px.png")));
+                    .read(Objects.requireNonNull(getClass().getResource("/menu/universiteParisCite_logo_horizontal_blanc_1000px.png")));
             logoUnivIcon[0] = new ImageIcon(imageUniv);
             logoUniv = new JLabel(logoUnivIcon[0]);
         } catch (IOException e) {
@@ -136,13 +136,16 @@ public class StartingLogoState extends State {
         timeline.start();
     }
 
+    /**
+     * Handles the exit of the state
+     */
     private void handleExit() {
         timeline.stop();
         // Make a smooth transition to the next state by loading the bg image
         try {
             // Load the background image
             BufferedImage backgroundImage = ImageIO
-                    .read(Objects.requireNonNull(getClass().getResourceAsStream("/akropolisBG.jpg")));
+                    .read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
             // Then we will make a smooth fade in transition to make it look nice
             blackScreen.removeAll();
             JLabel bg = new JLabel(new ImageIcon(backgroundImage));

@@ -1,13 +1,16 @@
 package view.main;
 
-import javax.swing.*;
-
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import util.SettingsParser;
 import view.main.states.AppState;
 import view.main.states.StartState;
 
 public class App extends JFrame{
 
-    private static final ImageIcon appIcon = new ImageIcon("res/akropolis_logo2.png");
+    private static final ImageIcon appIcon = new ImageIcon("res/menu/akropolis_logo2.png");
     private final JPanel screen = new JPanel();
     private static final App INSTANCE = new App();
 
@@ -21,8 +24,8 @@ public class App extends JFrame{
         
         getContentPane().setBackground(java.awt.Color.BLACK);
         screen.setBackground(java.awt.Color.WHITE);
-        int WIDTH = 1500;
-        int HEIGHT = 700;
+        int WIDTH = SettingsParser.getResolutionWidth();
+        int HEIGHT = SettingsParser.getResolutionHeight();
         screen.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGHT));
         add(screen);
         pack();

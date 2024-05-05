@@ -12,12 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Objects;
 import javax.imageio.ImageIO;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-
 import view.View;
 
 /**
@@ -26,33 +24,39 @@ import view.View;
  */
 public class BoardUI extends JPanel implements View {
     private PlayerLabel playerLabel = new PlayerLabel("Player");
-    private ScoreLabel scorelabel =new ScoreLabel(0);
+    private final ArrayList<Color> playerColors = new ArrayList<Color>();
+    private ArrayList<ImageIcon > playerIcons = new ArrayList<ImageIcon>();
+    private ScoreLabel scorelabel = new ScoreLabel(0);
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
     private ImageIcon playerIcon = null;
     private JLabel playerImageLabel = new JLabel(playerIcon);
     private RockLabel rockLabel = new RockLabel();
     private ImageIcon rockIcon;
     private JLabel rockImageLabel = new JLabel();
+    private boolean firstTurn = true;
     private JProgressBar remainingTilesBar ;
-    private float hue = 0.0f;
-    private Timer timer;
-    private Color bg = new Color(255,229,180);
 
     /**
      * Constructor for the BoardUI class.
      * Initializes the player name label, the rock label, and the remaining tiles label.
      */
-    public BoardUI() {
+    public BoardUI(int numberOfPlayers) {
         setOpaque(true);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
-
+        playerColors.add(Color.BLUE);
+        playerColors.add(Color.RED);
+        playerColors.add(Color.GREEN.darker());
+        playerColors.add(Color.MAGENTA);
         try{
-            Image img1 = ImageIO.read(getClass().getResource("/play.png"));
-            playerIcon = new ImageIcon(img1);
-            playerImageLabel = new JLabel(playerIcon);
+            // Load all the player icons for each player
+            for (int i = 0; i < numberOfPlayers; i++){
+                Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/playerIcons/Icons_0" + (i + 1) + ".png")));
+                playerIcons.add(new ImageIcon(icon));
+            }
+            playerImageLabel = new JLabel(playerIcons.get(0));
             playerLabel.add(playerImageLabel);
-            Image img2 = ImageIO.read(getClass().getResource("/rock.png")).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+            Image img2 = ImageIO.read(Objects.requireNonNull(getClass().getResource("/rock.png"))).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
             rockIcon = new ImageIcon(img2);
             rockImageLabel = new JLabel(rockIcon);
             
@@ -68,15 +72,15 @@ public class BoardUI extends JPanel implements View {
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 200));
-        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 350));
+        playerLabel.setBorder(new EmptyBorder(0, 0, 0, 450));
+        playerImageLabel.setBorder(new EmptyBorder(0, 0, 0, 600));
         topPanel.add(playerLabel, gbc);        
         topPanel.add(playerImageLabel, gbc);        
         gbc.gridx = 2;
         rockImageLabel.setBorder(new EmptyBorder(0, 0, 15, 0));
         topPanel.add(rockImageLabel, gbc);
         topPanel.add(rockLabel, gbc);
-        remainingTilesBar = createRemainingTilesBar();
+        remainingTilesBar = createRemainingTilesBar(numberOfPlayers);
         gbc.gridx = 3;
         topPanel.add(remainingTilesBar, gbc);
         topPanel.add(remainingTilesLabel, gbc);
@@ -88,14 +92,24 @@ public class BoardUI extends JPanel implements View {
 
         add(topPanel, BorderLayout.NORTH);
     
-        setBackground(bg);
+        setBackground(playerColors.get(0));
         applyStyle();
     }
 
-    private JProgressBar createRemainingTilesBar() {
+    /**
+     * Creates a progress bar to display the remaining tiles.
+     * @return the progress bar
+     */
+    private JProgressBar createRemainingTilesBar(int numberOfPlayers) {
         JProgressBar bar = new JProgressBar();
         bar.setMinimum(0);
-        bar.setMaximum(57); 
+        int max = switch (numberOfPlayers) {
+            case 1, 2 -> 27;
+            case 3 -> 36;
+            case 4 -> 55;
+            default -> 55;
+        };
+        bar.setMaximum(max); 
         bar.setStringPainted(true);
         bar.setFont(new Font("Serif", Font.BOLD, 16)); 
         bar.setForeground(Color.GRAY); 
@@ -108,32 +122,34 @@ public class BoardUI extends JPanel implements View {
         remainingTilesBar.setString("Tuiles restantes: " + remainingTiles);
     }
 
-    @Override
-    public void doLayout(){
-        super.doLayout();
-        if (timer == null) {
-            timer = new Timer(70, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    hue += 0.005f;
-                    if (hue > 1.0f) {
-                        hue = 0.0f;
-                    }
-                    bg = Color.getHSBColor(hue, 0.5f, 0.5f);
-                    setBackground(bg);
-                    repaint();
-                }
-            });
-            timer.start();
+    /**
+     * Sets the player name label to the specified player name.
+     * @param playerName the name of the player
+     */
+    public void setPlayer(String playerName){
+        playerLabel.setPlayer(playerName);
+        System.out.println(playerName);
+        if (playerIcons.size() > 0 && !firstTurn){
+            nextPlayerIcon();
+            setBackground(playerColors.get(playerIcons.indexOf(playerImageLabel.getIcon())));
+        }
+        else{
+            firstTurn = false;
         }
     }
 
-    public void setPlayer(String playerName){
-        playerLabel.setPlayer(playerName);
+    /**
+     * Changes the player icon to the next one in the list.
+     */
+    private void nextPlayerIcon(){
+        int index = playerIcons.indexOf(playerImageLabel.getIcon());
+        index = (index + 1) % playerIcons.size();
+        playerImageLabel.setIcon(playerIcons.get(index));
+        playerImageLabel.repaint();
     }
 
-    public void setscore (int score){
-        scorelabel.setScore(score);
+    public void setScore(int score , int arg1, int arg2 , int arg3 , int arg4, int arg5, int arg11, int arg22 , int arg33 , int arg44, int arg55) {
+        scorelabel.setScore(score, arg1, arg2, arg3, arg4, arg5, arg11, arg22, arg33, arg44, arg55);
     }
 
     public void setRock(int rock){

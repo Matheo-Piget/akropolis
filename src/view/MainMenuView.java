@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import javax.swing.Box;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
@@ -46,7 +47,7 @@ public class MainMenuView extends JPanel {
         super();
         // Charger l'image de fond
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/akropolisBG.jpg")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
             // Rendre le fond transparent pour afficher l'image
             setOpaque(false);
         } catch (IOException e) {
@@ -90,9 +91,9 @@ public class MainMenuView extends JPanel {
     }
 
     private void addButtonsPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 20, 20));
-        buttonPanel.setOpaque(false); // Rendre le panneau transparent
-
+        JPanel buttonPanel = new JPanel(new GridLayout(2,2, 20, 20));
+        buttonPanel.setOpaque(false);
+    
         // Bouton démarrer
         JButton startButton = createStyledButton("Démarrer", e -> startNewGame());
         // Bouton règles
@@ -101,29 +102,39 @@ public class MainMenuView extends JPanel {
         JButton creditsButton = createStyledButton("Crédits", e -> showCreditsPanel());
         // Bouton quitter
         JButton quitButton = createStyledButton("Quitter", e -> System.exit(0));
-
-        // Ajouter les boutons au panneau de boutons
-        buttonPanel.add(startButton);
+    
         buttonPanel.add(rulesButton);
+        buttonPanel.add(startButton);
         buttonPanel.add(creditsButton);
         buttonPanel.add(quitButton);
-
-        // Contraintes pour centrer le panneau de boutons dans l'arrière-plan
+    
+        buttonPanel.add(Box.createVerticalStrut(10));
+    
+        // Settings button
+        JButton settingsButton = createStyledButton("Paramètres", e -> System.out.println("Settings"));
+        buttonPanel.add(settingsButton);
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.NONE;
-
-        // Ajouter le panneau de boutons au panneau d'arrière-plan avec les contraintes
+    
         add(buttonPanel, gbc);
     }
 
     private void initSoundEffects() {
-        buttonClickSound = new SoundEffect("/GameButton.wav"); // Assurez-vous que le chemin est correct
+        buttonClickSound = new SoundEffect("/sound/GameButton.wav"); // Assurez-vous que le chemin est correct
     }
 
+    /**
+     * Create a styled button
+     *
+     * @param text           the text to display on the button
+     * @param actionListener the action listener for the button
+     * @return a styled button
+     */
     private JButton createStyledButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(150, 50));
@@ -152,7 +163,7 @@ public class MainMenuView extends JPanel {
     private void playBackgroundMusic() {
         try {
             // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources
-            InputStream audioSrc = getClass().getResourceAsStream("/Akropolis.wav");
+            InputStream audioSrc = getClass().getResourceAsStream("/sound/Akropolis.wav");
             assert audioSrc != null;
             InputStream bufferedIn = new BufferedInputStream(audioSrc);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
@@ -173,6 +184,9 @@ public class MainMenuView extends JPanel {
         }
     }
 
+    /**
+     * Start a new game
+     */
     private void startNewGame() {
         stopBackgroundMusic();
         System.out.println("Nouvelle partie démarrée");
@@ -220,6 +234,12 @@ public class MainMenuView extends JPanel {
         }
     }
 
+    /**
+     * Collect the player name
+     *
+     * @param playerNumber the player number
+     * @return the player name
+     */
     private String collectPlayerName(int playerNumber) {
         String playerName;
         do {
@@ -238,10 +258,13 @@ public class MainMenuView extends JPanel {
                         JOptionPane.WARNING_MESSAGE);
                 playerName = null;
             }
-        } while (playerName == null || playerName.trim().isEmpty());
+        } while (playerName == null);
         return playerName.trim();
     }
 
+    /**
+     * showRulesPanel
+     */
     private void showRulesPanel() {
         // Création d'un nouveau dialogue
         JDialog rulesDialog = new JDialog();
@@ -255,7 +278,7 @@ public class MainMenuView extends JPanel {
         for (int i = 7; i >= 1; i--) {
             try {
                 BufferedImage img = ImageIO
-                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
+                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/rules/regles" + i + ".png")));
                 ImageIcon icon = new ImageIcon(img);
                 rulesImages.add(icon);
             } catch (IOException e) {
@@ -314,6 +337,9 @@ public class MainMenuView extends JPanel {
         rulesDialog.setVisible(true);
     }
 
+    /**
+     * showCreditsPanel
+     */
     private void showCreditsPanel() {
         // Création du dialogue pour les crédits
         JDialog creditsDialog = new JDialog();
@@ -348,6 +374,12 @@ public class MainMenuView extends JPanel {
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
     }
 
+    /**
+     * Create a styled navigation button
+     *
+     * @param text  the text to display on the button
+     * @return a styled navigation button
+     */
     private JButton createStyledNavigationButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(50, 50));

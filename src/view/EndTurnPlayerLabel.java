@@ -32,7 +32,8 @@ class EndTurnPlayerLabel extends JLabel {
     public void addNotify() {
         super.addNotify();
         Container parent = getParent();
-        BoardView boardView = (BoardView) parent.getParent();
+        // Ugly code but hey, it works
+        BoardView boardView = (BoardView) parent.getParent().getParent().getParent();
         setFont(new Font("Serif", Font.BOLD, 25));
         timeline = new Timeline(0);
 
@@ -124,6 +125,8 @@ class EndTurnPlayerLabel extends JLabel {
         setText("Prochain Joueur: " + playerName);
     }
 
+
+    // Start the animation
     public void play(String playerName) {
         setPlayerName(playerName);
         timeline.start();
