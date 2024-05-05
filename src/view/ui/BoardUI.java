@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
 import view.View;
@@ -50,12 +51,12 @@ public class BoardUI extends JPanel implements View {
         try{
             // Load all the player icons for each player
             for (int i = 0; i < numberOfPlayers; i++){
-                Image icon = ImageIO.read(getClass().getResource("/Icons_0" + (i + 1) + ".png"));
+                Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/playerIcons/Icons_0" + (i + 1) + ".png")));
                 playerIcons.add(new ImageIcon(icon));
             }
             playerImageLabel = new JLabel(playerIcons.get(0));
             playerLabel.add(playerImageLabel);
-            Image img2 = ImageIO.read(getClass().getResource("/rock.png")).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+            Image img2 = ImageIO.read(Objects.requireNonNull(getClass().getResource("/rock.png"))).getScaledInstance(60, 60, Image.SCALE_DEFAULT);
             rockIcon = new ImageIcon(img2);
             rockImageLabel = new JLabel(rockIcon);
             

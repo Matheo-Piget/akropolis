@@ -179,7 +179,7 @@ public class TileView extends JComponent implements View {
         }
         // Draw the price of the tile
         g2.setColor(Color.WHITE);
-        g2.drawString("Coût : "+ String.valueOf(cost), getWidth() - 60, 20);
+        g2.drawString("Coût : "+ cost, getWidth() - 60, 20);
         g2.dispose();
     }
 }

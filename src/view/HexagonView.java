@@ -154,6 +154,7 @@ public abstract class HexagonView extends JComponent {
             int stringWidth = g2d.getFontMetrics().stringWidth(heightStr);
             int x = (getWidth() - stringWidth) / 2;
             int y = getHeight() / 2 + fontSize / 3;
+            assert texture != null;
             Color hexagonColor = texture.getGraphics().getColor();
             Color outlineColor = hexagonColor.darker();
 

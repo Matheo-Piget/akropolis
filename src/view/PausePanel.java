@@ -148,7 +148,7 @@ public class PausePanel extends JPanel {
         for (int i = 7; i >= 1; i--) {
             try {
                 BufferedImage img = ImageIO
-                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
+                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/rules/regles" + i + ".png")));
                 ImageIcon icon = new ImageIcon(img);
                 rulesImages.add(icon);
             } catch (IOException e) {

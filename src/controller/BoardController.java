@@ -31,7 +31,7 @@ public class BoardController extends Controller {
     public BoardController(Board model, BoardView view) {
         super(model, view);
         try {
-            tilePlacementSound = new SoundEffect("/tilePlaceSound.wav");
+            tilePlacementSound = new SoundEffect("/sound/tilePlaceSound.wav");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to load sound effect: " + e.getMessage());

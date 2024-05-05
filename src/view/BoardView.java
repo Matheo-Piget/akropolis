@@ -200,7 +200,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         gameSwitch.show(this, "game");
         setOpaque(true);
         setFocusable(true);
-        pauseButtonClickSound = new SoundEffect("/GameButton.wav");
+        pauseButtonClickSound = new SoundEffect("/sound/GameButton.wav");
         gamePanel.moveToFront(scoreDetails);
         gamePanel.moveToBack(borderGamePanel);
     }
@@ -224,6 +224,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         borderGamePanel.add(siteView, BorderLayout.WEST);
     }
 
+    /**
+     * Setup the layered pane.
+     */
     private void setupLayeredPane() {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.add(cardPanel, 0);
@@ -235,6 +238,11 @@ public class BoardView extends JPanel implements View, KeyListener {
         borderGamePanel.add(layeredPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Setup the bottom panel.
+     *
+     * @param numPlayers The number of players.
+     */
     private void setupBottomPanel(int numPlayers) {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setOpaque(false);
@@ -288,6 +296,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         endTurnPlayerLabel.play(playerNames[(index + 1) % gridViews.size()]);
     }
 
+    /**
+     * Freeze the game.
+     */
     public void freeze() {
         currentGridView.disableListeners();
         siteView.disableListeners();
@@ -296,6 +307,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         this.setEnabled(false);
     }
 
+    /**
+     * Unfreeze the game.
+     */
     public void unfreeze() {
         currentGridView.enableListeners();
         siteView.enableListeners();

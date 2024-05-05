@@ -10,7 +10,7 @@ import view.main.states.StartState;
 
 public class App extends JFrame{
 
-    private static final ImageIcon appIcon = new ImageIcon("res/akropolis_logo2.png");
+    private static final ImageIcon appIcon = new ImageIcon("res/menu/akropolis_logo2.png");
     private final JPanel screen = new JPanel();
     private static final App INSTANCE = new App();
 

@@ -47,7 +47,7 @@ public class MainMenuView extends JPanel {
         super();
         // Charger l'image de fond
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/akropolisBG.jpg")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
             // Rendre le fond transparent pour afficher l'image
             setOpaque(false);
         } catch (IOException e) {
@@ -125,7 +125,7 @@ public class MainMenuView extends JPanel {
     }
 
     private void initSoundEffects() {
-        buttonClickSound = new SoundEffect("/GameButton.wav"); // Assurez-vous que le chemin est correct
+        buttonClickSound = new SoundEffect("/sound/GameButton.wav"); // Assurez-vous que le chemin est correct
     }
 
     /**
@@ -163,7 +163,7 @@ public class MainMenuView extends JPanel {
     private void playBackgroundMusic() {
         try {
             // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources
-            InputStream audioSrc = getClass().getResourceAsStream("/Akropolis.wav");
+            InputStream audioSrc = getClass().getResourceAsStream("/sound/Akropolis.wav");
             assert audioSrc != null;
             InputStream bufferedIn = new BufferedInputStream(audioSrc);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
@@ -258,7 +258,7 @@ public class MainMenuView extends JPanel {
                         JOptionPane.WARNING_MESSAGE);
                 playerName = null;
             }
-        } while (playerName == null || playerName.trim().isEmpty());
+        } while (playerName == null);
         return playerName.trim();
     }
 
@@ -278,7 +278,7 @@ public class MainMenuView extends JPanel {
         for (int i = 7; i >= 1; i--) {
             try {
                 BufferedImage img = ImageIO
-                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/regles" + i + ".png")));
+                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/rules/regles" + i + ".png")));
                 ImageIcon icon = new ImageIcon(img);
                 rulesImages.add(icon);
             } catch (IOException e) {
