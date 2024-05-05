@@ -41,3 +41,6 @@ pom.xml.versionsBackup
 ### Gradle ###
 .gradle/
 build/
+
+## Project ###
+res/save/*

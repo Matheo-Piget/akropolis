@@ -44,7 +44,7 @@ public class SettingsParser {
         return height;
     }
 
-    public void changeResolution(int width, int height) {
+    public static void changeResolution(int width, int height) {
         changeResolutionWidth(width);
         changeResolutionHeight(height);
         save(); // Save the new resolution

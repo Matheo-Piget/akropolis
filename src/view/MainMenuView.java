@@ -2,25 +2,22 @@ package view;
 
 import view.main.App;
 import view.main.states.PlayingState;
+import view.ui.UIFactory;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import javax.swing.Box;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,8 +40,6 @@ public class MainMenuView extends JPanel {
     private CardLayout switcher = new CardLayout();
     private AkropolisTitleLabel titleLabel;
     private Clip backgroundMusicClip;
-    // private Clip buttonClickSound;
-    private SoundEffect buttonClickSound;
 
     public MainMenuView() {
         super();
@@ -60,12 +55,11 @@ public class MainMenuView extends JPanel {
         }
         choicePanel.setOpaque(false);
         add(choicePanel, "choicePanel");
-        add(new SettingsPanel(), "settingsPanel");
+        add(new SettingsPanel(switcher), "settingsPanel");
         switcher.show(this, "choicePanel");
         addTitleLabel();
         addButtonsPanel();
         playBackgroundMusic();
-        initSoundEffects();
     }
 
     @Override
@@ -100,13 +94,13 @@ public class MainMenuView extends JPanel {
         buttonPanel.setOpaque(false);
     
         // Bouton démarrer
-        JButton startButton = createStyledButton("Démarrer", e -> startNewGame());
+        JButton startButton = UIFactory.createStyledButton("Démarrer", e -> startNewGame());
         // Bouton règles
-        JButton rulesButton = createStyledButton("Règles du jeu", e -> showRulesPanel());
+        JButton rulesButton = UIFactory.createStyledButton("Règles du jeu", e -> UIFactory.showRulesPanel());
         // Bouton crédits
-        JButton creditsButton = createStyledButton("Crédits", e -> showCreditsPanel());
+        JButton creditsButton = UIFactory.createStyledButton("Crédits", e -> showCreditsPanel());
         // Bouton quitter
-        JButton quitButton = createStyledButton("Quitter", e -> System.exit(0));
+        JButton quitButton = UIFactory.createStyledButton("Quitter", e -> System.exit(0));
     
         buttonPanel.add(rulesButton);
         buttonPanel.add(startButton);
@@ -116,7 +110,7 @@ public class MainMenuView extends JPanel {
         buttonPanel.add(Box.createVerticalStrut(10));
     
         // Settings button
-        JButton settingsButton = createStyledButton("Paramètres", e -> switcher.show(this, "settingsPanel"));
+        JButton settingsButton = UIFactory.createStyledButton("Paramètres", e -> switcher.show(this, "settingsPanel"));
         buttonPanel.add(settingsButton);
     
         GridBagConstraints gbc = new GridBagConstraints();
@@ -127,42 +121,6 @@ public class MainMenuView extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
     
         choicePanel.add(buttonPanel, gbc);
-    }
-
-    private void initSoundEffects() {
-        buttonClickSound = new SoundEffect("/sound/GameButton.wav"); // Assurez-vous que le chemin est correct
-    }
-
-    /**
-     * Create a styled button
-     *
-     * @param text           the text to display on the button
-     * @param actionListener the action listener for the button
-     * @return a styled button
-     */
-    private JButton createStyledButton(String text, ActionListener actionListener) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(150, 50));
-        button.setBackground(new Color(255, 215, 0));
-        button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 235, 59));
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 215, 0));
-            }
-        });
-        // Ajout l'écouteur d'événements
-        button.addActionListener(e -> {
-            buttonClickSound.play(); // pour Jouez l'effet sonore ici
-            actionListener.actionPerformed(e);
-        });
-        return button;
     }
 
     private void playBackgroundMusic() {
@@ -268,81 +226,6 @@ public class MainMenuView extends JPanel {
     }
 
     /**
-     * showRulesPanel
-     */
-    private void showRulesPanel() {
-        // Création d'un nouveau dialogue
-        JDialog rulesDialog = new JDialog();
-        rulesDialog.setTitle("Règles du jeu");
-        rulesDialog.setSize(910, 700);
-        rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.
-        // Crée un panel principal utilisant BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        // liste pour stocker les images des règles du jeu.
-        List<ImageIcon> rulesImages = new ArrayList<>();
-        for (int i = 7; i >= 1; i--) {
-            try {
-                BufferedImage img = ImageIO
-                        .read(Objects.requireNonNull(getClass().getResourceAsStream("/rules/regles" + i + ".png")));
-                ImageIcon icon = new ImageIcon(img);
-                rulesImages.add(icon);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.err.println("Erreur lors du chargement de l'image /res/regles" + i + ".png");
-            }
-        }
-        JLabel imagLabel = new JLabel();
-        if (!rulesImages.isEmpty()) {
-            imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
-        }
-        // Utilise un JScrollPane pour permettre le défilement si l'image est plus
-        // grande que le panel.
-        JScrollPane scrollPane = new JScrollPane(imagLabel);
-        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); // Couleur de fond de la barre de
-                                                                                   // défilement
-        scrollPane.getVerticalScrollBar().setForeground(new Color(255, 215, 0)); // Couleur de la barre de défilement
-        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0)); // Taille de la barre de défilement
-
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        JButton prevButton = createStyledNavigationButton("<");
-        JButton nextButton = createStyledNavigationButton(">");
-
-        final int[] currentIndex = { 0 };
-        prevButton.addActionListener(e -> {
-            // Décrémente l'index et met à jour l'image affichée quand le bouton précédent
-            // est cliqué.
-            if (currentIndex[0] > 0) {
-                currentIndex[0]--;
-                imagLabel.setIcon(rulesImages.get(currentIndex[0]));
-            }
-        });
-
-        nextButton.addActionListener(e -> {
-            // incrémente l'index et met à jour l'image affichée quand le bouton précédent
-            // est cliqué.
-            if (currentIndex[0] < rulesImages.size() - 1) {
-                currentIndex[0]++;
-                imagLabel.setIcon(rulesImages.get(currentIndex[0]));
-            }
-        });
-
-        // Panels pour positionner les boutons sur les côtés de l'image
-        JPanel leftButtonPanel = new JPanel(new BorderLayout());
-        leftButtonPanel.add(prevButton, BorderLayout.CENTER);
-
-        JPanel rightButtonPanel = new JPanel(new BorderLayout());
-        rightButtonPanel.add(nextButton, BorderLayout.CENTER);
-
-        // Ajoute les boutons de navigation à gauche et à droite de l'image
-        mainPanel.add(leftButtonPanel, BorderLayout.WEST);
-        mainPanel.add(rightButtonPanel, BorderLayout.EAST);
-
-        rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
-        rulesDialog.setVisible(true);
-    }
-
-    /**
      * showCreditsPanel
      */
     private void showCreditsPanel() {
@@ -377,34 +260,6 @@ public class MainMenuView extends JPanel {
 
         creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
         creditsDialog.setVisible(true); // Affiche le dialogue des crédits
-    }
-
-    /**
-     * Create a styled navigation button
-     *
-     * @param text  the text to display on the button
-     * @return a styled navigation button
-     */
-    private JButton createStyledNavigationButton(String text) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(50, 50));
-        button.setBackground(new Color(255, 215, 0));
-        button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 20));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 235, 59));
-                button.setForeground(Color.BLACK);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(255, 215, 0));
-                button.setForeground(Color.BLACK);
-            }
-        });
-        return button;
     }
 
     private JLabel createStyledCreditLabel(String text) {

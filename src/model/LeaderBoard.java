@@ -93,6 +93,43 @@ public class LeaderBoard {
     }
 
     /**
+     * Resets the leaderboard.
+     */
+    public void resetLeaderBoard() {
+        scores.clear();
+        // Add the goofy default scores
+        LinkedHashMap<String, Integer> onePlayerScores = new LinkedHashMap<>();
+        scores.put("ONE_PLAYER", onePlayerScores);
+        onePlayerScores.put("Lasagna", 100);
+        onePlayerScores.put("Zangief", 60);
+        onePlayerScores.put("BarkBark", 50);
+        onePlayerScores.put("ChickenMH", 45);
+        onePlayerScores.put("Lezgo", 15);
+        LinkedHashMap<String, Integer> twoPlayerScores = new LinkedHashMap<>();
+        scores.put("TWO_PLAYER", twoPlayerScores);
+        twoPlayerScores.put("JohnAkropolis", 60);
+        twoPlayerScores.put("Suckaball", 40);
+        twoPlayerScores.put("Jeej", 30);
+        twoPlayerScores.put("Shrek", 25);
+        twoPlayerScores.put("Ligma", 20);
+        LinkedHashMap<String, Integer> threePlayerScores = new LinkedHashMap<>();
+        scores.put("THREE_PLAYER", threePlayerScores);
+        threePlayerScores.put("CacaProut", 50);
+        threePlayerScores.put("Kiryu", 48);
+        threePlayerScores.put("DGSI", 40);
+        threePlayerScores.put("Dragunov", 35);
+        threePlayerScores.put("FREEROBUX", 10);
+        LinkedHashMap<String, Integer> fourPlayerScores = new LinkedHashMap<>();
+        scores.put("FOUR_PLAYER", fourPlayerScores);
+        fourPlayerScores.put("FreeCandy", 40);
+        fourPlayerScores.put("LikeAndSub", 30);
+        fourPlayerScores.put("THEGOAT", 25);
+        fourPlayerScores.put("EarLicker", 10);
+        fourPlayerScores.put("Nvidia", 0);
+        saveScores();
+    }
+
+    /**
      * Gets the scores for a specific mode.
      *
      * @param mode The mode of the game.
