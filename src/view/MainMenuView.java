@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import javax.swing.Box;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
@@ -90,9 +91,9 @@ public class MainMenuView extends JPanel {
     }
 
     private void addButtonsPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 20, 20));
-        buttonPanel.setOpaque(false); // Rendre le panneau transparent
-
+        JPanel buttonPanel = new JPanel(new GridLayout(2,2, 20, 20));
+        buttonPanel.setOpaque(false);
+    
         // Bouton démarrer
         JButton startButton = createStyledButton("Démarrer", e -> startNewGame());
         // Bouton règles
@@ -101,22 +102,25 @@ public class MainMenuView extends JPanel {
         JButton creditsButton = createStyledButton("Crédits", e -> showCreditsPanel());
         // Bouton quitter
         JButton quitButton = createStyledButton("Quitter", e -> System.exit(0));
-
-        // Ajouter les boutons au panneau de boutons
-        buttonPanel.add(startButton);
+    
         buttonPanel.add(rulesButton);
+        buttonPanel.add(startButton);
         buttonPanel.add(creditsButton);
         buttonPanel.add(quitButton);
-
-        // Contraintes pour centrer le panneau de boutons dans l'arrière-plan
+    
+        buttonPanel.add(Box.createVerticalStrut(10));
+    
+        // Settings button
+        JButton settingsButton = createStyledButton("Paramètres", e -> System.out.println("Settings"));
+        buttonPanel.add(settingsButton);
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.NONE;
-
-        // Ajouter le panneau de boutons au panneau d'arrière-plan avec les contraintes
+    
         add(buttonPanel, gbc);
     }
 

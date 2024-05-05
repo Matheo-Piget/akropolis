@@ -327,7 +327,7 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         }
         return filledHexagons;
-    }
+     }
 
     /**
      * Show the pause menu.

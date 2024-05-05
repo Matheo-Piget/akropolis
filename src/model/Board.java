@@ -27,7 +27,7 @@ public class Board extends Model {
             playerList.add(player);
             nb_rocks++;
         }
-        stackTiles = new StackTiles(3); // Assuming 60 tiles in the stack
+        stackTiles = new StackTiles(switchSizeStackPlayer()); // Initialize the stack of tiles
         site = new Site(switchSizePlayers());
         currentPlayer = playerList.get(0); // The first player starts
         stackTiles.shuffle(); // Shuffle the stack of tiles
@@ -54,7 +54,6 @@ public class Board extends Model {
      * @param player The player for whom the turn is starting.
      */
     public void startTurn(Player player) {
-        firePropertyChange("nextTurn", null, player);
         if (isGameOver()) {
             firePropertyChange("gameOver", null, getWinner());
             return;
@@ -65,6 +64,7 @@ public class Board extends Model {
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles);
         }
+        firePropertyChange("nextTurn", null, player);
     }
 
     /**
@@ -137,6 +137,21 @@ public class Board extends Model {
     }
 
     /**
+     * Returns the number of tiles to put on the stack according to the number of
+     * players.
+     * 
+     * @return The number of tiles to put on the stack.
+     */
+    public int switchSizeStackPlayer(){
+        return switch (getNumberOfPlayers()) {
+            case 1, 2 -> 30;
+            case 3 -> 40;
+            case 4 -> 60;
+            default -> 60;
+        };
+    }
+
+    /**
      * Returns the number of tiles to put on the table according to the number of
      * players.
      * 
@@ -189,7 +204,7 @@ public class Board extends Model {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && site.isEmpty();
+        return stackTiles.isEmpty() && site.size() <= 1;
     }
 
     /**

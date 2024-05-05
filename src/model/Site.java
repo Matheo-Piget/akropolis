@@ -10,6 +10,19 @@ public class Site extends Model {
     }
 
     /**
+     * This method is used to get the size of the site
+     * @return The size of the site
+     */
+    public int size() {
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] == null) {
+                return i;
+            }
+        }
+        return tiles.length;
+    }
+
+    /**
      * This method is used to update the site with the tiles from the stack
      * 
      * @param stackTiles The stack of tiles to update the site with

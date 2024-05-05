@@ -79,7 +79,7 @@ public class BoardUI extends JPanel implements View {
         rockImageLabel.setBorder(new EmptyBorder(0, 0, 15, 0));
         topPanel.add(rockImageLabel, gbc);
         topPanel.add(rockLabel, gbc);
-        remainingTilesBar = createRemainingTilesBar();
+        remainingTilesBar = createRemainingTilesBar(numberOfPlayers);
         gbc.gridx = 3;
         topPanel.add(remainingTilesBar, gbc);
         topPanel.add(remainingTilesLabel, gbc);
@@ -99,10 +99,16 @@ public class BoardUI extends JPanel implements View {
      * Creates a progress bar to display the remaining tiles.
      * @return the progress bar
      */
-    private JProgressBar createRemainingTilesBar() {
+    private JProgressBar createRemainingTilesBar(int numberOfPlayers) {
         JProgressBar bar = new JProgressBar();
         bar.setMinimum(0);
-        bar.setMaximum(57); 
+        int max = switch (numberOfPlayers) {
+            case 1, 2 -> 27;
+            case 3 -> 36;
+            case 4 -> 55;
+            default -> 55;
+        };
+        bar.setMaximum(max); 
         bar.setStringPainted(true);
         bar.setFont(new Font("Serif", Font.BOLD, 16)); 
         bar.setForeground(Color.GRAY); 
