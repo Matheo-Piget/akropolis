@@ -29,6 +29,7 @@ import java.util.List;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import javax.imageio.ImageIO;
+import java.awt.CardLayout;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -37,7 +38,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MainMenuView extends JPanel {
 
+    private JPanel choicePanel = new JPanel(new GridBagLayout());
     private BufferedImage backgroundImage;
+    private CardLayout switcher = new CardLayout();
     private AkropolisTitleLabel titleLabel;
     private Clip backgroundMusicClip;
     // private Clip buttonClickSound;
@@ -45,6 +48,7 @@ public class MainMenuView extends JPanel {
 
     public MainMenuView() {
         super();
+        this.setLayout(switcher);
         // Charger l'image de fond
         try {
             backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
@@ -54,9 +58,10 @@ public class MainMenuView extends JPanel {
             // Remplacer l'image manquante par une couleur de fond grise
             setBackground(Color.GRAY);
         }
-
-        setLayout(new GridBagLayout());
-
+        choicePanel.setOpaque(false);
+        add(choicePanel, "choicePanel");
+        add(new SettingsPanel(), "settingsPanel");
+        switcher.show(this, "choicePanel");
         addTitleLabel();
         addButtonsPanel();
         playBackgroundMusic();
@@ -87,7 +92,7 @@ public class MainMenuView extends JPanel {
         titleGbc.weighty = 0.1;
         titleGbc.fill = GridBagConstraints.NONE;
         titleGbc.anchor = GridBagConstraints.NORTH;
-        add(titleLabel, titleGbc);
+        choicePanel.add(titleLabel, titleGbc);
     }
 
     private void addButtonsPanel() {
@@ -111,7 +116,7 @@ public class MainMenuView extends JPanel {
         buttonPanel.add(Box.createVerticalStrut(10));
     
         // Settings button
-        JButton settingsButton = createStyledButton("Paramètres", e -> System.out.println("Settings"));
+        JButton settingsButton = createStyledButton("Paramètres", e -> switcher.show(this, "settingsPanel"));
         buttonPanel.add(settingsButton);
     
         GridBagConstraints gbc = new GridBagConstraints();
@@ -121,7 +126,7 @@ public class MainMenuView extends JPanel {
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.NONE;
     
-        add(buttonPanel, gbc);
+        choicePanel.add(buttonPanel, gbc);
     }
 
     private void initSoundEffects() {
@@ -172,7 +177,7 @@ public class MainMenuView extends JPanel {
             clip.open(audioStream);
             clip.start();
             // stay in loop if you want to play the clip continuously
-            // clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
