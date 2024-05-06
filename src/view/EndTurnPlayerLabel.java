@@ -14,8 +14,7 @@ import util.Timeline;
 
 class EndTurnPlayerLabel extends JLabel {
     private Timeline timeline;
-    private Color outlineColor = Color.WHITE;
-    private final int ANIMATION_RATE = 17;
+    private final Color outlineColor = Color.WHITE;
     private final int ANIMATION_REPEAT = 50;
 
     public EndTurnPlayerLabel() {
@@ -49,37 +48,29 @@ class EndTurnPlayerLabel extends JLabel {
         setVisible(false);
         setForeground(new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
 
-        timeline.addKeyFrame(new Timeline.KeyFrame(ANIMATION_RATE, ANIMATION_REPEAT, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(true);
-                // Increase the label's opacity by a step each time the action is performed
-                int alpha = getForeground().getAlpha();
-                alpha = Math.min(alpha + 255 / ANIMATION_REPEAT, 255);
-                setForeground(new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(),
-                        alpha));
-                if (parent instanceof JComponent) {
-                    ((JComponent) parent).repaint(getBounds());
-                }
+        int ANIMATION_RATE = 17;
+        timeline.addKeyFrame(new Timeline.KeyFrame(ANIMATION_RATE, ANIMATION_REPEAT, e -> {
+            setVisible(true);
+            // Increase the label's opacity by a step each time the action is performed
+            int alpha = getForeground().getAlpha();
+            alpha = Math.min(alpha + 255 / ANIMATION_REPEAT, 255);
+            setForeground(new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(),
+                    alpha));
+            if (parent instanceof JComponent) {
+                ((JComponent) parent).repaint(getBounds());
             }
         }));
-        timeline.addKeyFrame(new Timeline.KeyFrame(900, 1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Do nothing
-            }
+        timeline.addKeyFrame(new Timeline.KeyFrame(900, 1, e -> {
+            // Do nothing
         }));
-        timeline.setOnFinished(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timeline.reset();
-                setVisible(false);
-                // Reset the label's opacity to 0
-                setForeground(
-                        new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
-                boardView.unfreeze();
-                boardView.displayNextBoard();
-            }
+        timeline.setOnFinished(e -> {
+            timeline.reset();
+            setVisible(false);
+            // Reset the label's opacity to 0
+            setForeground(
+                    new Color(getForeground().getRed(), getForeground().getGreen(), getForeground().getBlue(), 0));
+            boardView.unfreeze();
+            boardView.displayNextBoard();
         });
     }
 

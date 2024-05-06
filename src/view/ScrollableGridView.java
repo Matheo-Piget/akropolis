@@ -105,6 +105,9 @@ public class ScrollableGridView extends JScrollPane implements View {
         return grid;
     }
 
+    /**
+     * Unfilled the hexagons
+     */
     public void unfilledEachHexagons() {
         for (HexagonView hexagon : filledHexagonViews) {
             if (hexagon != null) {
@@ -115,10 +118,19 @@ public class ScrollableGridView extends JScrollPane implements View {
         filledHexagonViews = new HexagonView[3];
     }
 
+    /**
+     * Get the filled hexagons
+     * @return The filled hexagons
+     */
     public HexagonView[] getFilledHexagons() {
         return filledHexagonViews;
     }
 
+    /**
+     * Fill the hexagons with the tile
+     * @param tile The tile to fill the hexagons with
+     * @param hoveredHexagon The hovered hexagon
+     */
     public void fillEachHexagons(TileView tile, HexagonView hoveredHexagon) {
         int rotation = tile.getRotation();
         HexagonView hex2 = null;
@@ -154,6 +166,7 @@ public class ScrollableGridView extends JScrollPane implements View {
         }
     }
 
+
     @Override
     public void addNotify() {
         super.addNotify();
@@ -174,18 +187,28 @@ public class ScrollableGridView extends JScrollPane implements View {
         grid.addHexagon(hexagon);
     }
 
+    /**
+     * Enable the listeners
+     */
     public void enableListeners(){
         grid.addMouseListener(ma);
         grid.addMouseMotionListener(ma);
         grid.setEnabled(true);
     }
 
+    /**
+     * Disable the listeners
+     */
     public void disableListeners(){
         grid.removeMouseListener(ma);
         grid.removeMouseMotionListener(ma);
         grid.setEnabled(false);
     }
 
+    /**
+     * Set the selected tile
+     * @param tile The selected tile
+     */
     public void setSelectedTile(TileView tile) {
         if (selectedTile != null) {
             // Unfilled the hexagons
@@ -196,6 +219,9 @@ public class ScrollableGridView extends JScrollPane implements View {
         selectedTile = tile;
     }
 
+    /**
+     * Rotate the selected tile
+     */
     public void rotateSelectedTile(){
         if(selectedTile != null){
             selectedTile.rotate();
@@ -215,6 +241,9 @@ public class ScrollableGridView extends JScrollPane implements View {
         getViewport().setViewPosition(new Point(x, y));
     }
 
+    /**
+     * Remove the selected tile
+     */
     public void removeSelectedTile() {
         if (selectedTile != null) {
             // Unfilled the hexagons

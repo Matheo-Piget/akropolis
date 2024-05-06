@@ -22,6 +22,12 @@ public class SiteView extends JPanel implements View {
         this.capacity = capacity;
     }
 
+    /**
+     * Get the tile clicked
+     * @param x The x position of the click
+     * @param y The y position of the click
+     * @return The tile clicked
+     */
     public TileView getTileClicked(int x, int y) {
         for (TileView tileView : getTiles()) {
             if (tileView.contains(x, y)) {
@@ -31,6 +37,10 @@ public class SiteView extends JPanel implements View {
         return null;
     }
 
+    /**
+     * Get the tiles in the site
+     * @return The tiles in the site
+     */
     public ArrayList<TileView> getTiles() {
         ArrayList<TileView> tiles = new ArrayList<>();
         for (java.awt.Component component : getComponents()) {
@@ -40,11 +50,19 @@ public class SiteView extends JPanel implements View {
     }
 
 
+    /**
+     * Update the site view
+     * @param tiles The tiles to update the site with
+     */
     public void update(ArrayList<TileView> tiles) { 
         setTilesInSite(tiles);
         System.out.println("SiteView updated");
     }
 
+    /**
+     * Set the tiles in the site
+     * @param tiles The tiles to set in the site
+     */
     public void setTilesInSite(ArrayList<TileView> tiles) {
         // Stop all animations
         for (TileView tile : getTiles()) {
@@ -62,6 +80,9 @@ public class SiteView extends JPanel implements View {
         repaint();
     }
 
+    /**
+     * Disable the listeners
+     */
     public void disableListeners(){
         if(ma == null){
             // Get the mouse adapter
@@ -72,6 +93,9 @@ public class SiteView extends JPanel implements View {
         setEnabled(false);
     }
 
+    /**
+     * Enable the listeners
+     */
     public void enableListeners(){
         if(ma != null){
             addMouseListener(ma);

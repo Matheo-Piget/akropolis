@@ -37,13 +37,13 @@ public class MainMenuView extends JPanel {
     public MainMenuView() {
         super();
         this.setLayout(switcher);
-        // Charger l'image de fond
+        // load the background image
         try {
             backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
-            // Rendre le fond transparent pour afficher l'image
+            // Set the panel to be transparent
             setOpaque(false);
         } catch (IOException e) {
-            // Remplacer l'image manquante par une couleur de fond grise
+            // If the image is not found, set the background to gray
             setBackground(Color.GRAY);
         }
         SoundManager.playSound("menu");
@@ -56,6 +56,11 @@ public class MainMenuView extends JPanel {
 
     }
 
+    /**
+     * Set the background image
+     *
+     * @param g the graphics object
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -64,6 +69,9 @@ public class MainMenuView extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
+    /**
+     * Stop the music when the panel is removed
+     */
     @Override
     public void removeNotify() {
         super.removeNotify();
@@ -71,6 +79,9 @@ public class MainMenuView extends JPanel {
         titleLabel.stop();
     }
 
+    /**
+     * Add the title label to the panel
+     */
     private void addTitleLabel() {
         titleLabel = new AkropolisTitleLabel();
         GridBagConstraints titleGbc = new GridBagConstraints();
