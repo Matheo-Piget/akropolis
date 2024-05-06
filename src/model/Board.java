@@ -27,7 +27,7 @@ public class Board extends Model {
             playerList.add(player);
             nb_rocks++;
         }
-        stackTiles = new StackTiles(switchSizeStackPlayer()); // Initialize the stack of tiles
+        stackTiles = new StackTiles(5); // Initialize the stack of tiles
         site = new Site(switchSizePlayers());
         currentPlayer = playerList.get(0); // The first player starts
         stackTiles.shuffle(); // Shuffle the stack of tiles

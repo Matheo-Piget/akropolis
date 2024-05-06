@@ -10,7 +10,7 @@ import java.util.Objects;
 
 /** This class is a factory for loading images. */
 public class TextureFactory {
-    private static HashMap<String, BufferedImage> textures = new HashMap<>();
+    private static final HashMap<String, BufferedImage> textures = new HashMap<>();
 
     public static BufferedImage getTexture(String imageName) {
         BufferedImage texture = textures.get(imageName);
@@ -56,7 +56,6 @@ public class TextureFactory {
                 try {
                     img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/garden.png")));
                 } catch (IOException e) {
-                    e.printStackTrace();
                     Color green = new Color(0, 255, 0);
                     // Then fill a TexturePaint with the color
                     g.setColor(green);
@@ -68,7 +67,6 @@ public class TextureFactory {
                 try {
                     img = ImageIO.read(Objects.requireNonNull(TextureFactory.class.getResourceAsStream("/tiles/market.png")));
                 } catch (IOException e) {
-                    e.printStackTrace();
                     Color yellow = new Color(255, 255, 0);
                     // Then fill a TexturePaint with the color
                     g.setColor(yellow);

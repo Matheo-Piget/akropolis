@@ -6,10 +6,10 @@ import java.util.List;
 import model.Board;
 import model.Grid;
 import model.Player;
+import util.SoundManager;
 import view.BoardView;
 import view.HexagonView;
 import view.ScrollableGridView;
-import view.SoundEffect;
 import view.TileView;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -20,7 +20,6 @@ public class BoardController extends Controller {
     private final UIController uiController;
     private List<GridController> gridControllers;
     private TileController selectedTile;
-    private SoundEffect tilePlacementSound; 
 
     /**
      * Constructor for the BoardController class.
@@ -30,12 +29,6 @@ public class BoardController extends Controller {
      */
     public BoardController(Board model, BoardView view) {
         super(model, view);
-        try {
-            tilePlacementSound = new SoundEffect("/sound/tilePlaceSound.wav");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to load sound effect: " + e.getMessage());
-        }
         new SiteController(model.getSite(), view.getSiteView(), this);
         uiController = new UIController(model, view.getBoardUI());
         initializeGridControllers(model, view);
@@ -87,7 +80,7 @@ public class BoardController extends Controller {
                                 tile.setCoordinates(hexagonsCoordinates);
                                 // Place the tile on the board
                                 board.addTileToGrid();
-                                tilePlacementSound.play();
+                                SoundManager.playSound("tilePlaced");
                             }
                         }
                     }

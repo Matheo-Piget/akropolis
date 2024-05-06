@@ -1,5 +1,7 @@
 package view.ui;
 
+import util.SoundManager;
+
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import java.awt.Color;
@@ -9,8 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import view.SoundEffect;
 
 import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,6 @@ import java.awt.Font;
  * It is used to create UI elements for the game.
  */
 public class UIFactory {
-    private static final SoundEffect buttonClickSound = new SoundEffect("/sound/GameButton.wav");
     /**
      * Create a styled navigation button
      *
@@ -82,7 +81,7 @@ public class UIFactory {
         });
         // Ajout l'écouteur d'événements
         button.addActionListener(e -> {
-            buttonClickSound.play(); // pour Jouez l'effet sonore ici
+            SoundManager.playSound("gameButton2"); // pour Jouez l'effet sonore ici
             actionListener.actionPerformed(e);
         });
         return button;

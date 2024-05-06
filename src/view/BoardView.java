@@ -1,6 +1,7 @@
 package view;
 
 import model.Player;
+import util.SoundManager;
 import view.main.App;
 import view.main.states.GameOverState;
 import view.ui.BoardUI;
@@ -46,7 +47,6 @@ public class BoardView extends JPanel implements View, KeyListener {
     private JButton infoButton;
     private final CardLayout switchGrids = new CardLayout();
     private final JPanel cardPanel = new JPanel(switchGrids);
-    private SoundEffect pauseButtonClickSound;
     private String[] playerNames;
 
     /**
@@ -189,9 +189,9 @@ public class BoardView extends JPanel implements View, KeyListener {
         gamePanel.setOpaque(false);
         scoreDetails = new ScoreDetails();
         // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS BUT NOT WITH AN INT ???
-        gamePanel.add(scoreDetails, new Integer(1));
+        gamePanel.add(scoreDetails, Integer.valueOf(1));
         scoreDetails.setLocation(App.getInstance().getWidth() - App.getInstance().getScreen().getWidth() / 5, 0);
-        gamePanel.add(borderGamePanel, new Integer(0));
+        gamePanel.add(borderGamePanel, Integer.valueOf(0));
         borderGamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
         borderGamePanel.setOpaque(false);
         this.add(gamePanel, "game");
@@ -200,7 +200,6 @@ public class BoardView extends JPanel implements View, KeyListener {
         gameSwitch.show(this, "game");
         setOpaque(true);
         setFocusable(true);
-        pauseButtonClickSound = new SoundEffect("/sound/GameButton.wav");
         gamePanel.moveToFront(scoreDetails);
         gamePanel.moveToBack(borderGamePanel);
     }
@@ -253,7 +252,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         infoButton = createStyledButton("?");
         infoButton.setPreferredSize(new Dimension(85, 85));
         infoButton.addActionListener(e -> {
-            pauseButtonClickSound.play();
+            SoundManager.playSound("gameButton2");
             scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5, App.getInstance().getScreen().getHeight());
             scoreDetails.validate();
             scoreDetails.repaint();
@@ -261,7 +260,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> {
-            pauseButtonClickSound.play();
+            SoundManager.playSound("gameButton2");
             showPauseMenu();
         });
         buttonPanel.add(infoButton);

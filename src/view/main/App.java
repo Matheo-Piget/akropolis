@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import util.SettingsParser;
+import util.SoundManager;
 import view.main.states.AppState;
 import view.main.states.StartState;
 
@@ -29,6 +30,12 @@ public class App extends JFrame{
         screen.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGHT));
         add(screen);
         pack();
+
+        SoundManager.loadSound("menu", "/sound/Akropolis.wav");
+        SoundManager.loadSound("gameButton", "/sound/ButtonSound.wav");
+        SoundManager.loadSound("gameButton2", "/sound/GameButton.wav");
+        SoundManager.loadSound("tilePlaced", "/sound/tilePlaceSound.wav");
+
 
         setIconImage(appIcon.getImage());
 

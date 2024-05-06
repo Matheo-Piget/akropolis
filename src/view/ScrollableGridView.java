@@ -18,7 +18,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     private TileView selectedTile;
     private HexagonView[] filledHexagonViews = new HexagonView[3];
     private HexagonView hoveredHexagon = null;
-    private MouseAdapter ma;
+    private final MouseAdapter ma;
 
     public ScrollableGridView(GridView grid) {
         super(grid);

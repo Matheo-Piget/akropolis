@@ -66,6 +66,9 @@ public class TileView extends JComponent implements View {
         repaint();
     }
 
+    /**
+     * This method is used to setup the glow animation
+     */
     private void setupGlow() {
         if (glowTimer != null) {
             glowTimer.stop();
@@ -92,18 +95,29 @@ public class TileView extends JComponent implements View {
         });
     }
 
+    /**
+     * This method is used to start the glow animation
+     */
     public void stopGlow() {
         glowTimer.stop();
         glow = 0.0f;
         repaint();
     }
 
+    /**
+     * This method is used to dispatch the mouse event to the parent component
+     * @param e The mouse event
+     */
     @Override
     protected void processMouseEvent(MouseEvent e) {
         super.processMouseEvent(e);
         getParent().dispatchEvent(e);
     }
 
+    /**
+     * This method is used to dispatch the mouse motion event to the parent component
+     * @param e The mouse event
+     */
     @Override
     protected void processMouseMotionEvent(MouseEvent e) {
         super.processMouseMotionEvent(e);

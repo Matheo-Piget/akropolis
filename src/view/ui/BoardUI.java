@@ -156,6 +156,9 @@ public class BoardUI extends JPanel implements View {
         rockLabel.setRocks(rock);
     }
 
+    /**
+     * Applies the style to the player name label and the remaining tiles label.
+     */
     private void applyStyle() {
         // Style pour playerLabel
         playerLabel.setForeground(Color.WHITE);

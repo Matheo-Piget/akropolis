@@ -28,6 +28,9 @@ public class StartingLogoState extends State {
         return INSTANCE;
     }
 
+    /**
+     * Enters the state
+     */
     @Override
     public void enter() {
         System.out.println("Entering Starting Logo State");

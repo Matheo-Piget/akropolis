@@ -14,10 +14,7 @@ import java.util.List;
 public class Timeline {
     private final Timer timer;
     private final List<KeyFrame> keyFrames;
-    private ActionListener onFinished = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
+    private ActionListener onFinished = e -> {
     };
     private int currentKeyFrameIndex;
     private int repeatCount;
@@ -84,7 +81,7 @@ public class Timeline {
     /**
      * Sets the action to execute when the timeline finishes.
      *
-     * @param onFinished
+     * @param onFinished the action to execute when the timeline finishes
      */
     public void setOnFinished(ActionListener onFinished) {
         this.onFinished = onFinished;

@@ -1,5 +1,6 @@
 package view;
 
+import util.SoundManager;
 import view.main.App;
 import view.main.states.PlayingState;
 import view.ui.UIFactory;
@@ -18,28 +19,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.BorderLayout;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import java.awt.CardLayout;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MainMenuView extends JPanel {
 
-    private JPanel choicePanel = new JPanel(new GridBagLayout());
+    private final JPanel choicePanel = new JPanel(new GridBagLayout());
     private BufferedImage backgroundImage;
-    private CardLayout switcher = new CardLayout();
+    private final CardLayout switcher = new CardLayout();
     private AkropolisTitleLabel titleLabel;
-    private Clip backgroundMusicClip;
 
     public MainMenuView() {
         super();
@@ -53,13 +46,14 @@ public class MainMenuView extends JPanel {
             // Remplacer l'image manquante par une couleur de fond grise
             setBackground(Color.GRAY);
         }
+        SoundManager.playSound("menu");
         choicePanel.setOpaque(false);
         add(choicePanel, "choicePanel");
         add(new SettingsPanel(switcher), "settingsPanel");
         switcher.show(this, "choicePanel");
         addTitleLabel();
         addButtonsPanel();
-        playBackgroundMusic();
+
     }
 
     @Override
@@ -73,7 +67,7 @@ public class MainMenuView extends JPanel {
     @Override
     public void removeNotify() {
         super.removeNotify();
-        stopBackgroundMusic();
+        SoundManager.loopSound("menu");
         titleLabel.stop();
     }
 
@@ -123,35 +117,11 @@ public class MainMenuView extends JPanel {
         choicePanel.add(buttonPanel, gbc);
     }
 
-    private void playBackgroundMusic() {
-        try {
-            // Utilisation de getResourceAsStream pour lire le fichier depuis les ressources
-            InputStream audioSrc = getClass().getResourceAsStream("/sound/Akropolis.wav");
-            assert audioSrc != null;
-            InputStream bufferedIn = new BufferedInputStream(audioSrc);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
-
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
-            // stay in loop if you want to play the clip continuously
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void stopBackgroundMusic() {
-        if (backgroundMusicClip != null) {
-            backgroundMusicClip.stop();
-        }
-    }
-
     /**
      * Start a new game
      */
     private void startNewGame() {
-        stopBackgroundMusic();
+        SoundManager.loopSound("menu");
         System.out.println("Nouvelle partie démarrée");
 
         // Utilisation de JComboBox pour sélectionner le nombre de joueurs
@@ -172,6 +142,12 @@ public class MainMenuView extends JPanel {
                 JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
+            if (playerNumberComboBox.getSelectedItem() == null) {
+                System.out.println("Aucun choix fait, partie non démarrée");
+                JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             int numberOfPlayers = (int) playerNumberComboBox.getSelectedItem();
             List<String> playerNames = new ArrayList<>();
 

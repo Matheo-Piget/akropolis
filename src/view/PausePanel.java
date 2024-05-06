@@ -33,7 +33,7 @@ public class PausePanel extends JPanel {
     public PausePanel(BoardView boardView) {
         setSize(new Dimension(400, 400));
         this.boardView = boardView;
-        this.setLayout(new GridLayout(8, 1));
+        this.setLayout(new GridLayout(9, 1));
         initializeComponents();
     }
 

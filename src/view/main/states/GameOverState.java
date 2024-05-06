@@ -1,18 +1,19 @@
 package view.main.states;
 
 import util.State;
+import util.Timeline;
 import view.main.App;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameOverState extends State {
 
     private static final GameOverState INSTANCE = new GameOverState();
-    private JPanel gameOverPanel;
-
+    private Timeline timeline;
+    private JPanel blackScreen;
     private String winner;
 
     public static GameOverState getInstance() {
@@ -21,17 +22,62 @@ public class GameOverState extends State {
 
     @Override
     public void enter() {
-        System.out.println("Entering Game Over State");
+        System.out.println("Entering GameOver State");
+        blackScreen = new JPanel(new BorderLayout());
+        KeyListener keyListener = new KeyListener() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+            }
 
-        gameOverPanel = new JPanel(new BorderLayout());
-        gameOverPanel.setBackground(new Color(50, 50, 50));
-        App.getInstance().getScreen().add(gameOverPanel);
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                // Skip the logo animation if a key is pressed
+                System.out.println("Key pressed, skipping logo animation");
+                // Remove the key listener
+                blackScreen.removeKeyListener(this);
+                handleExit();
+            }
 
-        // Create and add game over components
-        createGameOverComponents();
-
-        // Revalidate screen
-        App.getInstance().getScreen().revalidate();
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+            }
+        };
+        blackScreen.setFocusable(true);
+        blackScreen.setOpaque(true);
+        blackScreen.requestFocus();
+        blackScreen.requestFocusInWindow();
+        blackScreen.addKeyListener(keyListener);
+        blackScreen.setBackground(java.awt.Color.BLACK);
+        App.getInstance().getScreen().add(blackScreen, java.awt.BorderLayout.CENTER);
+        App.getInstance().getScreen().validate();
+        JLabel logo = new JLabel("Le Gagnant est : " + winner);
+        // White transparent color
+        logo.setForeground(new java.awt.Color(255, 255, 255, 0));
+        logo.setHorizontalAlignment(JLabel.CENTER);
+        logo.setVerticalAlignment(JLabel.CENTER);
+        blackScreen.add(logo, java.awt.BorderLayout.CENTER);
+        blackScreen.validate();
+        logo.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 25));
+        timeline = new Timeline(0);
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Increase the label's opacity by a step each time the action is performed
+            int alpha = logo.getForeground().getAlpha();
+            alpha = Math.min(alpha + 255 / 50, 255);
+            logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
+                    logo.getForeground().getBlue(), alpha));
+        }));
+        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, e -> {
+            // Just wait
+        }));
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Decrease the label's opacity by a step each time the action is performed
+            int alpha = logo.getForeground().getAlpha();
+            alpha = Math.max(alpha - 255 / 50, 0);
+            logo.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
+                    logo.getForeground().getBlue(), alpha));
+        }));
+        timeline.setOnFinished(e -> handleExit());
+        timeline.start();
     }
 
     @Override
@@ -43,37 +89,12 @@ public class GameOverState extends State {
     }
 
     /**
-     * Creates the game over components.
-     */
-    private void createGameOverComponents() {
-        // Winner label
-        JLabel winnerLabel = new JLabel("Game Over! Winner: " + winner);
-        winnerLabel.setFont(new Font("Arial", Font.BOLD, 40));
-        winnerLabel.setHorizontalAlignment(JLabel.CENTER);
-        winnerLabel.setForeground(Color.WHITE);
-        winnerLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        gameOverPanel.add(winnerLabel, BorderLayout.CENTER);
-
-        // Button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setOpaque(false);
-
-        // Quit to Main Menu button
-        JButton quitButton = createStyledButton("Quit to Main Menu");
-        quitButton.addActionListener(e -> App.getInstance().exitToMainMenu());
-        buttonPanel.add(quitButton);
-
-        gameOverPanel.add(buttonPanel, BorderLayout.SOUTH);
-    }
-
-    /**
      * Creates a styled button.
      *
-     * @param text the text of the button
      * @return the styled button
      */
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
+    private JButton createStyledButton() {
+        JButton button = new JButton("Retour au menu principal");
         button.setBackground(new Color(255, 215, 0));
         button.setForeground(Color.BLACK);
         button.setFont(new Font("Arial", Font.BOLD, 16));
@@ -97,6 +118,43 @@ public class GameOverState extends State {
             }
         });
         return button;
+    }
+
+    /**
+     * Handles the exit of the state
+     */
+    private void handleExit() {
+        timeline.stop();
+        blackScreen.removeAll();
+
+        blackScreen.setLayout(new GridBagLayout());
+
+        JLabel label = new JLabel("Bravo " + winner + " ! ");
+        label.setFont(new Font("Arial", Font.BOLD, 25));
+        label.setForeground(Color.WHITE);
+
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        gbc2.insets = new Insets(10, 10, 10, 10);
+        gbc2.anchor = GridBagConstraints.CENTER;
+
+        blackScreen.add(label, gbc2);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10); //
+
+
+        JButton button = createStyledButton();
+        button.addActionListener(e -> App.getInstance().appState.changeState(StartState.getInstance()));
+
+        // Center the button
+        gbc.anchor = GridBagConstraints.CENTER;
+        blackScreen.add(button, gbc);
+
+        blackScreen.revalidate();
     }
 
     public void setWinner(String winner) {

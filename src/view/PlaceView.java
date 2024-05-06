@@ -92,7 +92,7 @@ public class PlaceView extends HexagonView {
     /**
      * Draws a star at the given position with the given size.
      * 
-     * @param g    the graphics context
+     * @param g2d    the graphics context
      * @param x    the x coordinate of the star
      * @param y    the y coordinate of the star
      * @param size the size of the star
