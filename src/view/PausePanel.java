@@ -69,7 +69,7 @@ public class PausePanel extends JPanel {
         // Ajout des écouteurs pour changer l'apparence lors du survol
         label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label.setForeground(Color.YELLOW); // Changement de couleur lors du survol
+                label.setForeground(Color.BLUE); // Changement de couleur lors du survol
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
