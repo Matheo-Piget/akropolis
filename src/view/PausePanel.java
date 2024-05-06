@@ -1,14 +1,13 @@
 package view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import util.SoundManager;
 import view.main.App;
 import view.main.states.StartState;
 import view.ui.UIFactory;
@@ -85,8 +84,9 @@ public class PausePanel extends JPanel {
      */
     private void addButtons() {
         addButton(RESUME_BUTTON_LABEL, e -> boardView.resumeGame());
-        addButton(QUIT_BUTTON_LABEL, e -> App.getInstance().appState.changeState(StartState.getInstance()));
+        addButton("Activer/Désactiver le son", e -> toggleSound());
         addButton(RULES_BUTTON_LABEL, e -> UIFactory.showRulesPanel());
+        addButton(QUIT_BUTTON_LABEL, e -> App.getInstance().appState.changeState(StartState.getInstance()));
     }
 
     /**
@@ -130,5 +130,30 @@ public class PausePanel extends JPanel {
             }
         });
         return button;
+    }
+
+    private void updateButton() {
+        Component[] components = getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton button) {
+                if (button.getText().equals("Désactiver le son") || button.getText().equals("Activer le son") || button.getText().equals("Activer/Désactiver le son")){
+                    button.setText(SoundManager.isEnable ? "Désactiver le son" : "Activer le son");
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Toggles the sound on or off.
+     */
+    private void toggleSound() {
+        SoundManager.isEnable = !SoundManager.isEnable;
+        if (SoundManager.isEnable) {
+            SoundManager.loopSound("menu");
+        } else {
+            SoundManager.stopAllSounds();
+        }
+        updateButton();
     }
 }
