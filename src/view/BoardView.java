@@ -5,13 +5,18 @@ import view.main.App;
 import view.main.states.GameOverState;
 import view.ui.BoardUI;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -20,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -30,7 +34,7 @@ import java.util.concurrent.CountDownLatch;
  * It takes care of displaying the scrolling board and the site to make the game
  * playable.
  */
-public class BoardView extends JPanel implements View, KeyListener {
+public class BoardView extends JPanel implements View {
 
     // Fields
     private ScrollableGridView currentGridView;
@@ -58,6 +62,7 @@ public class BoardView extends JPanel implements View, KeyListener {
      */
     public BoardView(int maxHexagons, ArrayList<Player> players, int siteCapacity) {
         setupView();
+        setupKeyBindings();
         int numPlayers = players.size();
         initializeGridViews(maxHexagons, numPlayers);
         initializeSiteView(siteCapacity);
@@ -93,10 +98,12 @@ public class BoardView extends JPanel implements View, KeyListener {
                 latch.await(); // Wait for workers to finish
                 // Add BoardView to screen
                 SwingUtilities.invokeLater(() -> {
+                    BoardView.this.setFocusable(true);
+                    BoardView.this.setFocusTraversalKeysEnabled(false);
+                    BoardView.this.requestFocusInWindow();
+                    BoardView.this.requestFocus();
                     App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
                     App.getInstance().getScreen().revalidate();
-                    BoardView.this.requestFocusInWindow();
-                    BoardView.this.addKeyListener(BoardView.this);
                 });
 
                 return null;
@@ -199,10 +206,36 @@ public class BoardView extends JPanel implements View, KeyListener {
         this.add(new PausePanel(this), "pause");
         gameSwitch.show(this, "game");
         setOpaque(true);
-        setFocusable(true);
         pauseButtonClickSound = new SoundEffect("/sound/GameButton.wav");
         gamePanel.moveToFront(scoreDetails);
         gamePanel.moveToBack(borderGamePanel);
+    }
+
+    private void setupKeyBindings(){
+        Action escapeAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                showPauseMenu();
+            }
+        };
+        Action rotateAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                currentGridView.rotateSelectedTile();
+            }
+        };
+        Action centerAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                currentGridView.centerView();
+            }
+        };
+        ActionMap actionMap = getActionMap();
+        actionMap.put("escape", escapeAction);
+        actionMap.put("rotate", rotateAction);
+        actionMap.put("center", centerAction);
+
+        InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), "rotate");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "center");
     }
 
     /**
@@ -378,30 +411,6 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         });
         return button;
-    }
-
-    // KeyListener methods
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            showPauseMenu();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-            currentGridView.rotateSelectedTile();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_C) {
-            currentGridView.centerView();
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // Not needed, but must be implemented due to KeyListener interface
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Not needed, but must be implemented due to KeyListener interface
     }
 
     public void showGameOver(String winner) {

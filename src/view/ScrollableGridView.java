@@ -22,7 +22,6 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     public ScrollableGridView(GridView grid) {
         super(grid);
-        setFocusable(true);
         this.grid = grid;
 
         getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);

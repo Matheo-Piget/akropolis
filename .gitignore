@@ -43,4 +43,5 @@ pom.xml.versionsBackup
 build/
 
 ## Project ###
-res/save/*
+res/save/settings.ini
+res/save/leaderBoard.save

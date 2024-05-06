@@ -15,6 +15,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import javax.swing.Box;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.BorderLayout;
@@ -39,6 +40,7 @@ public class MainMenuView extends JPanel {
     private BufferedImage backgroundImage;
     private CardLayout switcher = new CardLayout();
     private AkropolisTitleLabel titleLabel;
+    private Dimension buttonSize = new Dimension(250, 50);
     private Clip backgroundMusicClip;
 
     public MainMenuView() {
@@ -46,7 +48,8 @@ public class MainMenuView extends JPanel {
         this.setLayout(switcher);
         // Charger l'image de fond
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
+            backgroundImage = ImageIO
+                    .read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/akropolisBG.jpg")));
             // Rendre le fond transparent pour afficher l'image
             setOpaque(false);
         } catch (IOException e) {
@@ -90,37 +93,43 @@ public class MainMenuView extends JPanel {
     }
 
     private void addButtonsPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(2,2, 20, 20));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 20, 20));
         buttonPanel.setOpaque(false);
-    
+
         // Bouton démarrer
-        JButton startButton = UIFactory.createStyledButton("Démarrer", e -> startNewGame());
+        JButton startButton = UIFactory.createStyledButton("Démarrer", buttonSize, e -> startNewGame());
         // Bouton règles
-        JButton rulesButton = UIFactory.createStyledButton("Règles du jeu", e -> UIFactory.showRulesPanel());
+        JButton rulesButton = UIFactory.createStyledButton("Règles du jeu", buttonSize,
+                e -> UIFactory.showRulesPanel());
         // Bouton crédits
-        JButton creditsButton = UIFactory.createStyledButton("Crédits", e -> showCreditsPanel());
+        JButton creditsButton = UIFactory.createStyledButton("Crédits", buttonSize, e -> showCreditsPanel());
         // Bouton quitter
-        JButton quitButton = UIFactory.createStyledButton("Quitter", e -> System.exit(0));
-    
+        JButton quitButton = UIFactory.createStyledButton("Quitter", buttonSize, e -> System.exit(0));
+
         buttonPanel.add(rulesButton);
         buttonPanel.add(startButton);
         buttonPanel.add(creditsButton);
         buttonPanel.add(quitButton);
-    
+
         buttonPanel.add(Box.createVerticalStrut(10));
-    
+
         // Settings button
-        JButton settingsButton = UIFactory.createStyledButton("Paramètres", e -> switcher.show(this, "settingsPanel"));
+        JButton settingsButton = UIFactory.createStyledButton("Paramètres", buttonSize,
+                e -> switcher.show(this, "settingsPanel"));
         buttonPanel.add(settingsButton);
-    
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.NONE;
-    
+        gbc.anchor = GridBagConstraints.SOUTH;
+
         choicePanel.add(buttonPanel, gbc);
+
+        gbc.gridy = 1;
+        choicePanel.add(Box.createVerticalStrut(100), gbc);
     }
 
     private void playBackgroundMusic() {
@@ -131,11 +140,11 @@ public class MainMenuView extends JPanel {
             InputStream bufferedIn = new BufferedInputStream(audioSrc);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn);
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
+            backgroundMusicClip = AudioSystem.getClip();
+            backgroundMusicClip.open(audioStream);
+            backgroundMusicClip.start();
             // stay in loop if you want to play the clip continuously
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -144,6 +153,7 @@ public class MainMenuView extends JPanel {
     private void stopBackgroundMusic() {
         if (backgroundMusicClip != null) {
             backgroundMusicClip.stop();
+            backgroundMusicClip.close();
         }
     }
 
@@ -151,7 +161,7 @@ public class MainMenuView extends JPanel {
      * Start a new game
      */
     private void startNewGame() {
-        stopBackgroundMusic();
+        //stopBackgroundMusic();
         System.out.println("Nouvelle partie démarrée");
 
         // Utilisation de JComboBox pour sélectionner le nombre de joueurs
