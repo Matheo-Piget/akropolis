@@ -62,9 +62,9 @@ public class UIFactory {
      * @param actionListener the action listener for the button
      * @return a styled button
      */
-    public static JButton createStyledButton(String text, Dimension dimension, ActionListener actionListener) {
+    public static JButton createStyledButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
-        button.setPreferredSize(dimension);
+        button.setPreferredSize(new Dimension(200, 40));
         button.setBackground(new Color(255, 215, 0));
         button.setForeground(Color.BLACK);
         button.setFont(new Font("Arial", Font.BOLD, 16));
