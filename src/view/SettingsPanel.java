@@ -3,15 +3,16 @@ package view;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import java.awt.*;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import model.LeaderBoard;
-
 import javax.swing.ImageIcon;
 import java.util.Arrays;
 import java.util.Objects;
-
 import util.SettingsParser;
 import util.SoundManager;
 import view.main.App;
@@ -24,7 +25,6 @@ import view.ui.UIFactory;
 public class SettingsPanel extends JLayeredPane {
     private JComboBox<String> windowSize = new JComboBox<>();
     private final JLabel backGroundLabel = new JLabel();
-    private boolean isSoundOn = true; // État initial du son
 
     /**
      * Constructor for the SettingsPanel class.
@@ -75,7 +75,9 @@ public class SettingsPanel extends JLayeredPane {
         JButton backButton = UIFactory.createStyledButton("Retour", e -> switcher.show(getParent(), "choicePanel"));
         backButton.setBounds(50, 250, 300, 30);
         backButton.addActionListener(e -> switcher.show(getParent(), "choicePanel"));
-        JButton soundToggleButton = UIFactory.createStyledButton("Activer/Désactiver le son", e -> toggleSound());
+        JButton soundToggleButton = UIFactory.createStyledButton("", e -> toggleSound());
+        String soundButtonText = SoundManager.isSoundEnabled() ? "Désactiver le son" : "Activer le son";
+        soundToggleButton.setText(soundButtonText);
         soundToggleButton.setBounds(50, 150, 300, 30);
         add(soundToggleButton, Integer.valueOf(1));
         add(windowSizeLabel, Integer.valueOf(1));
@@ -104,15 +106,15 @@ public class SettingsPanel extends JLayeredPane {
      * Updates the appearance of the sound button based on the sound state.
      */
     private void updateSoundButtonAppearance() {
-        String buttonText = isSoundOn ? "Désactiver le son" : "Activer le son";
-
         Component[] components = getComponents();
         for (Component component : components) {
             if (component instanceof JButton button) {
-                // Mettez à jour le texte du bouton
-                if (button.getText().equals("Activer/Désactiver le son") || button.getText().equals("Activer le son") || button.getText().equals("Désactiver le son")){
-                    button.setText(buttonText);
+                if (SoundManager.isSoundEnabled() && button.getText().equals("Activer le son")){
+                    button.setText("Désactiver le son");
                     break;
+                }
+                else if (!SoundManager.isSoundEnabled() && button.getText().equals("Désactiver le son")){
+                    button.setText("Activer le son");
                 }
             }
         }
@@ -122,14 +124,12 @@ public class SettingsPanel extends JLayeredPane {
      * Toggles the sound on and off.
      */
     private void toggleSound() {
-        isSoundOn = !isSoundOn;
-        if (isSoundOn) {
-            SoundManager.isEnable = true;
+        SoundManager.invertSoundEnabled();
+        if (SoundManager.isSoundEnabled()) {
             SoundManager.loopSound("menu");
 
         } else {
             SoundManager.stopAllSounds();
-            SoundManager.isEnable = false;
         }
         // Mettez à jour l'apparence du bouton en fonction de l'état du son
         updateSoundButtonAppearance();

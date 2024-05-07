@@ -1,8 +1,8 @@
 package view.ui;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-
 import java.awt.Font;
 import java.awt.Color;
 
@@ -21,11 +21,9 @@ public class RockLabel extends JLabel {
         setBorder(new EmptyBorder(24, 0, 0, 0)); // Ajoute un espace en haut du texte
     }
     public void setRocks(int rocks){
-        
         setFont(new Font("Serif", Font.BOLD, 18)); 
         this.setText("                 " + rocks);
         startBlinking();
-
         validate();
         repaint();
     }
@@ -37,7 +35,6 @@ public class RockLabel extends JLabel {
         if (timer != null && timer.isRunning()) {
             return;
         }
-
         timer = new Timer(9, e -> {
             isBlinking = !isBlinking;
             setForeground(isBlinking ? Color.RED : Color.WHITE);

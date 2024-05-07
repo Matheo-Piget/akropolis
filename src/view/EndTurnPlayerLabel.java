@@ -7,9 +7,7 @@ import java.awt.Graphics2D;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
 import util.Timeline;
 
 class EndTurnPlayerLabel extends JLabel {

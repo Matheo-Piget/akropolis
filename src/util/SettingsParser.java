@@ -74,6 +74,15 @@ public class SettingsParser {
         save(); // Save the new resolution
     }
 
+    public static boolean soundEnabled() {
+        return Boolean.parseBoolean(properties.getProperty("SOUND_ENABLED"));
+    }
+
+    public static void setSoundEnabled(boolean enabled) {
+        properties.setProperty("SOUND_ENABLED", Boolean.toString(enabled));
+        save();
+    }
+
     /**
      * This method is used to get the volume
      */

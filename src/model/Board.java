@@ -142,7 +142,7 @@ public class Board extends Model {
      * 
      * @return The number of tiles to put on the stack.
      */
-    public int switchSizeStackPlayer(){
+    public int switchSizeStackPlayer() {
         return switch (getNumberOfPlayers()) {
             case 1, 2 -> 30;
             case 3 -> 40;
@@ -203,7 +203,8 @@ public class Board extends Model {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        return stackTiles.isEmpty() && site.isEmpty();
+        // LIS LES REGLES DU JEU STP
+        return stackTiles.isEmpty() && site.size() <= 1;
     }
 
     /**

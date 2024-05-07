@@ -1,6 +1,10 @@
 package util;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -10,7 +14,7 @@ public class SoundManager {
 
     private static final Map<String, Clip> soundMap = new HashMap<>();
 
-    public static boolean isEnable = true;
+    private static boolean isEnable = true;
 
     /**
      * Load a sound from a file
@@ -19,6 +23,7 @@ public class SoundManager {
      */
     public static void loadSound(String soundName, String path) {
         try {
+            isEnable = SettingsParser.soundEnabled();
             URL url = SoundManager.class.getResource(path);
             if (url == null) {
                 System.err.println("Resource not found: " + path);
@@ -31,6 +36,15 @@ public class SoundManager {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isSoundEnabled() {
+        return isEnable;
+    }
+
+    public static void invertSoundEnabled() {
+        isEnable = !isEnable;
+        SettingsParser.setSoundEnabled(isEnable);
     }
 
     /**

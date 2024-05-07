@@ -1,12 +1,16 @@
 package view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+import util.SettingsParser;
 import util.SoundManager;
 import view.main.App;
 import view.main.states.StartState;
@@ -84,7 +88,8 @@ public class PausePanel extends JPanel {
      */
     private void addButtons() {
         addButton(RESUME_BUTTON_LABEL, e -> boardView.resumeGame());
-        addButton("Activer/Désactiver le son", e -> toggleSound());
+        String soundButtonText = SettingsParser.soundEnabled() ? "Désactiver le son" : "Activer le son";
+        addButton(soundButtonText, e -> toggleSound());
         addButton(RULES_BUTTON_LABEL, e -> UIFactory.showRulesPanel());
         addButton(QUIT_BUTTON_LABEL, e -> App.getInstance().appState.changeState(StartState.getInstance()));
     }
@@ -136,9 +141,11 @@ public class PausePanel extends JPanel {
         Component[] components = getComponents();
         for (Component component : components) {
             if (component instanceof JButton button) {
-                if (button.getText().equals("Désactiver le son") || button.getText().equals("Activer le son") || button.getText().equals("Activer/Désactiver le son")){
-                    button.setText(SoundManager.isEnable ? "Désactiver le son" : "Activer le son");
-                    break;
+                if (SettingsParser.soundEnabled() && button.getText().equals("Activer le son")){
+                    button.setText("Désactiver le son");
+                }
+                else if (!SettingsParser.soundEnabled() && button.getText().equals("Désactiver le son")){
+                    button.setText("Activer le son");
                 }
             }
         }
@@ -148,8 +155,8 @@ public class PausePanel extends JPanel {
      * Toggles the sound on or off.
      */
     private void toggleSound() {
-        SoundManager.isEnable = !SoundManager.isEnable;
-        if (SoundManager.isEnable) {
+        SoundManager.invertSoundEnabled();
+        if (SoundManager.isSoundEnabled()) {
             SoundManager.loopSound("menu");
         } else {
             SoundManager.stopAllSounds();

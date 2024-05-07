@@ -5,6 +5,8 @@ import util.SoundManager;
 import view.main.App;
 import view.main.states.GameOverState;
 import view.ui.BoardUI;
+import view.ui.TriangleButton;
+
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.JDialog;
@@ -44,7 +46,7 @@ public class BoardView extends JPanel implements View, KeyListener {
     private final CardLayout gameSwitch = new CardLayout();
     private BoardUI boardUI;
     private JButton pauseButton;
-    private JButton infoButton;
+    private TriangleButton infoButton;
     private final CardLayout switchGrids = new CardLayout();
     private final JPanel cardPanel = new JPanel(switchGrids);
     private String[] playerNames;
@@ -182,7 +184,6 @@ public class BoardView extends JPanel implements View, KeyListener {
     /**
      * Setup the view.
      */
-    @SuppressWarnings("removal")
     private void setupView() {
         setLayout(gameSwitch);
         this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
@@ -249,21 +250,26 @@ public class BoardView extends JPanel implements View, KeyListener {
         bottomPanel.add(boardUI, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
-        infoButton = createStyledButton("?");
-        infoButton.setPreferredSize(new Dimension(85, 85));
+        infoButton = new TriangleButton("Score");
+        infoButton.setBackground(new Color(255, 215, 0));
+        infoButton.setSize(new Dimension(100, 150));
+        infoButton.setFont(new Font("Arial", Font.BOLD, 22));
+        // Change the shape of the button to be a triangle
         infoButton.addActionListener(e -> {
             SoundManager.playSound("gameButton2");
             scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5, App.getInstance().getScreen().getHeight());
             scoreDetails.validate();
             scoreDetails.repaint();
         });
+        gamePanel.add(infoButton, Integer.valueOf(1));
+        infoButton.setLocation(App.getInstance().getWidth() - infoButton.getWidth(), App.getInstance().getHeight() / 2 - infoButton.getHeight());
+        infoButton.repaint();
         pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> {
             SoundManager.playSound("gameButton2");
             showPauseMenu();
         });
-        buttonPanel.add(infoButton);
         buttonPanel.add(pauseButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         borderGamePanel.add(bottomPanel, BorderLayout.SOUTH);
