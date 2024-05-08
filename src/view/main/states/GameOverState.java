@@ -8,11 +8,23 @@ import view.main.App;
 import view.ui.UIFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import javax.swing.JPanel;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.VolatileImage;
 import java.awt.GridLayout;
+import java.awt.GraphicsEnvironment;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsConfiguration;
+import java.awt.Transparency;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.KeyListener;
@@ -22,7 +34,7 @@ public class GameOverState extends State {
     private static final GameOverState INSTANCE = new GameOverState();
     private Timeline timeline;
     private JPanel blackScreen;
-    private List<Pair<String,Integer>> ranking;
+    private List<Pair<String, Integer>> ranking;
 
     public static GameOverState getInstance() {
         return INSTANCE;
@@ -118,14 +130,73 @@ public class GameOverState extends State {
         blackScreen.add(rankingPanel);
 
         JPanel middlePanel = new JPanel(new BorderLayout());
-        middlePanel.setOpaque(false);
+        middlePanel.setOpaque(true);
         middlePanel.setBackground(Color.BLACK);
         JButton button = createButton();
 
         middlePanel.add(button, BorderLayout.SOUTH);
         blackScreen.add(middlePanel);
 
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gs = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gs.getDefaultConfiguration();
 
+        class ImagePanel extends JPanel {
+            private VolatileImage vImg;
+        
+            public ImagePanel() {
+                this.setOpaque(false);
+            }
+        
+            public void setImage(BufferedImage img) {
+                if (vImg != null) {
+                    vImg.flush();
+                }
+                vImg = gc.createCompatibleVolatileImage(img.getWidth(), img.getHeight(), Transparency.TRANSLUCENT);
+                Graphics2D g = vImg.createGraphics();
+                g.setComposite(java.awt.AlphaComposite.Src);
+                g.drawImage(img, 0, 0, this);
+                g.dispose();
+            }
+        
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (vImg != null) {
+                    g.drawImage(vImg, 0, 0, this);
+                }
+            }
+        }        
+
+        try {
+            // GIF create visual artefacts so WE WILL BRUTE FORCE IT USING A TIMER AND A LOT OF IMAGES HAHAHA
+            ImagePanel trophyLabel = new ImagePanel();
+            trophyLabel.setOpaque(false);
+            BufferedImage[] images = new BufferedImage[40];
+            for (int i = 0; i < 40; i++) {
+                try {
+                    images[i] = ImageIO.read(getClass().getResource("/menu/animTrophy/frame" + (i + 1) + ".png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            trophyLabel.setSize(images[0].getWidth(), images[0].getHeight());
+            middlePanel.add(trophyLabel, BorderLayout.CENTER);
+            middlePanel.validate();
+            middlePanel.repaint();
+            int delay = 40;
+            final int [] index = { 0 }; // The ultimate hack to avoid final variable in lambda
+            new javax.swing.Timer(delay, e -> {
+                trophyLabel.setImage(images[index[0]]);
+                trophyLabel.repaint();
+                index[0]++;
+                if (index[0] == 40) {
+                    index[0] = 0;
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Création du panneau des meilleurs scores à droite
         JPanel leaderBoardPanel = createLeaderBoardPanel(category);
@@ -136,8 +207,9 @@ public class GameOverState extends State {
 
     /**
      * Customizes a label
+     * 
      * @param label The label to customize
-     * @param size The size of the label
+     * @param size  The size of the label
      * @param color The color of the label
      * @param style The style of the label
      */
@@ -146,14 +218,17 @@ public class GameOverState extends State {
         label.setForeground(color);
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setVerticalAlignment(JLabel.CENTER);
+        label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
     }
 
     /**
      * Creates the ranking panel
+     * 
      * @return The ranking panel
      */
     private JPanel createRankingPanel() {
-        JPanel rankingPanel = new JPanel(new GridLayout(ranking.size() + 1, 1));
+        JPanel rankingPanel = new JPanel();
+        rankingPanel.setLayout(new BoxLayout(rankingPanel, BoxLayout.Y_AXIS));
         rankingPanel.setOpaque(false);
 
         JLabel title = new JLabel("Classement");
@@ -163,6 +238,7 @@ public class GameOverState extends State {
         for (int i = 0; i < ranking.size(); i++) {
             JLabel label = new JLabel((i + 1) + " - " + ranking.get(i).getKey() + " : " + ranking.get(i).getValue());
             customizeLabel(label, 25, Color.WHITE, Font.BOLD);
+            rankingPanel.add(Box.createVerticalStrut(10));
             rankingPanel.add(label);
         }
 
@@ -174,7 +250,8 @@ public class GameOverState extends State {
         LeaderBoard leaderBoard = new LeaderBoard();
         LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
 
-        JPanel leaderBoardPanel = new JPanel(new GridLayout(6, 1));
+        JPanel leaderBoardPanel = new JPanel();
+        leaderBoardPanel.setLayout(new BoxLayout(leaderBoardPanel, BoxLayout.Y_AXIS));
         leaderBoardPanel.setOpaque(false);
 
         JLabel leaderBoardTitle = new JLabel("Meilleurs scores");
@@ -184,6 +261,7 @@ public class GameOverState extends State {
         for (String key : leaderBoardValues.keySet()) {
             JLabel label = new JLabel(key + " : " + leaderBoardValues.get(key));
             customizeLabel(label, 25, Color.WHITE, Font.BOLD);
+            leaderBoardPanel.add(Box.createVerticalStrut(10)); // Add space
             leaderBoardPanel.add(label);
         }
 
@@ -192,6 +270,7 @@ public class GameOverState extends State {
 
     /**
      * Creates the button to return to the main menu
+     * 
      * @return The button to return to the main menu
      */
     private JButton createButton() {
@@ -199,7 +278,7 @@ public class GameOverState extends State {
                 e -> App.getInstance().appState.changeState(StartState.getInstance()));
     }
 
-    public void setRanking(List<Pair<String,Integer>> ranking) {
+    public void setRanking(List<Pair<String, Integer>> ranking) {
         this.ranking = ranking;
     }
 }
