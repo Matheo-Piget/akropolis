@@ -6,24 +6,29 @@ import view.main.App;
 import view.main.states.GameOverState;
 import view.ui.BoardUI;
 import view.ui.TriangleButton;
-
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
+import util.Pair;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -33,7 +38,9 @@ import java.util.concurrent.CountDownLatch;
  * It takes care of displaying the scrolling board and the site to make the game
  * playable.
  */
-public class BoardView extends JPanel implements View, KeyListener {
+public class BoardView extends JPanel implements View {
+    // DONT USE KEYLISTENER, USE KEYBINDINGS INSTEAD BECAUSE KEYLISTNER IS NOT
+    // RELIABLE AND CAN BE OVERRIDEN BY OTHER COMPONENTS, THEY CAN LOSE FOCUS
 
     // Fields
     private ScrollableGridView currentGridView;
@@ -60,6 +67,7 @@ public class BoardView extends JPanel implements View, KeyListener {
      */
     public BoardView(int maxHexagons, ArrayList<Player> players, int siteCapacity) {
         setupView();
+        setupKeyBindings();
         int numPlayers = players.size();
         initializeGridViews(maxHexagons, numPlayers);
         initializeSiteView(siteCapacity);
@@ -98,7 +106,6 @@ public class BoardView extends JPanel implements View, KeyListener {
                     App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
                     App.getInstance().getScreen().revalidate();
                     BoardView.this.requestFocusInWindow();
-                    BoardView.this.addKeyListener(BoardView.this);
                 });
 
                 return null;
@@ -115,6 +122,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         };
         worker.execute(); // Start the SwingWorker
     }
+
     // Getter methods
     public ScrollableGridView getGridView() {
         return currentGridView;
@@ -155,7 +163,8 @@ public class BoardView extends JPanel implements View, KeyListener {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
-                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize, playerColors.get(gridViews.indexOf(gridView)));
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize,
+                                        playerColors.get(gridViews.indexOf(gridView)));
                                 publish(hexagon);
                             }
                         }
@@ -182,6 +191,36 @@ public class BoardView extends JPanel implements View, KeyListener {
     }
 
     /**
+     * Setup the key bindings to listen for key events.
+     */
+    private void setupKeyBindings(){
+        Action escapeAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                showPauseMenu();
+            }
+        };
+        Action rotateAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                currentGridView.rotateSelectedTile();
+            }
+        };
+        Action centerAction = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                currentGridView.centerView();
+            }
+        };
+        ActionMap actionMap = getActionMap();
+        actionMap.put("escape", escapeAction);
+        actionMap.put("rotate", rotateAction);
+        actionMap.put("center", centerAction);
+
+        InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), "rotate");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "center");
+    }
+
+    /**
      * Setup the view.
      */
     private void setupView() {
@@ -189,11 +228,13 @@ public class BoardView extends JPanel implements View, KeyListener {
         this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
         gamePanel.setOpaque(false);
         scoreDetails = new ScoreDetails();
-        // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS BUT NOT WITH AN INT ???
+        // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS
+        // BUT NOT WITH AN INT ???
         gamePanel.add(scoreDetails, Integer.valueOf(1));
         scoreDetails.setLocation(App.getInstance().getWidth() - App.getInstance().getScreen().getWidth() / 5, 0);
         gamePanel.add(borderGamePanel, Integer.valueOf(0));
-        borderGamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
+        borderGamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(),
+                App.getInstance().getScreen().getHeight());
         borderGamePanel.setOpaque(false);
         this.add(gamePanel, "game");
         gamePanel.setBounds(0, 0, App.getInstance().getScreen().getWidth(), App.getInstance().getScreen().getHeight());
@@ -207,8 +248,9 @@ public class BoardView extends JPanel implements View, KeyListener {
 
     /**
      * initialize the grisviews
+     * 
      * @param maxHexagons max hexagons in the gridview
-     * @param numPlayers number of players
+     * @param numPlayers  number of players
      */
     private void initializeGridViews(int maxHexagons, int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
@@ -257,12 +299,14 @@ public class BoardView extends JPanel implements View, KeyListener {
         // Change the shape of the button to be a triangle
         infoButton.addActionListener(e -> {
             SoundManager.playSound("gameButton2");
-            scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5, App.getInstance().getScreen().getHeight());
+            scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5,
+                    App.getInstance().getScreen().getHeight());
             scoreDetails.validate();
             scoreDetails.repaint();
         });
         gamePanel.add(infoButton, Integer.valueOf(1));
-        infoButton.setLocation(App.getInstance().getWidth() - infoButton.getWidth(), App.getInstance().getHeight() / 2 - infoButton.getHeight());
+        infoButton.setLocation(App.getInstance().getWidth() - infoButton.getWidth(),
+                App.getInstance().getHeight() / 2 - infoButton.getHeight());
         infoButton.repaint();
         pauseButton = createStyledButton("||");
         pauseButton.setPreferredSize(new Dimension(85, 85));
@@ -286,7 +330,7 @@ public class BoardView extends JPanel implements View, KeyListener {
         currentGridView.setSelectedTile(tile);
     }
 
-    public void resumeGame(){
+    public void resumeGame() {
         gameSwitch.show(this, "game");
     }
 
@@ -346,7 +390,7 @@ public class BoardView extends JPanel implements View, KeyListener {
             }
         }
         return filledHexagons;
-     }
+    }
 
     /**
      * Show the pause menu.
@@ -377,6 +421,7 @@ public class BoardView extends JPanel implements View, KeyListener {
                 button.setBackground(new Color(255, 235, 59));
                 button.setForeground(Color.BLACK);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 215, 0));
                 button.setForeground(Color.BLACK);
@@ -385,32 +430,8 @@ public class BoardView extends JPanel implements View, KeyListener {
         return button;
     }
 
-    // KeyListener methods
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            showPauseMenu();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-            currentGridView.rotateSelectedTile();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_C) {
-            currentGridView.centerView();
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // Not needed, but must be implemented due to KeyListener interface
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Not needed, but must be implemented due to KeyListener interface
-    }
-
-    public void showGameOver(String winner) {
-        GameOverState.getInstance().setWinner(winner);
+    public void showGameOver(List<Pair<String,Integer>> players) {
+        GameOverState.getInstance().setRanking(players);
         App.getInstance().appState.changeState(GameOverState.getInstance());
     }
 }

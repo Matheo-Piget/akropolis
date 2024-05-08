@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import util.Pair;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class Board extends Model {
      */
     public void startTurn(Player player) {
         if (isGameOver()) {
-            firePropertyChange("gameOver", null, getWinner());
+            firePropertyChange("gameOver", null, getPlayersOrdered());
             return;
         }
         currentPlayer.getGrid().display();
@@ -208,21 +209,21 @@ public class Board extends Model {
     }
 
     /**
-     * Returns the winner of the game.
+     * Returns the players of the game ordered from best to worst.
      * 
-     * @return The winner of the game.
+     * @return The players of the game ordered from best to worst.
      */
-    public Player getWinner() {
-        if (isGameOver()) {
-            Player winner = playerList.get(0);
-            for (Player p : playerList) {
-                if (getScore(p) > getScore(winner)) {
-                    winner = p;
-                }
-            }
-            return winner;
+    public List<Pair<String, Integer>> getPlayersOrdered() {
+        List<Player> sortedPlayers = new ArrayList<>(playerList);
+        sortedPlayers.sort((p1, p2) -> Integer.compare(getScore(p2), getScore(p1)));
+        List<Pair<String, Integer>> players = new ArrayList<>();
+        for (Player player : sortedPlayers) {
+            players.add(new Pair<>(player.getName(), getScore(player)));
         }
-        return null;
+        for (Pair<String, Integer> pair : players) {
+            System.out.println(pair.getKey() + " : " + pair.getValue());
+        }
+        return players;
     }
 
     /**

@@ -3,7 +3,6 @@ package model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.util.Collections;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,18 +49,22 @@ public class LeaderBoard {
      * @param playerName The name of the player.
      */
     public void addScore(String mode, int score, String playerName) {
-        if (!scores.containsKey(mode)) {
-            scores.put(mode, new LinkedHashMap<>());
-        }
         Map<String, Integer> playerScores = scores.get(mode);
         if (playerScores.size() == 5) {
-            String lowestScorePlayer = Collections.min(playerScores.entrySet(), Map.Entry.comparingByValue()).getKey();
-            if (score > playerScores.get(lowestScorePlayer)) {
-                playerScores.remove(lowestScorePlayer);
-                playerScores.put(playerName, score);
+            // Compare to all scores and put it in the highest possible rank, moving the
+            // others down
+            List<Map.Entry<String, Integer>> scoreList = new ArrayList<>(playerScores.entrySet());
+            // Sort the scoreList in descending order
+            scoreList.sort((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()));
+            // Because it's in descending order, we can stop at the first score that is
+            // lower than the new one
+            for (int i = 0; i < scoreList.size(); i++) {
+                if (scoreList.get(i).getValue() < score) {
+                    playerScores.remove(scoreList.get(scoreList.size() - 1).getKey());
+                    playerScores.put(playerName, score);
+                    break;
+                }
             }
-        } else if (!playerScores.containsKey(playerName) || playerScores.get(playerName) < score) {
-            playerScores.put(playerName, score);
         }
         saveScores();
     }
@@ -136,16 +139,14 @@ public class LeaderBoard {
      * @return The scores for the mode.
      */
     public LinkedHashMap<String, Integer> getScores(String mode) {
-        return scores.get(mode);
-    }
+        LinkedHashMap<String, Integer> unsortedScores = scores.get(mode);
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(unsortedScores.entrySet());
+        list.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
 
-    // Test
-    public static void main(String[] args) {
-        LeaderBoard leaderBoard = new LeaderBoard();
-        Map<String, Integer> scores = leaderBoard.getScores("ONE_PLAYER");
-        leaderBoard.addScore("ONE_PLAYER", 50, "TOTO");
-        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
+        LinkedHashMap<String, Integer> sortedScores = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            sortedScores.put(entry.getKey(), entry.getValue());
         }
+        return sortedScores;
     }
 }

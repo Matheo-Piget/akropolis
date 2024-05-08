@@ -1,29 +1,32 @@
 package view.main.states;
 
 import util.State;
+import util.Pair;
+import model.LeaderBoard;
 import util.Timeline;
 import view.main.App;
+import view.ui.UIFactory;
+import java.util.LinkedHashMap;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class GameOverState extends State {
 
     private static final GameOverState INSTANCE = new GameOverState();
     private Timeline timeline;
     private JPanel blackScreen;
-    private String winner;
+    private List<Pair<String,Integer>> ranking;
 
     public static GameOverState getInstance() {
         return INSTANCE;
@@ -33,6 +36,7 @@ public class GameOverState extends State {
     public void enter() {
         System.out.println("Entering GameOver State");
         blackScreen = new JPanel(new BorderLayout());
+        blackScreen.setSize(App.getInstance().getScreen().getSize());
         KeyListener keyListener = new KeyListener() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent e) {
@@ -59,13 +63,13 @@ public class GameOverState extends State {
         blackScreen.setBackground(java.awt.Color.BLACK);
         App.getInstance().getScreen().add(blackScreen, java.awt.BorderLayout.CENTER);
         App.getInstance().getScreen().validate();
-        JLabel logo = new JLabel("Le Gagnant est : " + winner);
+        JLabel logo = new JLabel("Le Gagnant est : " + ranking.get(0).getKey() + " !");
         // White transparent color
         logo.setForeground(new java.awt.Color(255, 255, 255, 0));
         logo.setHorizontalAlignment(JLabel.CENTER);
         logo.setVerticalAlignment(JLabel.CENTER);
         blackScreen.add(logo, java.awt.BorderLayout.CENTER);
-        blackScreen.validate();
+        blackScreen.revalidate();
         logo.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 25));
         timeline = new Timeline(0);
         timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
@@ -92,41 +96,8 @@ public class GameOverState extends State {
     @Override
     public void exit() {
         System.out.println("Exiting Game Over State");
-
         // Remove all components from the screen
         App.getInstance().getScreen().removeAll();
-    }
-
-    /**
-     * Creates a styled button.
-     *
-     * @return the styled button
-     */
-    private JButton createStyledButton() {
-        JButton button = new JButton("Retour au menu principal");
-        button.setBackground(new Color(255, 215, 0));
-        button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(255, 215, 0), 2),
-                BorderFactory.createEmptyBorder(10, 20, 10, 20)
-        ));
-        button.setPreferredSize(new Dimension(200, 40));
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                button.setBackground(new Color(255, 235, 59));
-                button.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                button.setBackground(new Color(255, 215, 0));
-                button.setForeground(Color.BLACK);
-            }
-        });
-        return button;
     }
 
     /**
@@ -137,10 +108,40 @@ public class GameOverState extends State {
         blackScreen.removeAll();
 
         blackScreen.setLayout(new GridBagLayout());
+        String category = "";
+        switch (ranking.size()) {
+            case 1:
+                category = "ONE_PLAYER";
+                break;
+            case 2:
+                category = "TWO_PLAYER";
+                break;
+            case 3:
+                category = "THREE_PLAYER";
+                break;
+            default:
+                category = "FOUR_PLAYER";
+                break;
+        }
+        LeaderBoard leaderBoard = new LeaderBoard();
+        // Write the new score to the file
+        for (Pair<String, Integer> pair : ranking) {
+            leaderBoard.addScore(category, pair.getValue(), pair.getKey());
+        }
 
-        JLabel label = new JLabel("Bravo " + winner + " ! ");
-        label.setFont(new Font("Arial", Font.BOLD, 25));
-        label.setForeground(Color.WHITE);
+        JPanel rankingPanel = new JPanel(new GridLayout(ranking.size() + 1, 1));
+        rankingPanel.setOpaque(false);
+        JLabel title = new JLabel("Classement");
+        title.setFont(new Font("Serif", Font.BOLD, 40));
+        title.setForeground(Color.WHITE);
+        rankingPanel.add(title);
+        for (int i = 0; i < ranking.size(); i++) {
+            JLabel label = new JLabel((i + 1) + " - " + ranking.get(i).getKey() + " : " + ranking.get(i).getValue());
+            label.setFont(new Font("Serif", Font.BOLD, 25));
+            label.setForeground(Color.WHITE);
+            label.setOpaque(false);
+            rankingPanel.add(label);
+        }
 
         GridBagConstraints gbc2 = new GridBagConstraints();
         gbc2.gridx = 0;
@@ -148,16 +149,36 @@ public class GameOverState extends State {
         gbc2.insets = new Insets(10, 10, 10, 10);
         gbc2.anchor = GridBagConstraints.CENTER;
 
-        blackScreen.add(label, gbc2);
+        blackScreen.add(rankingPanel, gbc2);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.insets = new Insets(10, 10, 10, 10); //
+        gbc.insets = new Insets(10, 10, 10, 10);
 
+        JPanel leaderBoardPanel = new JPanel(new GridLayout(6, 1));
+        leaderBoardPanel.setOpaque(false);
+        JLabel leaderBoardTitle = new JLabel("Meilleurs scores");
+        leaderBoardTitle.setFont(new Font("Serif", Font.BOLD, 40));
+        leaderBoardTitle.setForeground(Color.WHITE);
+        leaderBoardPanel.add(leaderBoardTitle);
+        LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
+        for (String key : leaderBoardValues.keySet()) {
+            JLabel label = new JLabel(key + " : " + leaderBoardValues.get(key));
+            label.setFont(new Font("Serif", Font.BOLD, 25));
+            label.setForeground(Color.WHITE);
+            label.setOpaque(false);
+            leaderBoardPanel.add(label);
+        }
+        blackScreen.add(leaderBoardPanel, gbc);
 
-        JButton button = createStyledButton();
-        button.addActionListener(e -> App.getInstance().appState.changeState(StartState.getInstance()));
+        JButton button = UIFactory.createStyledButton("Retour au menu principal",
+                e -> App.getInstance().appState.changeState(StartState.getInstance()));
+        // Calculte the size to allocate based on the text
+        FontMetrics metrics = button.getFontMetrics(button.getFont());
+        int width = metrics.stringWidth(button.getText()) + 20;
+        int height = metrics.getHeight() + 10;
+        button.setPreferredSize(new java.awt.Dimension(width, height));
 
         // Center the button
         gbc.anchor = GridBagConstraints.CENTER;
@@ -166,7 +187,7 @@ public class GameOverState extends State {
         blackScreen.revalidate();
     }
 
-    public void setWinner(String winner) {
-        this.winner = winner;
+    public void setRanking(List<Pair<String,Integer>> ranking) {
+        this.ranking = ranking;
     }
 }

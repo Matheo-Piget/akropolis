@@ -2,10 +2,12 @@ package controller;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import model.Board;
 import model.Grid;
 import model.Player;
+import util.Pair;
 import util.SoundManager;
 import view.BoardView;
 import view.HexagonView;
@@ -101,7 +103,23 @@ public class BoardController extends Controller {
             ((BoardView) view).nextTurn();
         }
         if (evt.getPropertyName().equals("gameOver")) {
-            ((BoardView) view).showGameOver(((Player) (evt.getNewValue())).getName());
+            // To avoid a ClassCastException, we need to check the type of the winner
+            Object winner = evt.getNewValue();
+            List<Pair<String, Integer>> players = new ArrayList<Pair<String, Integer>>();
+            if (winner instanceof List<?>) {
+                List<?> unknowList = (List<?>) winner;
+                for (Object obj : unknowList) {
+                    if (obj instanceof Pair<?, ?>) {
+                        Pair<?, ?> pair = (Pair<?, ?>) obj;
+                        if (pair.getKey() instanceof String && pair.getValue() instanceof Integer) {
+                            String name = (String) pair.getKey();
+                            Integer score = (Integer) pair.getValue();
+                            players.add(new Pair<String, Integer>(name, score));
+                        }
+                    }
+                }
+            }
+            ((BoardView) view).showGameOver(players);
         }
         handleUiUpdates(evt);
     }
