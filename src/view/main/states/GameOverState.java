@@ -12,12 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.event.KeyListener;
 
@@ -107,84 +103,100 @@ public class GameOverState extends State {
         timeline.stop();
         blackScreen.removeAll();
 
-        blackScreen.setLayout(new GridBagLayout());
-        String category = "";
-        switch (ranking.size()) {
-            case 1:
-                category = "ONE_PLAYER";
-                break;
-            case 2:
-                category = "TWO_PLAYER";
-                break;
-            case 3:
-                category = "THREE_PLAYER";
-                break;
-            default:
-                category = "FOUR_PLAYER";
-                break;
-        }
-        LeaderBoard leaderBoard = new LeaderBoard();
-        // Write the new score to the file
-        for (Pair<String, Integer> pair : ranking) {
-            leaderBoard.addScore(category, pair.getValue(), pair.getKey());
-        }
+        blackScreen.setLayout(new GridLayout(1, 3));
 
+        // Récupération de la catégorie en fonction de la taille du classement
+        String category = switch (ranking.size()) {
+            case 1 -> "ONE_PLAYER";
+            case 2 -> "TWO_PLAYER";
+            case 3 -> "THREE_PLAYER";
+            default -> "FOUR_PLAYER";
+        };
+
+        // Création du panneau de classement à gauche
+        JPanel rankingPanel = createRankingPanel();
+        blackScreen.add(rankingPanel);
+
+        JPanel middlePanel = new JPanel(new BorderLayout());
+        middlePanel.setOpaque(false);
+        middlePanel.setBackground(Color.BLACK);
+        JButton button = createButton();
+
+        middlePanel.add(button, BorderLayout.SOUTH);
+        blackScreen.add(middlePanel);
+
+
+
+        // Création du panneau des meilleurs scores à droite
+        JPanel leaderBoardPanel = createLeaderBoardPanel(category);
+        blackScreen.add(leaderBoardPanel);
+
+        blackScreen.revalidate();
+    }
+
+    /**
+     * Customizes a label
+     * @param label The label to customize
+     * @param size The size of the label
+     * @param color The color of the label
+     * @param style The style of the label
+     */
+    public void customizeLabel(JLabel label, int size, Color color, int style) {
+        label.setFont(new Font("Arial", style, size));
+        label.setForeground(color);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.CENTER);
+    }
+
+    /**
+     * Creates the ranking panel
+     * @return The ranking panel
+     */
+    private JPanel createRankingPanel() {
         JPanel rankingPanel = new JPanel(new GridLayout(ranking.size() + 1, 1));
         rankingPanel.setOpaque(false);
+
         JLabel title = new JLabel("Classement");
-        title.setFont(new Font("Serif", Font.BOLD, 40));
-        title.setForeground(Color.WHITE);
+        customizeLabel(title, 40, Color.WHITE, Font.BOLD);
         rankingPanel.add(title);
+
         for (int i = 0; i < ranking.size(); i++) {
             JLabel label = new JLabel((i + 1) + " - " + ranking.get(i).getKey() + " : " + ranking.get(i).getValue());
-            label.setFont(new Font("Serif", Font.BOLD, 25));
-            label.setForeground(Color.WHITE);
-            label.setOpaque(false);
+            customizeLabel(label, 25, Color.WHITE, Font.BOLD);
             rankingPanel.add(label);
         }
 
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
-        gbc2.insets = new Insets(10, 10, 10, 10);
-        gbc2.anchor = GridBagConstraints.CENTER;
+        return rankingPanel;
+    }
 
-        blackScreen.add(rankingPanel, gbc2);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(10, 10, 10, 10);
+    // Création du panneau des meilleurs scores
+    private JPanel createLeaderBoardPanel(String category) {
+        LeaderBoard leaderBoard = new LeaderBoard();
+        LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
 
         JPanel leaderBoardPanel = new JPanel(new GridLayout(6, 1));
         leaderBoardPanel.setOpaque(false);
+
         JLabel leaderBoardTitle = new JLabel("Meilleurs scores");
-        leaderBoardTitle.setFont(new Font("Serif", Font.BOLD, 40));
-        leaderBoardTitle.setForeground(Color.WHITE);
+        customizeLabel(leaderBoardTitle, 40, Color.WHITE, Font.BOLD);
         leaderBoardPanel.add(leaderBoardTitle);
-        LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
+
         for (String key : leaderBoardValues.keySet()) {
             JLabel label = new JLabel(key + " : " + leaderBoardValues.get(key));
-            label.setFont(new Font("Serif", Font.BOLD, 25));
-            label.setForeground(Color.WHITE);
-            label.setOpaque(false);
+            customizeLabel(label, 25, Color.WHITE, Font.BOLD);
             leaderBoardPanel.add(label);
         }
-        blackScreen.add(leaderBoardPanel, gbc);
 
-        JButton button = UIFactory.createStyledButton("Retour au menu principal",
+        return leaderBoardPanel;
+    }
+
+    /**
+     * Creates the button to return to the main menu
+     * @return The button to return to the main menu
+     */
+    private JButton createButton() {
+        return UIFactory.createStyledButton("Retour au menu principal",
                 e -> App.getInstance().appState.changeState(StartState.getInstance()));
-        // Calculte the size to allocate based on the text
-        FontMetrics metrics = button.getFontMetrics(button.getFont());
-        int width = metrics.stringWidth(button.getText()) + 20;
-        int height = metrics.getHeight() + 10;
-        button.setPreferredSize(new java.awt.Dimension(width, height));
-
-        // Center the button
-        gbc.anchor = GridBagConstraints.CENTER;
-        blackScreen.add(button, gbc);
-
-        blackScreen.revalidate();
     }
 
     public void setRanking(List<Pair<String,Integer>> ranking) {
