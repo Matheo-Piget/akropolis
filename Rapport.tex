@@ -27,13 +27,15 @@
     \section{Introduction}\label{sec:introduction}
 
     \subsection{Présentation du Projet}\label{subsec:presentation-du-projet}
-    Le projet consiste en la réalisation d'un jeu de société nommé Akrapolis, qui est un jeu tour par tour dont le but est de construire une cité antique.
+    Le projet consiste en la réalisation d'un jeu de société nommé Akropolis, qui est un jeu tour par tour dont le but est de construire une cité antique.
     Le jeu se déroule sur un plateau de jeu composé de cases hexagonales.
     Chaque joueur possède un certain nombre de ressources qu'il peut utiliser pour construire des bâtiments sur les cases du plateau.
-    Chaque bâtiment rapporte des points de victoire à son propriétaire.
+    Chaque bâtiment rapporte des points de victoire à son propriétaire en remplissant certaines conditions.
+    Il est aussi possible de les faire supperposer pour obtenir d'avantage de points.
+    Il faut donc gérer le placement des bâtiments pour maximiser les points de victoire.
+    La pioche de tuiles est limitée. Le jeu se termine lorsqu'il n'en reste qu'une.
     Le joueur qui a le plus de points de victoire à la fin de la partie est déclaré vainqueur.
 
-    \newline
     Réalisé en java et en utilisant la bibliothèque graphique Swing, le jeu est jouable en local sur un ordinateur.
 
     \subsection{Objectifs}\label{subsec:obectifs}
@@ -47,20 +49,19 @@
 
     Pour la gestion du projet, nous avons opté pour une méthode de développement agile, basée sur des itérations courtes et des réunions régulières pour faire le point sur l'avancement du projet et discuter des problèmes rencontrés.
     Nous avons également utilisé un dépôt Git pour gérer les différentes versions, ce qui nous a permis de travailler en parallèle sur les différentes parties du jeu et de fusionner nos modifications facilement.
-
+    Nous avons priviligé en priorité la réalisation du modèle de jeu en implémentant les règles du jeu.
+    Nous avons ensuite travaillé sur la vue (ce qui fût la partie la plus longue) et relié le modèle à la vue en implémentant le contrôleur.
 
     \subsection{Répartition des taches}\label{subsec:repartition-des-taches}
     Pour la réalisation du projet, nous avons réparti les tâches en fonction des compétences de chacun, la polyvalence de chacun nous a permis de travailler sur plusieurs aspects du jeu.
-    Nous avons également organisé des réunions régulières (plus ou moins obligatoire grace a ce cours) pour discuter de l'avancement du projet et des problèmes rencontrés (voir section \ref{sec:difficultes-rencontrees}).
-
+    Nous avons également organisé des réunions régulières (plus ou moins obligatoire grace à ce cours) pour discuter de l'avancement du projet et des problèmes rencontrés (voir section \ref{sec:difficultes-rencontrees}).
 
     \subsection{Architecture du Projet}\label{subsec:architecture-du-projet}
     Pour ce projet, nous avons opté pour une architecture orientée objet, avec une séparation claire entre les différentes parties du jeu, basé sur un modèle MVC (Modèle-Vue-Contrôleur) car beaucoup plus modulable et facile à maintenir, pour faire des modifications ou ajouter des fonctionnalités.
     Nous avons également utilisé des classes utilitaires pour gérer le jeu.
     La partie graphique du jeu est gérée par la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
+    Aucune autre bibliothèque n'a été utilisée pour la réalisation du jeu (à part JUnit pour les tests unitaires).
     Avec une grande partie assez abstraite, le jeu est facilement modifiable et extensible, principalement pour les jeux de société.
-
-
 
     \section{Développement et Fonctionnalités}\label{sec:developpement-et-fonctionnalites}
 
@@ -69,20 +70,20 @@
     Parallèlement à cela, nous avons travaillé sur les tâches annexes comme la gestion des images, des sons, mais également sur des scripts bash et powershell.
     Mais également sur des tests unitaires pour vérifier le bon fonctionnement de notre code.
 
-
     \subsection{Organisation du Code}\label{subsec:organisation-du-code}
 
     Le code du jeu est organisé en plusieurs packages, chacun regroupant des classes ayant un rôle adéquat.
-    Le modèle du jeu est regroupé dans le package \texttt{model}, la vue dans le package \texttt{view} et le contrôleur dans le package \texttt{controller}, eux même contenant certain d'autre package pour une meilleure organisation.
-    Les classes utilitaires sont regroupées dans le package \texttt{test}.
-    Les ressources du jeu (images, sons, etc.) sont stockées dans le package \texttt{res}.
+    Le modèle du jeu est regroupé dans le package \texttt{model}, la vue dans le package \texttt{view} et le contrôleur dans le package \texttt{controller}, eux même contenant des sous-packages pour organiser les classes.
+    Les classes utilitaires sont regroupées dans le package \texttt{util}.
+    Les classes de tests sont regroupées dans le package \texttt{test}.
+    Les ressources du jeu (images, sons, etc.) sont stockées dans le dossier \texttt{res}.
     Pour rentrer dans les détails, le modèle est composé de plusieurs classes, chacune représentant un élément du jeu (joueur, plateau, bâtiment, etc.).
     La vue est composée de plusieurs classes, chacune représentant un élément graphique du jeu (fenêtre principale, plateau de jeu, etc.).
     Pour plus de lisibilité et de claireté, nous avons décidé de faire un schéma UML de notre projet, que vous pouvez retrouver en annexe, voir section \ref{sec:annexes}.
 
     \subsection{Fonctionnalités Principales}\label{subsec:fonctionnalites-principales}
 
-    Le jeu dispose d'un menu principal, qui permet de lancer une nouvelle partie, de voir les règles, de voir les crédits, ou de quitter le jeu.
+    Le jeu dispose d'un menu principal, qui permet de lancer une nouvelle partie, de voir les règles, de voir les crédits, de modifier certains paramètres ou de quitter le jeu.
     Une fois une partie lancée, le jeu se déroule en tours par tours.
     Le jeu suit les règles du jeu Akropolis, avec des bâtiments à construire, des ressources à gérer, et des points de victoire à accumuler.
     Le jeu se termine lorsqu'il n'y a plus de tuiles dans la pioche, et le joueur avec le plus de points de victoire est alors déclaré vainqueur.
@@ -99,7 +100,7 @@
 
         \item Le jeu les charge dynamiquement lors de son exécution.
 
-        \item \textbf{Format des Images :} Les images sont au format PNG pour assurer une qualité graphique optimale tout en minimisant la taille des fichiers.
+        \item \textbf{Format des Images :} Les images sont au format PNG pour assurer une qualité graphique et compatibilité optimale et pour gérer la transparence avec Swing. 
     \end{itemize}
 
     \subsubsection*{Fichiers Sonores}
@@ -117,19 +118,59 @@
     règle spécifique au jeu
     très fidèle au jeu de société -> respect des règles
 
+    \subsection{Interface Graphique}\label{subsec:interface-graphique}
 
-
+    Comme mentionné précédemment, l'interface graphique du jeu est réalisée en utilisant la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
+    L'avantage de son utilisation est qu'elle est incluse dans la bibliothèque standard de Java, ce qui signifie qu'elle est disponible sur toutes les plateformes Java.
+    Pour rappel, nous allons brièvement expliquer le fonctionnement de Swing.
+    \newline
+    Swing utilise un modèle de composants légers, ce qui signifie que les composants Swing sont indépendants de la plateforme et ne dépendent pas des composants natifs de la plateforme.
+    Cela signifie que les composants Swing ont un aspect et un comportement cohérents sur toutes les plateformes (sur le papier en tout cas mais en pratique c'est pas toujours le cas).
+    C'est cela qui le différencie de AWT (Abstract Window Toolkit) qui utilise des composants lourds qui dépendent des composants natifs de la plateforme.
+    Cela ne signifie pas que Swing ne peut pas utiliser les composants natifs de la plateforme, on peut toujours utiliser les composants AWT dans Swing.
+    Par contre on ne peut pas utiliser les composants Swing dans une application AWT.
+    Le JFrame est la fenêtre principale de l'application Swing. C'est la fenêtre qui contient tous les autres composants Swing.
+    Les composants Swing sont des objets qui héritent de la classe JComponent.
+    On peut ajouter des composants Swing à un JFrame en utilisant la méthode add() de la classe Container.
+    Il y a pas mal de composants qui sont disponibles dans Swing, comme le JPanel pour regrouper nos composants, le JButton pour créer un bouton programmable ou encore le JLabel pour afficher du texte.
+    \newline
+    Tout le rendu graphique est géré par Swing dans un thread séparé appelé Event Dispatch Thread (EDT).
+    Il est important de ne pas bloquer l'EDT avec des opérations longues, sinon l'interface graphique deviendra non réactive.
+    Il est aussi impossible de modifier les composants Swing en dehors de l'EDT, Swing n'est pas thread-safe.
+    Cela ne veut pas dire qu'on ne peut pas utiliser plusieurs threads dans une application Swing, mais il faut faire attention à ne pas modifier les composants Swing en dehors de l'EDT.
+    Fort heureusement, Swing fournit des méthodes pour exécuter du code dans l'EDT, comme la méthode invokeLater() de la classe EventQueue.
+    Il est également possible de créer des threads SwingWorker pour exécuter des tâches longues en arrière-plan sans bloquer l'EDT.
+    Aussi il est tout à fait possible de créer ses propres composants Swing en étendant la classe JComponent ou une de ses sous-classes (comme JPanel).
+    On peut alors redéfinir les méthodes paintComponent() et/ou paint() pour personnaliser le rendu du composant.
+    C'est ce que nous avons fait pour la plupart des composants de notre jeu puisque la plupart des composants Swing manquent de fonctionnalités.
+    Par exemple, le Jlabel ne permet pas d'avoir une bordure autour de notre texte, il a fallu créer notre propre composant pour cela.
+    \newline
+    Swing utilise la programmation événementielle pour gérer les interactions de l'utilisateur.
+    Les composants Swing possèdent des écouteurs appelés EventListeners qui sont notifiés lorsqu'un événement que l'on souhaite écouter se produit.
+    Les EventListeners sont des interfaces qui définissent des méthodes qui sont appelées lorsqu'un événement se produit.
+    Les classes très utiles de Listeners sont les MouseListener qui permettent de gérer les événements de la souris (les clics, les déplacements, etc.) et les KeyListener qui permettent de gérer les événements du clavier (les touches pressées, relâchées, etc.).
+    Il est également possible de créer ses propres écouteurs en implémentant les différentes interfaces de Listener.
+    \newline
+    Enfin, il existe des LayoutManagers qui permettent de gérer la disposition des composants dans une fenêtre.
+    On peut sinon hardcoder la position des composants mais il faudra alors gérer les redimensionnements de la fenêtre.
+    Si nous n'avons pas de LayoutManager, il faudra donc définir la taille et la position de chaque composant à la main sinon ils ne s'afficheront pas.
+    Cela peut être très fastidieux et compliqué, c'est pourquoi il est recommandé d'utiliser un LayoutManager lorsque c'est possible.
+    Le problème est que les LayoutManagers de Swing ne sont pas toujours très flexibles.
+    Ils sont souvent soit trop rigides et simplistes, soit trop complexes et difficiles à utiliser.
+    C'est pourquoi il est souvent nécessaire de combiner plusieurs LayoutManagers pour obtenir le résultat souhaité.
+    \newline
+    Le framework Swing est assez ancien : il date de 1997 et a été inclu dans la JDK 1.2.
+    Les fonctionnalités sont limités : il n'y a qu'une classe de Timer pour gérer les animations, pas de support pour les shaders, pas de support direct pour les effets sonores, la 3D et pas de décodeur vidéo intégré.
+    Ceci n'est pas aidé par l'existence d'autres frameworks plus modernes et plus flexibles comme JavaFX qui inclue un support pour les animations, les effets sonores, la 3D et les vidéos (pour les shaders il faudra passer par OpenGL par exemple).
+    Cela dit, il est tout à fait possible de combiner Swing avec JavaFX pour profiter des avantages des deux frameworks.
+    On peut aussi utiliser des bibliothèques tierces pour ajouter des fonctionnalités manquantes à Swing, ou même créer ses propres composants personnalisés.
+    Notre interface reste assez simple à cause de ces limitations et de la non utilisation de frameworks tiers.    
     \section{Difficultés Rencontrées}\label{sec:difficultes-rencontrees}
 
     Implémentation des tuiles et des coordonnées choix -> on savait pas trop comment aborder le problème
     Implémentation de la vue assez difficile -> car contrainte hexagones + gestion des coordonnées
     Implémentation des règles du jeu -> pas forcément évident de les implémenter correctement
     Gestion de Swing qui n'est pas forcément très évident
-
-
-
-
-
 
     \section{Conclusion}\label{sec:conclusion}
 
