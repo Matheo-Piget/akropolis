@@ -50,10 +50,10 @@
     Pour la gestion du projet, nous avons opté pour une méthode de développement agile, basée sur des itérations courtes et des réunions régulières pour faire le point sur l'avancement du projet et discuter des problèmes rencontrés.
     Nous avons également utilisé un dépôt Git pour gérer les différentes versions, ce qui nous a permis de travailler en parallèle sur les différentes parties du jeu et de fusionner nos modifications facilement.
     Nous avons priviligé en priorité la réalisation du modèle de jeu en implémentant les règles du jeu.
-    Nous avons ensuite travaillé sur la vue (ce qui fût la partie la plus longue) et relié le modèle à la vue en implémentant le contrôleur.
+    Nous avons ensuite travaillé sur la vue (ce qui fût la partie la plus longue) et relier le modèle à la vue en implémentant le contrôleur.
 
     \subsection{Répartition des taches}\label{subsec:repartition-des-taches}
-    Pour la réalisation du projet, nous avons réparti les tâches en fonction des compétences de chacun, la polyvalence de chacun nous a permis de travailler sur plusieurs aspects du jeu.
+    Pour la réalisation du projet, nous avons réparti les tâches en fonction des compétences de chacun. La polyvalence de chacun nous a permis de travailler sur plusieurs aspects du jeu.
     Nous avons également organisé des réunions régulières (plus ou moins obligatoire grace à ce cours) pour discuter de l'avancement du projet et des problèmes rencontrés (voir section \ref{sec:difficultes-rencontrees}).
 
     \subsection{Architecture du Projet}\label{subsec:architecture-du-projet}
@@ -114,10 +114,29 @@
 
     \subsection{Logique de Jeu}\label{subsec:logique-de-jeu}
 
-    jeu de société donc tour par tour
-    règle spécifique au jeu
-    très fidèle au jeu de société -> respect des règles
-
+    Le jeu est un jeu tour par tour, où chaque joueur peut choisir une tuile à placer sur le plateau de jeu.
+    Le coût de la tuile est définis par la position de cette dernière dans le site.
+    On utilise les rochers pour payer les tuiles.
+    Le site est modélisé par la classe Site qui contient un tableau de tuiles de taille précalculée en fonction du nombre de joueurs.
+    Grâce à la position de la tuile dans le tableau, on peut déterminer son coût. Pour que cela marche, il faut que les tuiles soient placées dans l'ordre.
+    Il faut donc réaranger le site à chaque fois qu'une tuile est placée pour ne pas avoir de valeurs null entre les tuiles.
+    La pioche est modélisée grâce à la classe StackTile qui extend de Stack\textless{}Tile\textgreater{} et qui contient les tuiles restantes à piocher.
+    Elle implémente une méthode pour générer ces tuiles de manière aléatoire lors de la création de l'objet.
+    Nous avons veiller à générer un nombre minimum de certains types de tuiles pour éviter les parties trop déséquilibrées.
+    La classe Player contient les informations sur le joueur, comme son nom, son score, ses ressources et sa grille de jeu.
+    La grille de jeu est représentée par une table de hashage qui associe une tuile à une position.
+    Elle a aussi en référence le joueur pour pouvoir lui ajouter des ressources lorsqu'il supperpose une mine.
+    Elle gére si un ajout à une position est possible ou non dans la méthode addTile.
+    La classe Tile contient simplement une liste d'hexagones qui la compose.
+    Chaque hexagone contient une position représenté par un Vecteur3D. La classe Hexagone est abstraite. 
+    Nous définissons donc nos différents types concrets d'hexagones :
+    \begin{itemize}
+        \item \textbf{Place} : Les places du jeu, elles permettent d'avoir un multiplicateur de score.
+        \item \textbf{Quarries} : Les carrières du jeu, elles permettent de gagner des ressources lorsqu'elles sont supperposées.
+        \item \textbf{District} : Les quartiers du jeu, ils permettent de gagner des points de victoire.
+    \end{itemize}
+    La classe Hexagon et Tile implémentent toutes les deux serializable. Cela est dû au fait que nous voulious ajouter en extension un mode multijoueur en ligne.
+    Cette fonctionnalité n'a pas été implémentée mais nous avons prévu le coup en rendant nos classes serializable (plus de détails dans la section \ref{subsec:extensions}).
     \subsection{Interface Graphique}\label{subsec:interface-graphique}
 
     Comme mentionné précédemment, l'interface graphique du jeu est réalisée en utilisant la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
@@ -165,6 +184,10 @@
     Cela dit, il est tout à fait possible de combiner Swing avec JavaFX pour profiter des avantages des deux frameworks.
     On peut aussi utiliser des bibliothèques tierces pour ajouter des fonctionnalités manquantes à Swing, ou même créer ses propres composants personnalisés.
     Notre interface reste assez simple à cause de ces limitations et de la non utilisation de frameworks tiers.    
+    
+    
+    \subsection{Extensions}\label{subsec:extensions}
+
     \section{Difficultés Rencontrées}\label{sec:difficultes-rencontrees}
 
     Implémentation des tuiles et des coordonnées choix -> on savait pas trop comment aborder le problème

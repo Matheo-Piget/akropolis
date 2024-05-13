@@ -144,7 +144,6 @@ public class Grid extends Model{
     private void addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) {
         for (int i = 0; i < 3; i++) {
             Hexagon newHexagon_i = tile.hexagons.get(i);
-            newHexagon_i.setTile(tile);
             if (bellowHexagons[i] != null) {
                 newHexagon_i.setBelow(bellowHexagons[i]);
             }

@@ -62,9 +62,6 @@ public abstract class Hexagon implements java.io.Serializable{
         return position.z;
     }
 
-    public void setTile(Tile tile){
-        // Tile containing the hexagons
-    }
 
     public void setPosition(int x, int y){
         this.position = new Point3D(x, y, 1);
