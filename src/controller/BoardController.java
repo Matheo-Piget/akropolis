@@ -2,11 +2,9 @@ package controller;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import model.Board;
 import model.Grid;
-import model.Player;
 import util.Pair;
 import util.SoundManager;
 import view.BoardView;

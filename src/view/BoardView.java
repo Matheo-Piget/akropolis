@@ -288,7 +288,7 @@ public class BoardView extends JPanel implements View {
     private void setupBottomPanel(int numPlayers) {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setOpaque(false);
-        boardUI = new BoardUI(numPlayers);
+        boardUI = new BoardUI(numPlayers, scoreDetails);
         bottomPanel.add(boardUI, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
@@ -300,7 +300,7 @@ public class BoardView extends JPanel implements View {
         infoButton.addActionListener(e -> {
             SoundManager.playSound("gameButton2");
             scoreDetails.setSize(App.getInstance().getScreen().getWidth() / 5,
-                    App.getInstance().getScreen().getHeight());
+                    App.getInstance().getScreen().getHeight() - bottomPanel.getHeight());
             scoreDetails.validate();
             scoreDetails.repaint();
         });

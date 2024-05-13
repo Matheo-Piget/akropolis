@@ -24,20 +24,21 @@ public class UIController extends Controller {
         BoardUI boardUI = (BoardUI)view;
         boardUI.setPlayer(currentPlayer.getName());
         boardUI.setRock(currentPlayer.getResources());
-        int score=currentPlayer.getGrid().calculateScore();
-        int starsBuildingPlace = currentPlayer.getGrid().numberOfStars("Building Place");
-        int starsMarketPlace = currentPlayer.getGrid().numberOfStars("Market Place");
-        int starsBarrackPlace = currentPlayer.getGrid().numberOfStars("Barrack Place");
-        int starsTemplePlace = currentPlayer.getGrid().numberOfStars("Temple Place");
-        int starsGardenPlace = currentPlayer.getGrid().numberOfStars("Garden Place");
-        int buildingScore = currentPlayer.getGrid().calculateMaxBuildingScore();
-        int marketScore = currentPlayer.getGrid().calculateMarketScore(); 
-        int barrackScore = currentPlayer.getGrid().calculateBarrackScore();
-        int templeScore = currentPlayer.getGrid().calculateTempleScore();
-        int gardenScore = currentPlayer.getGrid().calculateGardenScore();       
-        currentPlayer.setScore(score);
-        System.out.println("Le score est " + score);
-        boardUI.setScore(currentPlayer.getScore(), starsBuildingPlace, starsMarketPlace, starsBarrackPlace, starsTemplePlace, starsGardenPlace, buildingScore, marketScore, barrackScore, templeScore, gardenScore);}
+        int [] mult = new int[5];
+        mult[0] = currentPlayer.getGrid().numberOfStars("Building Place");
+        mult[1] = currentPlayer.getGrid().numberOfStars("Market Place");
+        mult[2] = currentPlayer.getGrid().numberOfStars("Temple Place");
+        mult[3] = currentPlayer.getGrid().numberOfStars("Barrack Place");
+        mult[4] = currentPlayer.getGrid().numberOfStars("Garden Place");
+        int [] scores = new int[5];
+        scores[0] = currentPlayer.getGrid().calculateBuildingScoreNoPlaces();
+        scores[1] = currentPlayer.getGrid().calculateMarketScoreNoPlaces();
+        scores[2] = currentPlayer.getGrid().calculateTempleScoreNoPlaces();
+        scores[3] = currentPlayer.getGrid().calculateBarrackScoreNoPlaces();
+        scores[4] = currentPlayer.getGrid().calculateGardenScoreNoPlaces();
+        int score = currentPlayer.getGrid().calculateScore();
+        boardUI.setScore(score, scores, mult);
+    }
     /**
      * update the remaining tiles in the view
      */

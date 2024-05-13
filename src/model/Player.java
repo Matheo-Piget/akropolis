@@ -19,7 +19,6 @@ public class Player extends Model {
         this.score = score;
     }
 
-
     /**
      * Constructs a new player with the given name.
      * @param name The name of the player.

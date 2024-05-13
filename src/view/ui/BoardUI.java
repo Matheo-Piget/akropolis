@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
+
+import view.ScoreDetails;
 import view.View;
 
 /**
@@ -27,6 +29,7 @@ public class BoardUI extends JPanel implements View {
     private final ArrayList<Color> playerColors = new ArrayList<Color>();
     private ArrayList<ImageIcon > playerIcons = new ArrayList<ImageIcon>();
     private ScoreLabel scorelabel = new ScoreLabel(0);
+    private ScoreDetails scoreDetails;
     private RemainingTilesLabel remainingTilesLabel = new RemainingTilesLabel();
     private ImageIcon playerIcon = null;
     private JLabel playerImageLabel = new JLabel(playerIcon);
@@ -40,8 +43,9 @@ public class BoardUI extends JPanel implements View {
      * Constructor for the BoardUI class.
      * Initializes the player name label, the rock label, and the remaining tiles label.
      */
-    public BoardUI(int numberOfPlayers) {
+    public BoardUI(int numberOfPlayers, ScoreDetails scoreDetails) {
         setOpaque(true);
+        this.scoreDetails = scoreDetails;
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(100, 75));
         playerColors.add(Color.BLUE);
@@ -148,8 +152,9 @@ public class BoardUI extends JPanel implements View {
         playerImageLabel.repaint();
     }
 
-    public void setScore(int score , int arg1, int arg2 , int arg3 , int arg4, int arg5, int arg11, int arg22 , int arg33 , int arg44, int arg55) {
-        scorelabel.setScore(score, arg1, arg2, arg3, arg4, arg5, arg11, arg22, arg33, arg44, arg55);
+    public void setScore(int score , int[] scores, int[] mult){
+        scorelabel.setScore(score);
+        scoreDetails.updateScoreInfo(scores, mult);;
     }
 
     public void setRock(int rock){

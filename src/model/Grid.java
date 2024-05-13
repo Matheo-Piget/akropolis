@@ -10,7 +10,7 @@ import util.Point3D;
  * Represents the grid of the game board, containing hexagons in different
  * positions.
  */
-public class Grid extends Model{
+public class Grid extends Model {
     // Map to store hexagons based on their positions
     private final Map<Point3D, Hexagon> hexagons;
     private final Player player;
@@ -94,15 +94,16 @@ public class Grid extends Model{
             addHexagonsToGrid(tile, bellowHexagons);
         }
         // If the tile has a quarries below, give the player a resource
-        if (canBePlaced && hasNeighbor && sameHexagon <= 1){
+        if (canBePlaced && hasNeighbor && sameHexagon <= 1) {
             for (Hexagon hexagon : tile.hexagons) {
-                if(hexagon.getBelow() instanceof Quarries){
-                    player.setResources(player.getResources()+1);
+                if (hexagon.getBelow() instanceof Quarries) {
+                    player.setResources(player.getResources() + 1);
                 }
             }
         }
         display();
-        System.out.println("canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", sameHexagon: " + sameHexagon);
+        System.out.println(
+                "canBePlaced: " + canBePlaced + ", hasNeighbor: " + hasNeighbor + ", sameHexagon: " + sameHexagon);
         return canBePlaced && hasNeighbor && sameHexagon <= 1;
     }
 
@@ -110,7 +111,7 @@ public class Grid extends Model{
      * Checks if the tile can be placed on the grid and sets the below hexagons for
      * the tile.
      *
-     * @param tile          The tile to be placed on the grid.
+     * @param tile           The tile to be placed on the grid.
      * @param bellowHexagons The array to store the below hexagons for the tile.
      * @return True if the tile can be placed, false otherwise.
      */
@@ -138,7 +139,7 @@ public class Grid extends Model{
      * Adds the hexagons of the tile to the grid and sets the below hexagons for the
      * tile.
      *
-     * @param tile          The tile to be placed on the grid.
+     * @param tile           The tile to be placed on the grid.
      * @param bellowHexagons The array of below hexagons for the tile.
      */
     private void addHexagonsToGrid(Tile tile, Hexagon[] bellowHexagons) {
@@ -175,7 +176,7 @@ public class Grid extends Model{
      * Counts the number of hexagons in the tile that are the same as the below
      * hexagons.
      *
-     * @param tile          The tile to be checked.
+     * @param tile           The tile to be checked.
      * @param bellowHexagons The array of below hexagons for the tile.
      * @return The number of hexagons in the tile that are the same as the below
      *         hexagons.
@@ -190,6 +191,7 @@ public class Grid extends Model{
         }
         return sameHexagon;
     }
+
     public static boolean isAValidTile(Tile t) {
         Hexagon h1 = t.hexagons.get(0);
         Hexagon h2 = t.hexagons.get(1);
@@ -217,10 +219,10 @@ public class Grid extends Model{
         Point3D p = new Point3D(x, y);
         Hexagon topMosthexagon = null;
         // While we can retrieve from the hash map, keep going up
-        while (hexagons.containsKey(p)){
+        while (hexagons.containsKey(p)) {
             topMosthexagon = hexagons.get(p);
             p = new Point3D(topMosthexagon.getX(), topMosthexagon.getY(), p.z + 1);
-        } 
+        }
         return topMosthexagon;
     }
 
@@ -237,14 +239,15 @@ public class Grid extends Model{
 
     /**
      * Get the neighbors of a hexagon
+     * 
      * @param h The hexagon to get the neighbors
      * @return The neighbors of the hexagon
      */
-    private ArrayList<Hexagon> getNeighbors(Hexagon h){
+    private ArrayList<Hexagon> getNeighbors(Hexagon h) {
         ArrayList<Hexagon> neighbors = new ArrayList<>();
         Point[] axialDirections = {
-            new Point(1, 0), new Point(1, -1), new Point(0, -1),
-            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
+                new Point(1, 0), new Point(1, -1), new Point(0, -1),
+                new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
         };
         for (Point direction : axialDirections) {
             Hexagon neighbor = getHexagon(h.getX() + direction.x, h.getY() + direction.y);
@@ -273,9 +276,10 @@ public class Grid extends Model{
 
     /**
      * Get the top hexagons of the grid
+     * 
      * @return the top hexagons of the grid
      */
-     public ArrayList<Hexagon> getTopHexagons() {
+    public ArrayList<Hexagon> getTopHexagons() {
         ArrayList<Hexagon> topHexagons = new ArrayList<>();
         for (Hexagon hexagon : hexagons.values()) {
             Point3D p = new Point3D(hexagon.getX(), hexagon.getY(), hexagon.getZ());
@@ -283,7 +287,7 @@ public class Grid extends Model{
                 p = new Point3D(hexagon.getX(), hexagon.getY(), p.z + 1);
             }
             Hexagon he = hexagons.get(new Point3D(hexagon.getX(), hexagon.getY(), p.z - 1));
-            if(!topHexagons.contains(he)){
+            if (!topHexagons.contains(he)) {
                 topHexagons.add(he);
             }
         }
@@ -292,15 +296,16 @@ public class Grid extends Model{
 
     /**
      * Get the top Place hexagons of the grid
+     * 
      * @param s the type of the place
      * @return the top Place hexagons of the grid
      */
-    public ArrayList<Place> placeDeTypeS(String s){
+    public ArrayList<Place> placeDeTypeS(String s) {
         ArrayList<Place> topPlaceTypeS = new ArrayList<>();
         for (Hexagon hexagon : getTopHexagons()) {
             if (hexagon instanceof Place) {
                 if (hexagon.getType().equals(s)) {
-                    topPlaceTypeS.add((Place)hexagon);
+                    topPlaceTypeS.add((Place) hexagon);
                 }
             }
         }
@@ -309,24 +314,26 @@ public class Grid extends Model{
 
     /**
      * Get the number of stars of the places
+     * 
      * @param place the places to get the number of stars
      * @return the number of stars of the places
      */
-    public int numberOfStars(ArrayList<Place> place){
-        int nb =0;
+    public int numberOfStars(ArrayList<Place> place) {
+        int nb = 0;
         for (Place p : place) {
-            nb+=p.getStars();
+            nb += p.getStars();
         }
         return nb;
     }
 
     /**
      * Calculate the score of the grid
+     * 
      * @return the score of the grid
      */
-    public int calculateScore( ) {
+    public int calculateScore() {
         int totalScore = 0;
-        int buildingScore=0;
+        int buildingScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Garden":
@@ -344,23 +351,24 @@ public class Grid extends Model{
                 default:
                     break;
             }
-           //calcul le score du batiment tout seule(le plus grand quartier tout seule)
-        buildingScore = calculateMaxBuildingScore();
+            buildingScore = calculateMaxBuildingScore();
         }
 
-        return totalScore+buildingScore+player.getResources();
+        return totalScore + buildingScore + player.getResources();
     }
 
     /**
      * Calculate the score of the building
+     * 
      * @return the score of the building
      */
     public int calculateMaxBuildingScore() {
         int maxScore = 0;
         ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
-        // on parcous pour les hexagones visible de type building puis calculer pour chaque quartier et prendre le max
+        // on parcous pour les hexagones visible de type building puis calculer pour
+        // chaque quartier et prendre le max
         for (Hexagon hexagon : getTopHexagons()) {
-            if (hexagon.getType().equals("Building") ) {
+            if (hexagon.getType().equals("Building")) {
                 int buildingScore = calculateBuildingScore(hexagon, visitedHexagons);
                 if (buildingScore > maxScore) {
                     maxScore = buildingScore;
@@ -368,40 +376,59 @@ public class Grid extends Model{
             }
         }
         int nbEtoile = numberOfStars("Building Place");
-        return maxScore *nbEtoile;
+        return maxScore * nbEtoile;
+    }
 
+    public int calculateBuildingScoreNoPlaces() {
+        int totalScore = 0;
+        ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
+        for (Hexagon hexagon : getTopHexagons()) {
+            switch (hexagon.getType()) {
+                case "Building":
+                    int buildingScore = visitBuildingHex(hexagon, visitedHexagons);
+                    if (buildingScore > totalScore) {
+                        totalScore = buildingScore;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return totalScore;
     }
 
     /**
      * Calculate the score of the garden
+     * 
      * @param hexagon the hexagon to calculate the score
      * @return the score of the garden
      */
     private int calculateGardenScore(Hexagon hexagon) {
         int nb = numberOfStars(placeDeTypeS("Garden Place"));
-        return hexagon.getElevation()*nb;
+        return hexagon.getElevation() * nb;
     }
 
     /**
      * Calculate the score of the barrack
+     * 
      * @param hexagon the hexagon to calculate the score
      * @return the score of the barrack
      */
     private int calculateBarrackScore(Hexagon hexagon) {
         int nb = numberOfStars(placeDeTypeS("Barrack Place"));
-        return (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation()*nb: 0;
+        return (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation() * nb : 0;
     }
 
-    
     /**
      * Get the building neighbors of the hexagon
+     * 
      * @param hexagon the hexagon to get the building neighbors
      * @return the building neighbors of the hexagon
      */
-    private ArrayList<Hexagon> getBuildingNeighbors(Hexagon hexagon , ArrayList<Hexagon> visitedHexagons){ 
+    private ArrayList<Hexagon> getBuildingNeighbors(Hexagon hexagon, ArrayList<Hexagon> visitedHexagons) {
         ArrayList<Hexagon> buildingNeighbors = new ArrayList<>();
         for (Hexagon neighbor : getNeighbors(hexagon)) {
-            if (neighbor.getType().equals("Building")&&!visitedHexagons.contains(neighbor)) {
+            if (neighbor.getType().equals("Building") && !visitedHexagons.contains(neighbor)) {
                 buildingNeighbors.add(neighbor);
             }
         }
@@ -410,37 +437,41 @@ public class Grid extends Model{
 
     /**
      * Calculate the score of the building
+     * 
      * @param hexagon the hexagon to calculate the score
      * @return the score of the building
      */
-    private int calculateBuildingScore(Hexagon hexagon , ArrayList<Hexagon> visitedHexagon) {
-        return visitBuildingHex(hexagon , new ArrayList<>());
+    private int calculateBuildingScore(Hexagon hexagon, ArrayList<Hexagon> visitedHexagon) {
+        return visitBuildingHex(hexagon, new ArrayList<>());
     }
-    public int visitBuildingHex(Hexagon hexagone , ArrayList<Hexagon> visitedHexagone){
-        if (hexagone.getType().equals("Building")&& !visitedHexagone.contains(hexagone)) {
+
+    public int visitBuildingHex(Hexagon hexagone, ArrayList<Hexagon> visitedHexagone) {
+        if (hexagone.getType().equals("Building") && !visitedHexagone.contains(hexagone)) {
             visitedHexagone.add(hexagone); // we add the hexagone to the visited hexagone
             int score = hexagone.getElevation();
-            //int score =1; // we add 1 point for each building
-            for (Hexagon neighbor : getBuildingNeighbors(hexagone ,visitedHexagone)) {
-                score += visitBuildingHex(neighbor ,visitedHexagone); // we add the score of the neighbors
+            // int score =1; // we add 1 point for each building
+            for (Hexagon neighbor : getBuildingNeighbors(hexagone, visitedHexagone)) {
+                score += visitBuildingHex(neighbor, visitedHexagone); // we add the score of the neighbors
             }
-            return score; 
+            return score;
         }
-        return 0 ;
-    } 
+        return 0;
+    }
 
     /**
      * Calculate the score of the temple
+     * 
      * @param hexagon the hexagon to calculate the score
      * @return the score of the temple
      */
     private int calculateTempleScore(Hexagon hexagon) {
         int nb = numberOfStars(placeDeTypeS("Temple Place"));
-        return hexagonIsSurrounded(hexagon) ? hexagon.getElevation()*nb : 0;
+        return hexagonIsSurrounded(hexagon) ? hexagon.getElevation() * nb : 0;
     }
 
     /**
      * Calculate the score of the market
+     * 
      * @param hexagon the hexagon to calculate the score
      * @return the score of the market
      */
@@ -451,17 +482,18 @@ public class Grid extends Model{
                 return 0;
             }
         }
-        return nb;
+        return nb * hexagon.getElevation();
     }
 
     /**
      * Get the number of stars of the places
+     * 
      * @param Place the places to get the number of stars
      * @return the number of stars of the places
      */
-    public int numberOfStars(String Place){
-        int nb = 0 ;
-        ArrayList <Place> places = placeDeTypeS(Place);
+    public int numberOfStars(String Place) {
+        int nb = 0;
+        ArrayList<Place> places = placeDeTypeS(Place);
         for (Place p : places) {
             nb += p.getStars();
         }
@@ -469,15 +501,25 @@ public class Grid extends Model{
     }
 
     /**
-     * calculate the score of the market
+     * Calculate the score of the market
+     * 
      * @return the score of the market
      */
-    public int calculateMarketScore( ) {
+    public int calculateMarketScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Market":
-                    totalScore += calculateMarketScore(hexagon);
+                    boolean hasMarketNeighbor = false;
+                    for (Hexagon neighbor : getNeighbors(hexagon)) {
+                        if (neighbor.getType().equals("Market")) {
+                            hasMarketNeighbor = true;
+                            break;
+                        }
+                    }
+                    if (!hasMarketNeighbor) {
+                        totalScore += hexagon.getElevation();
+                    }
                     break;
                 default:
                     break;
@@ -487,15 +529,16 @@ public class Grid extends Model{
     }
 
     /**
-     * calculate the score of the barrack
+     * Calculate the score of the barrack
+     * 
      * @return the score of the barrack
      */
-    public int calculateBarrackScore( ) {
+    public int calculateBarrackScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Barrack":
-                    totalScore += calculateBarrackScore(hexagon);
+                    totalScore += (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation() : 0;
                     break;
                 default:
                     break;
@@ -506,14 +549,15 @@ public class Grid extends Model{
 
     /**
      * calculate the score of the temple
+     * 
      * @return the score of the temple
      */
-    public int calculateTempleScore( ) {
+    public int calculateTempleScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Temple":
-                    totalScore += calculateTempleScore(hexagon);
+                    totalScore += hexagonIsSurrounded(hexagon) ? hexagon.getElevation() : 0;
                     break;
                 default:
                     break;
@@ -523,15 +567,16 @@ public class Grid extends Model{
     }
 
     /**
-     * calculate the score of the garden
+     * Calculate the score of the garden
+     * 
      * @return the score of the garden
      */
-    public int calculateGardenScore( ) {
+    public int calculateGardenScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
             switch (hexagon.getType()) {
                 case "Garden":
-                    totalScore += calculateGardenScore(hexagon);
+                    totalScore += hexagon.getElevation();
                     break;
                 default:
                     break;
@@ -540,6 +585,4 @@ public class Grid extends Model{
         return totalScore;
     }
 
-    
-    
 }
