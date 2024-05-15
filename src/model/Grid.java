@@ -548,7 +548,7 @@ public class Grid extends Model {
     }
 
     /**
-     * calculate the score of the temple
+     * Calculate the score of the temple
      * 
      * @return the score of the temple
      */

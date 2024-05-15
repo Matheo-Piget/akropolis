@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
+import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
@@ -71,15 +72,41 @@ public class GameOverState extends State {
         blackScreen.setBackground(java.awt.Color.BLACK);
         App.getInstance().getScreen().add(blackScreen, java.awt.BorderLayout.CENTER);
         App.getInstance().getScreen().validate();
-        JLabel logo = new JLabel("Le Gagnant est : " + ranking.get(0).getKey() + " !");
+        JLabel gameFininshed = new JLabel("Les jeux sont faits !");
+        customizeLabel(gameFininshed, 30, new java.awt.Color(255, 255, 255, 0), Font.BOLD);
+        String labelText = ranking.size() == 1 ? "Avons-nous un nouveau record ?" : "Le gagnant est : " + ranking.get(0).getKey() + " !";
+        JLabel logo = new JLabel(labelText);
         // White transparent color
         logo.setForeground(new java.awt.Color(255, 255, 255, 0));
         logo.setHorizontalAlignment(JLabel.CENTER);
         logo.setVerticalAlignment(JLabel.CENTER);
-        blackScreen.add(logo, java.awt.BorderLayout.CENTER);
+        blackScreen.add(gameFininshed, java.awt.BorderLayout.CENTER);
         blackScreen.revalidate();
         logo.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 25));
         timeline = new Timeline(0);
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 100, e -> {
+            // Increase the label's opacity by a step each time the action is performed
+            int alpha = gameFininshed.getForeground().getAlpha();
+            alpha = Math.min(alpha + 255 / 50, 255);
+            gameFininshed.setForeground(new java.awt.Color(logo.getForeground().getRed(), logo.getForeground().getGreen(),
+                    logo.getForeground().getBlue(), alpha));
+        }));
+        timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
+            // Decrease the label's opacity by a step each time the action is performed
+            int alpha = gameFininshed.getForeground().getAlpha();
+            alpha = Math.max(alpha - 255 / 50, 0);
+            gameFininshed.setForeground(new java.awt.Color(logo.getForeground().getRed(), gameFininshed.getForeground().getGreen(),
+                    gameFininshed.getForeground().getBlue(), alpha));
+        }));
+        timeline.addKeyFrame(new Timeline.KeyFrame(1000, 1, e -> {
+            // Remove the game finished label
+            if (gameFininshed.getParent() != null) {
+                blackScreen.remove(gameFininshed);
+            }
+            // Add the logo label
+            SwingUtilities.invokeLater(() -> blackScreen.add(logo, java.awt.BorderLayout.CENTER));
+            blackScreen.revalidate();
+        }));
         timeline.addKeyFrame(new Timeline.KeyFrame(15, 50, e -> {
             // Increase the label's opacity by a step each time the action is performed
             int alpha = logo.getForeground().getAlpha();
@@ -124,6 +151,7 @@ public class GameOverState extends State {
             case 3 -> "THREE_PLAYER";
             default -> "FOUR_PLAYER";
         };
+        System.out.println("Category: " + category);
 
         // Création du panneau de classement à gauche
         JPanel rankingPanel = createRankingPanel();
@@ -248,6 +276,9 @@ public class GameOverState extends State {
     // Création du panneau des meilleurs scores
     private JPanel createLeaderBoardPanel(String category) {
         LeaderBoard leaderBoard = new LeaderBoard();
+        for (Pair<String, Integer> pair : ranking) {
+            leaderBoard.addScore(category, pair.getValue(), pair.getKey());
+        }
         LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
 
         JPanel leaderBoardPanel = new JPanel();

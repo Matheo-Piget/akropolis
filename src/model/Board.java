@@ -116,16 +116,22 @@ public class Board extends Model {
         return grids;
     }
 
+    /**
+     * Returns the site where the tiles are buyable.
+     * 
+     * @return The site where the tiles are buyable.
+     */
     public Site getSite() {
         return site;
     }
 
+    /**
+     * Returns the stack of tiles.
+     * 
+     * @return The stack of tiles.
+     */
     public StackTiles getStackTiles() {
         return stackTiles;
-    }
-
-    public int getManche() {
-        return manche;
     }
 
     /**
@@ -167,7 +173,7 @@ public class Board extends Model {
     }
 
     /**
-     * For debug only
+     * Adds a tile to the grid of the current player.
      * 
      * @param tile The tile to add to the grid.
      * @return True if the tile was added, false otherwise.
@@ -175,10 +181,6 @@ public class Board extends Model {
     public boolean addTile(Tile tile) {
         System.out.println("Adding tile to grid to player " + currentPlayer.getName());
         return currentPlayer.getGrid().addTile(tile);
-    }
-
-    public boolean addTile(Tile tile, Player player) {
-        return player.getGrid().addTile(tile);
     }
 
     public Hexagon getHexagon(int x, int y) {
@@ -204,7 +206,6 @@ public class Board extends Model {
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
-        // LIS LES REGLES DU JEU STP
         return stackTiles.isEmpty() && site.size() <= 1;
     }
 
@@ -234,15 +235,7 @@ public class Board extends Model {
      * @return True if the player can choose the tile, false otherwise.
      */
     public boolean canChooseTile(Tile chosen) {
-        int price = 0;
-        for (Tile tile : site.getTiles()) {
-            if (tile != chosen) {
-                price++;
-            } else {
-                break;
-            }
-        }
-        System.out.println("Price : " + price);
-        return currentPlayer.getResources() >= price;
+        int cost = site.calculateCost(chosen);
+        return currentPlayer.getResources() >= cost;
     }
 }

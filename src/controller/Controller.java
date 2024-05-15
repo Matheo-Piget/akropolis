@@ -4,6 +4,7 @@ import model.Model;
 import view.View;
 
 public abstract class Controller implements ControllerInterface {
+    // The casted model and view
     protected Model model;
     protected View view;
     

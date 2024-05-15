@@ -1,7 +1,6 @@
 package view.ui;
 
 import util.SoundManager;
-
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import java.awt.Color;
@@ -11,7 +10,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

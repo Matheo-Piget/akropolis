@@ -98,7 +98,7 @@ public class BoardController extends Controller {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("addTile")) {
             // Change the current grid to the next player's grid
-            ((BoardView) view).nextTurn();
+            ((BoardView) view).nextTurn(gridControllers.size() == 1);
         }
         if (evt.getPropertyName().equals("gameOver")) {
             // To avoid a ClassCastException, we need to check the type of the winner

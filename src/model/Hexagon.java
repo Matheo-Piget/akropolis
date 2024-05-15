@@ -128,7 +128,6 @@ public abstract class Hexagon implements java.io.Serializable{
         return below != null;
     }
 
-
     /**
      * checks if the tile is adjacent to the given tile
      * @param t the tile to check

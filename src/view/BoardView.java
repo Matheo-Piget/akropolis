@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -336,11 +335,15 @@ public class BoardView extends JPanel implements View {
 
     /**
      * Show the next GridView and pass turn.
+     * @param skipAnimation Whether to skip the animation.
      */
-    public void nextTurn() {
+    public void nextTurn(boolean skipAnimation) {
         int index = gridViews.indexOf(currentGridView);
         // Play the end turn animation
         getGridView().removeSelectedTile();
+        if (skipAnimation){
+            return;
+        }
         freeze();
         endTurnPlayerLabel.play(playerNames[(index + 1) % gridViews.size()]);
     }
