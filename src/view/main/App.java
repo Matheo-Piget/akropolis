@@ -36,7 +36,6 @@ public class App extends JFrame{
         SoundManager.loadSound("gameButton2", "/sound/GameButton.wav");
         SoundManager.loadSound("tilePlaced", "/sound/tilePlaceSound.wav");
 
-
         setIconImage(appIcon.getImage());
 
         setVisible(true);

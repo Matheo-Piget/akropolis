@@ -38,6 +38,14 @@ public class SoundManager {
         }
     }
 
+    public static void free(String soundName) {
+        Clip clip = soundMap.get(soundName);
+        if (clip != null) {
+            clip.close();
+            soundMap.remove(soundName);
+        }
+    }
+
     public static boolean isSoundEnabled() {
         return isEnable;
     }

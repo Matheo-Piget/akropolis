@@ -105,6 +105,10 @@ public class BoardView extends JPanel implements View {
                     App.getInstance().getScreen().add(BoardView.this, BorderLayout.CENTER);
                     App.getInstance().getScreen().revalidate();
                     BoardView.this.requestFocusInWindow();
+                    // Start the music and load the game sound
+                    SoundManager.stopSound("menu");
+                    SoundManager.loadSound("game", "/sound/game.wav");
+                    SoundManager.loopSound("game");
                 });
 
                 return null;
@@ -120,6 +124,13 @@ public class BoardView extends JPanel implements View {
             }
         };
         worker.execute(); // Start the SwingWorker
+    }
+
+    // When this component is removed from the screen, stop the music and free it from memory
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SoundManager.free("game");
     }
 
     // Getter methods

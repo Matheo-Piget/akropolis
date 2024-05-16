@@ -25,6 +25,10 @@ import java.awt.Font;
  * It is used to create UI elements for the game.
  */
 public class UIFactory {
+    // To ensure that only one rules panel is open at a time
+    private static boolean isRulesPanelOpen = false;
+    // To store the rules dialog and bring it to the front when needed
+    private static JDialog rulesDialog;
     /**
      * Create a styled navigation button
      *
@@ -89,8 +93,19 @@ public class UIFactory {
      * Shows the rules panel with the rules of the game.
      */
     public static void showRulesPanel() {
+        if (isRulesPanelOpen) {
+            // Display the previous rules panel if it is already open
+            rulesDialog.toFront();
+            return;
+        }
         // Création d'un nouveau dialogue
-        JDialog rulesDialog = new JDialog();
+        rulesDialog = new JDialog();
+        rulesDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                isRulesPanelOpen = false;
+            }
+        });
+        isRulesPanelOpen = true;
         rulesDialog.setTitle("Règles du jeu");
         rulesDialog.setSize(910, 700);
         rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.

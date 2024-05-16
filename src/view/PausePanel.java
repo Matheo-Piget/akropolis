@@ -157,7 +157,7 @@ public class PausePanel extends JPanel {
     private void toggleSound() {
         SoundManager.invertSoundEnabled();
         if (SoundManager.isSoundEnabled()) {
-            SoundManager.loopSound("menu");
+            SoundManager.loopSound("game");
         } else {
             SoundManager.stopAllSounds();
         }
