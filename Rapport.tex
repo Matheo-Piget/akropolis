@@ -9,6 +9,7 @@
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 \title{PG4 : Akropolis}
@@ -79,8 +80,8 @@
     Après ces premières semaines de travail, nous avons commencé à travailler sur la vue, en créant les différentes classes nécessaires pour l'interface graphique du jeu.
     Comme la classe pour le menu, les premières ébauches des classes BoardView, HexagonView ect.
     En même temps, le modèle se finalisait de plus en plus.
-    Lorsque les classes principales de la vue ont été crées, suffisante pour manipuler les tuiles ect, nous avons commencé à relier le modèle à la vue en créant les classes du package Controller.
-    Après cela le but principale était de finaliser la logique de le vue( le placement des tuiles, les clics qui les selctionnent, ect).
+    Lorsque les classes principales de la vue ont été crées, suffisante pour manipuler les tuiles, nous avons commencé à relier le modèle à la vue en créant les classes du package Controller.
+    Après cela le but principale était de finaliser la logique de le vue(le placement des tuiles, les clics qui les selctionnent).
     Pour cela nous avons du implémenter un controller solide qui aide à relier la vue et le modèle, nous avons utilisé des classes de java.beans pour gérer les événements (voir section \ref{subsec:organisation-du-code}) pour faire cela.
     Après avoir implémenter le controller, l'enjeux principal était de finaliser la vue et de la rendre agréable visuellement et intuitive.
     Ce qui a été nos objectifs pour les dernières semaine de développement.
@@ -146,6 +147,33 @@
     Elle gére si un ajout à une position est possible ou non dans la méthode addTile.
     La classe Tile contient simplement une liste d'hexagones qui la compose.
     Chaque hexagone contient une position représenté par un Vecteur3D. La classe Hexagone est abstraite. 
+    La position est définie grâce à un système de coordonnées axiales.
+    Ce système repose sur deux coordonnées q et r qui sont les coordonnées d'un hexagone dans un plan hexagonal.
+    On profite des propriétés géométriques de l'hexagone pour définir un système de coordonnées qui simplifie les calculs.
+    En effet, les hexagones ont des côtés de même longueur et des angles de 120 degrés.
+    Puisque les nôtres sont plats(non pointus au dessus et en dessous) en le représentant dans un cercle au milieu de notre figure on trouve que :
+    \begin{verbatim}
+        L = 2 * size
+    \end{verbatim}
+    Où L est la longueur d'un côté et size est le rayon du cercle.
+    Sa hauteur peut-être déterminé si l'on regarde l'hexagone comme 12 triangles rectangles.
+    On va suppose que l'hexagone est un cercle de rayon 1 et que l'on a un triangle rectangle de côté 1 et d'hypoténuse 2.
+    On trouve que :
+    \begin{verbatim}
+        H = sqrt(3) * size
+    \end{verbatim}
+    L'avantage de ce système est qu'il permet de facilement calculer les voisins d'un hexagone avec la formule :
+    \begin{verbatim}
+        (q + 1, r), (q + 1, r - 1), (q, r - 1), (q - 1, r), (q - 1, r + 1), (q, r + 1)
+    \end{verbatim}
+    Où q et r sont les coordonnées axiales de l'hexagone.
+    C'est aussi un système qui permet de facilement les tracer sur un écran.
+    La formule de conversion des coordonnées axiales en coordonnées cartésiennes est la suivante :
+    \begin{verbatim}
+        x = size * (3./2 * q)
+        y = size * (sqrt(3)/2 * q  +  sqrt(3) * r)
+    \end{verbatim}
+    Pour des illustrations détaillées de ce système nous vous renvoyons à \href{https://www.redblobgames.com/grids/hexagons/}{ce site qui nous a énormément aidé}.
     Nous définissons donc nos différents types concrets d'hexagones :
     \begin{itemize}
         \item \textbf{Place} : Les places du jeu, elles permettent d'avoir un multiplicateur de score.
@@ -203,7 +231,27 @@
     Notre interface reste assez simple à cause de ces limitations et de la non utilisation de frameworks tiers.    
     
     
-    \subsection{Extensions}\label{subsec:extensions}
+    \subsection{Extensions possibles}\label{subsec:extensions}
+
+    Diverses extensions pour notre projet sont possibles. Nous avons déjà évoqué la possibilité d'ajouter un mode multijoueur en ligne. 
+    Nous avions réussi en local à envoyer des objets serializables (comme les tuiles) entre deux clients. L'idée était que un joueur était à la fois serveur et client.
+    Il y avait donc un joueur qui lançait le serveur et un autre qui se connectait à ce serveur en utilisant son adresse IP.
+    Pour envoyer des objets serializables, il suffisait d'utiliser un ObjectInputStream et un ObjectOutputStream sur les sockets.
+    Grâce donc au protocole TCP, les objets étaient envoyés de manière fiable et ordonnée malgré la latence du réseau (ce qui en soit n'est pas un problème pour un jeu de société tour par tour).
+    Pour pouvoir l'implémenter il faudrait principalement la partie graphique avec les listeners pour les désactiver lorsqu'on attend un message du serveur.
+    En plus de cela, il faudrait faire attention à la synchronisation des threads pour éviter les problèmes de concurrence sans oublier de gérer les déconnexions.
+    Cela aurait été une extension très intéressante mais qui demandait beaucoup de temps et de travail.
+    \newline
+    Une autre extension possible est l'ajout d'une intelligence artificielle pour jouer contre l'ordinateur.
+    Cela aurait été une extension intéressante mais qui demandait également beaucoup de temps et de travail.
+    La raison pour laquelle nous n'avons pas implémenté cette extension est que nous avons préféré nous concentrer sur la réalisation du jeu de base.
+    De plus, Akropolis est un jeu de société complexe qui demande une réflexion stratégique importante.
+    Pour avoir une intelligence artificielle capable de rivaliser avec un joueur humain, il aurait fallu une IA suffisament sophistiquée pour prendre en compte toutes les possibilités de jeu.
+    La gestion de quoi choisir dans la pioche par exemple puisque l'on ne peut pas voir les tuiles suivantes il y a une part de hasard à moins de la faire tricher en regardant les tuiles suivantes.
+    Ensuite de nombreux coups sont possibles et un coup qui peut sembler bon peut se révéler catastrophique plus tard.
+    La gestion donc de la profondeur de recherche et de l'évaluation des coups possibles aurait été très complexe.
+    Il faut avoir une IA capable de réaliser des coups aussi suffisament rapidement pour ne pas ennuyer le joueur donc il faudrait vraiment bien optimiser le modèle.
+    Une variante du min max aurait été une solution mais encore faut-il avoir une fonction d'évaluation correcte.
 
     \section{Difficultés Rencontrées}\label{sec:difficultes-rencontrees}
 
@@ -213,12 +261,10 @@
     Durant les deux ou trois premières semaines, nous avons tourné en rond pour trouver une implémentation qui nous convenait.
     Après discussions, et après avoir demandé l'avis de notre encadrant de projet, nous avons finalement opté pour une implémentation sur une hashmap contenant des paires de coordonnées (Point3D) et de tuiles (Hexagon), pour ce qui est de la classe Point3D, elle étend une classe déjà existante; Point2D de Java.
     Et la classe Hexagon a été créer sur mesure pour ce projet.
-
     Dans le modèle une autre difficulté a été de calculer les scores, avec plusieurs contraintes à respecter, comme le placement de la tuile, le type de la tuile, le nombre de tuiles supperposées, ect.
-
-    \newline
-
-    Après avoir implémenté le modèle, nous avons décidé de nous attaquer à la vue, une autre très grande difficulté du projet pour plusieurs raisons, la première étant que toute la gestion des coordonnées, que ce soient celles des hexagones, ou de la souris était d'une grande difficulté à implémenter pour facilité cette partie du travail nous sommes aller chercher des ressources sur internet et grâce a ce site () nous avons pu avoir une aide, surtout dans la gestion des formules pour adapter les coordonnées de la souris et des hexagones.
+    Après avoir implémenté le modèle, nous avons décidé de nous attaquer à la vue, une autre très grande difficulté du projet pour plusieurs raisons, 
+    la première étant que toute la gestion des coordonnées, que ce soient celles des hexagones, ou de la souris était d'une grande difficulté à implémenter pour facilité cette partie du travail nous sommes aller chercher des ressources sur internet et grâce /href{au site évoqué précédemment}{https://www.redblobgames.com/grids/hexagons/}.
+    nous avons pu avoir une aide, surtout dans la gestion des formules pour adapter les coordonnées de la souris et des hexagones.
 
 
     \section{Conclusion}\label{sec:conclusion}
