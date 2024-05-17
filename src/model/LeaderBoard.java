@@ -12,6 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the leaderboard of the game.
+ * It stores the top 5 scores for each mode.
+ * It can add a score to the leaderboard and save the scores to a file.
+ */
 public class LeaderBoard {
     private LinkedHashMap<String, LinkedHashMap<String, Integer>> scores;
 

@@ -1,4 +1,4 @@
-package view;
+package view.panel;
 
 import util.SoundManager;
 import view.main.App;
@@ -27,6 +27,10 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 import java.awt.CardLayout;
 
+/**
+ * Represents the main menu view.
+ * This class is used to display the main menu of the game.
+ */
 public class MainMenuView extends JPanel {
 
     private final JPanel choicePanel = new JPanel(new GridBagLayout());
@@ -46,7 +50,7 @@ public class MainMenuView extends JPanel {
             // If the image is not found, set the background to gray
             setBackground(Color.GRAY);
         }
-        SoundManager.playSound("menu");
+        SoundManager.loopSound("menu");
         choicePanel.setOpaque(false);
         add(choicePanel, "choicePanel");
         add(new SettingsPanel(switcher), "settingsPanel");
@@ -75,7 +79,7 @@ public class MainMenuView extends JPanel {
     @Override
     public void removeNotify() {
         super.removeNotify();
-        SoundManager.loopSound("menu");
+        SoundManager.stopSound("menu");
         titleLabel.stop();
     }
 
@@ -132,9 +136,6 @@ public class MainMenuView extends JPanel {
      * Start a new game
      */
     private void startNewGame() {
-        SoundManager.loopSound("menu");
-        System.out.println("Nouvelle partie démarrée");
-
         // Utilisation de JComboBox pour sélectionner le nombre de joueurs
         JComboBox<Integer> playerNumberComboBox = new JComboBox<>(new Integer[] { 1, 2, 3, 4 });
         playerNumberComboBox.setSelectedIndex(0); // Sélectionne la première option par défaut
@@ -154,7 +155,6 @@ public class MainMenuView extends JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             if (playerNumberComboBox.getSelectedItem() == null) {
-                System.out.println("Aucun choix fait, partie non démarrée");
                 JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur",
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -167,7 +167,6 @@ public class MainMenuView extends JPanel {
                 if (playerName == null) {
                     // That means the user clicked cancel
                     // So we should stop the game creation process
-                    System.out.println("Annulation de la création de la partie");
                     return;
                 }
                 playerNames.add(playerName);
@@ -178,7 +177,6 @@ public class MainMenuView extends JPanel {
                 App.getInstance().appState.changeState(playingState);
             }
         } else {
-            System.out.println("Aucun choix fait, partie non démarrée");
             JOptionPane.showMessageDialog(this, "Aucune sélection effectuée. La partie ne démarrera pas.", "Erreur",
                     JOptionPane.ERROR_MESSAGE);
         }

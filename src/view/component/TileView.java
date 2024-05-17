@@ -1,9 +1,12 @@
-package view;
+package view.component;
 
 import javax.swing.JComponent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 import javax.swing.Timer;
+
+import view.View;
+
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Dimension;
@@ -13,6 +16,7 @@ import java.util.Arrays;
 /**
  * Represents a single tile in the game.
  * A tile is three hexagons that form a triangle.
+ * This class is used to draw a tile on the screen.
  */
 public class TileView extends JComponent implements View {
 

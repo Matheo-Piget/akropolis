@@ -1,16 +1,153 @@
-package view;
+package view.panel;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.Dimension;
+import javax.swing.JPanel;
+import java.awt.geom.Point2D;
+import util.Point3D;
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
-
+import view.View;
+import view.component.HexagonView;
+import view.component.TileView;
 import view.main.App;
 
+/**
+ * Represents a scrollable grid view.
+ * This class is used to display the game grid in a scrollable view.
+ */
 public class ScrollableGridView extends JScrollPane implements View {
+    public static int hexagonSize = 90;
+    /**
+     * Represents the game grid displayed in game.
+     */
+    public static class GridView extends JPanel {
+
+        private final int xOffset;
+        private final int yOffset;
+
+        private final HashMap<Point, HexagonView> hexagons = new HashMap<>();
+
+        public GridView(int maxHexagons) {
+            setDoubleBuffered(true);
+            int panelWidth = (int) (maxHexagons * 3.0 / 2 * hexagonSize);
+
+            int panelHeight = (int) (maxHexagons * Math.sqrt(3) * hexagonSize);
+            setPreferredSize(new Dimension(panelWidth, panelHeight));
+            this.setLayout(null); // We will manually set the position of the hexagons
+            xOffset = getPreferredSize().width / 2;// Offset for centering the (0, 0)
+            yOffset = getPreferredSize().height / 2; // Offset for centering the (0, 0)
+        }
+
+        /**
+         * Convert a grid position to a pixel position
+         * 
+         * @param gridPosition The grid position
+         * @return The pixel position
+         */
+        public Point2D convertGridPositionToPixelPosition(Point gridPosition) {
+            int q = gridPosition.x; // column index
+            int r = gridPosition.y; // row index
+            int size = hexagonSize / 2; // size of the hexagon
+            int pixelX = (int) (size * 3.0 / 2 * q) + xOffset;
+            int pixelY = (int) (size * Math.sqrt(3) * (r + q / 2.0)) + yOffset;
+            return new Point2D.Double(pixelX, pixelY);
+        }
+
+        /**
+         * Get the hexagon at the given pixel position
+         * Be careful, it will return null if there is no hexagon at the given mouse
+         * position
+         * 
+         * @param pixelPosition The pixel position
+         * @return The hexagon at the given pixel position
+         */
+        public HexagonView getHexagonAtPixelPos(Point2D pixelPosition) {
+            // We just need to use getComponentAt to get the hexagon at the pixel position
+            Component component = getComponentAt((int) pixelPosition.getX(), (int) pixelPosition.getY());
+            if (component instanceof HexagonView) {
+                return (HexagonView) component;
+            }
+            return null;
+        }
+
+        public HexagonView getHexagonAtGridPos(Point gridPosition) {
+            return hexagons.get(new Point(gridPosition.x, gridPosition.y));
+        }
+
+        public HexagonView getHexagonAtGridPos(int x, int y) {
+            return hexagons.get(new Point(x, y));
+        }
+
+        public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
+            int size = hexagonSize / 2;
+            double x = (pixelPosition.getX() - xOffset) / size;
+            double y = (pixelPosition.getY() - yOffset) / size;
+
+            double q = (2.0 / 3 * x);
+            double r = (-1.0 / 3 * x + Math.sqrt(3) / 3 * y);
+
+            return axialRound(q, r);
+
+        }
+
+        /**
+         * Round the axial coordinates to the nearest hexagon
+         * 
+         * @param q The q coordinate
+         * @param r The r coordinate
+         * @return The rounded coordinates
+         */
+        private Point3D axialRound(double q, double r) {
+            double s = -q - r;
+            double rq = Math.round(q);
+            double rr = Math.round(r);
+            double rs = Math.round(s);
+
+            double qDiff = Math.abs(rq - q);
+            double rDiff = Math.abs(rr - r);
+            double sDiff = Math.abs(rs - s);
+
+            if (qDiff > rDiff && qDiff > sDiff) {
+                rq = -rr - rs;
+            } else if (rDiff > sDiff) {
+                rr = -rq - rs;
+            }
+            return new Point3D((int) rq, (int) rr, 0);
+        }
+
+        /**
+         * Add a hexagon to the grid
+         * 
+         * @param hexagon The hexagon to add
+         */
+        public void addHexagon(HexagonView hexagon) {
+            boolean contains = hexagons.containsKey(hexagon.getPosition());
+            if (contains && hexagon.getZ() == 0) {
+                // It's an outline that will overlap
+                return;
+            }
+            // Find the position of the hexagon in pixels
+            Point2D position = convertGridPositionToPixelPosition(hexagon.getPosition());
+            // If there is already a hexagon with the same x and y, remove it
+            if (contains) {
+                this.remove(hexagons.get(hexagon.getPosition()));
+                hexagons.remove(hexagon.getPosition());
+            }
+            hexagon.setLocation((int) Math.round(position.getX()), (int) Math.round(position.getY()));
+            hexagons.put(hexagon.getPosition(), hexagon);
+            // Add it to the JPanel
+            this.add(hexagon);
+            // Repaint the area where the hexagon is
+            this.repaint(hexagon.getBounds());
+        }
+    }
 
     private final GridView grid;
     private final JScrollBar horizontalScrollBar;
@@ -120,6 +257,7 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     /**
      * Get the filled hexagons
+     * 
      * @return The filled hexagons
      */
     public HexagonView[] getFilledHexagons() {
@@ -128,7 +266,8 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     /**
      * Fill the hexagons with the tile
-     * @param tile The tile to fill the hexagons with
+     * 
+     * @param tile           The tile to fill the hexagons with
      * @param hoveredHexagon The hovered hexagon
      */
     public void fillEachHexagons(TileView tile, HexagonView hoveredHexagon) {
@@ -156,16 +295,16 @@ public class ScrollableGridView extends JScrollPane implements View {
             }
             default -> null;
         };
-        if(hex2 != null && hex3 != null){
-            hoveredHexagon.fill(tile.hex1);
-            hex2.fill(tile.hex2);
-            hex3.fill(tile.hex3);
+        if (hex2 != null && hex3 != null) {
+            ArrayList<HexagonView> hexagons = tile.getHexagons();
+            hoveredHexagon.fill(hexagons.get(0));
+            hex2.fill(hexagons.get(1));
+            hex3.fill(hexagons.get(2));
             filledHexagonViews[0] = hoveredHexagon;
             filledHexagonViews[1] = hex2;
             filledHexagonViews[2] = hex3;
         }
     }
-
 
     @Override
     public void addNotify() {
@@ -190,7 +329,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     /**
      * Enable the listeners
      */
-    public void enableListeners(){
+    public void enableListeners() {
         grid.addMouseListener(ma);
         grid.addMouseMotionListener(ma);
         grid.setEnabled(true);
@@ -199,7 +338,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     /**
      * Disable the listeners
      */
-    public void disableListeners(){
+    public void disableListeners() {
         grid.removeMouseListener(ma);
         grid.removeMouseMotionListener(ma);
         grid.setEnabled(false);
@@ -207,6 +346,7 @@ public class ScrollableGridView extends JScrollPane implements View {
 
     /**
      * Set the selected tile
+     * 
      * @param tile The selected tile
      */
     public void setSelectedTile(TileView tile) {
@@ -222,10 +362,10 @@ public class ScrollableGridView extends JScrollPane implements View {
     /**
      * Rotate the selected tile
      */
-    public void rotateSelectedTile(){
-        if(selectedTile != null){
+    public void rotateSelectedTile() {
+        if (selectedTile != null) {
             selectedTile.rotate();
-            if(hoveredHexagon != null){
+            if (hoveredHexagon != null) {
                 unfilledEachHexagons();
                 fillEachHexagons(selectedTile, hoveredHexagon);
             }
@@ -235,7 +375,7 @@ public class ScrollableGridView extends JScrollPane implements View {
     /**
      * Center the view of the scroll pane
      */
-    public void centerView(){
+    public void centerView() {
         int x = (grid.getPreferredSize().width - getPreferredSize().width) / 2;
         int y = (grid.getPreferredSize().height - getPreferredSize().height) / 2;
         getViewport().setViewPosition(new Point(x, y));

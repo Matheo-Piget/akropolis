@@ -5,6 +5,9 @@ import java.util.Objects;
 
 /**
  * Represents a point in 3D space.
+ * @param x the x coordinate.
+ * @param y the y coordinate.
+ * @param z the z coordinate.
  */
 public class Point3D extends Point{
     public int z;

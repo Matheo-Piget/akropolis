@@ -1,8 +1,12 @@
-package view;
+package view.component;
 
 import java.awt.Color;
 import model.District;
 
+/**
+ * Represents the view of a district in the game.
+ * Allows the district to be displayed on the screen.
+ */
 public class DistrictView extends HexagonView {
     private final District district;
     private static final Color strokeColor = Color.BLACK;

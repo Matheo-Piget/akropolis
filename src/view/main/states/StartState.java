@@ -1,8 +1,12 @@
 package view.main.states;
 import util.State;
-import view.MainMenuView;
 import view.main.App;
+import view.panel.MainMenuView;
 
+/**
+ * Represents the state of the game when it is starting.
+ * This state is responsible for displaying the main menu.
+ */
 public class StartState extends State{
     
     private static final StartState INSTANCE = new StartState();
@@ -13,7 +17,6 @@ public class StartState extends State{
 
     @Override
     public void enter() {
-        System.out.println("Entering Start State");
         MainMenuView mainMenu = new MainMenuView();
         App.getInstance().getScreen().add(mainMenu, java.awt.BorderLayout.CENTER);
         App.getInstance().getScreen().revalidate();
@@ -22,7 +25,6 @@ public class StartState extends State{
 
     @Override
     public void exit() {
-        System.out.println("Exiting Start State");
         App.getInstance().getScreen().removeAll();
     }
 }

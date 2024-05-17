@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
-import view.ScoreDetails;
+
 import view.View;
 
 /**
@@ -131,7 +131,6 @@ public class BoardUI extends JPanel implements View {
      */
     public void setPlayer(String playerName){
         playerLabel.setPlayer(playerName);
-        System.out.println(playerName);
         if (playerIcons.size() > 0 && !firstTurn){
             nextPlayerIcon();
             setBackground(playerColors.get(playerIcons.indexOf(playerImageLabel.getIcon())));

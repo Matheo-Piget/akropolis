@@ -1,7 +1,7 @@
 package controller;
 
 import model.Tile;
-import view.TileView;
+import view.component.TileView;
 import java.beans.PropertyChangeEvent;
 
 /**

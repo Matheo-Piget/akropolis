@@ -141,7 +141,6 @@ public abstract class Hexagon implements java.io.Serializable{
         for (Point point : axialDirections) {
             Point direct = new Point(this.getX()+point.x, this.getY()+point.y);
             if (t.getX() ==direct.x && t.getY()==direct.y) {
-                System.out.println("T");
                 return true;
             }
         }

@@ -1,6 +1,10 @@
-package view;
+package view.panel;
 
 import javax.swing.JPanel;
+
+import view.View;
+import view.component.TileView;
+
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
@@ -56,7 +60,6 @@ public class SiteView extends JPanel implements View {
      */
     public void update(ArrayList<TileView> tiles) { 
         setTilesInSite(tiles);
-        System.out.println("SiteView updated");
     }
 
     /**

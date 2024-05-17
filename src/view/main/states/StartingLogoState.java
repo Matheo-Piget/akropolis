@@ -33,7 +33,6 @@ public class StartingLogoState extends State {
      */
     @Override
     public void enter() {
-        System.out.println("Entering Starting Logo State");
         blackScreen = new JPanel(new BorderLayout());
         KeyListener keyListener = new KeyListener() {
             @Override
@@ -179,7 +178,6 @@ public class StartingLogoState extends State {
 
     @Override
     public void exit() {
-        System.out.println("Exiting Starting Logo State");
         App.getInstance().getScreen().removeAll();
     }
 }

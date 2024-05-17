@@ -60,7 +60,6 @@ public class Board extends Model {
             return;
         }
         currentPlayer.getGrid().display();
-        System.out.println("Player " + player.getName() + "'s turn");
         // Add tiles to the table if the manche is over
         if (manche % getNumberOfPlayers() == 0) {
             site.updateSite(stackTiles);
@@ -89,12 +88,9 @@ public class Board extends Model {
      * their turn.
      */
     public void endTurn() {
-        System.out.println("End of turn : " + currentPlayer.getName());
-        // Logic to end a turn
         manche++;
         currentPlayer = getNextPlayer(); // Switch to the next player
         currentPlayer.setSelectedTile(null); // Reset the selected tile
-        System.out.println("Next turn : " + getNextPlayer().getName());
         startTurn(currentPlayer); // Start the next player's turn
     }
 
@@ -164,7 +160,6 @@ public class Board extends Model {
      * @return The number of tiles to put on the table.
      */
     public int switchSizePlayers() {
-        System.out.println(getNumberOfPlayers());
         return switch (getNumberOfPlayers()) {
             case 1, 2 -> 3;
             case 3 -> 4;
@@ -179,7 +174,6 @@ public class Board extends Model {
      * @return True if the tile was added, false otherwise.
      */
     public boolean addTile(Tile tile) {
-        System.out.println("Adding tile to grid to player " + currentPlayer.getName());
         return currentPlayer.getGrid().addTile(tile);
     }
 
@@ -220,9 +214,6 @@ public class Board extends Model {
         List<Pair<String, Integer>> players = new ArrayList<>();
         for (Player player : sortedPlayers) {
             players.add(new Pair<>(player.getName(), getScore(player)));
-        }
-        for (Pair<String, Integer> pair : players) {
-            System.out.println(pair.getKey() + " : " + pair.getValue());
         }
         return players;
     }

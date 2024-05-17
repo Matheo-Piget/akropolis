@@ -1,4 +1,4 @@
-package view;
+package view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,7 +16,11 @@ import view.main.App;
 import view.main.states.StartState;
 import view.ui.UIFactory;
 
-public class PausePanel extends JPanel {
+/**
+ * Represents the pause panel.
+ * This class is used to display the pause menu of the game.
+ */
+class PausePanel extends JPanel {
     private static final String LEFT_CLICK_LABEL = "Click gauche: placer une tuile/ Sélectionner une tuile";
     private static final String RIGHT_CLICK_LABEL = "Click droit: glisser sur le plateau";
     private static final String ROTATE_LABEL = "R: tourner la tuile";

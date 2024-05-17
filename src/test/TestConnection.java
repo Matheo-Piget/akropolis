@@ -6,6 +6,9 @@ import network.Server;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Test the connection between the server and the client
+ */
 public class TestConnection {
     public static void main(String[] args) {
         try {
@@ -33,6 +36,7 @@ public class TestConnection {
             ArrayList<Player> players = new ArrayList<Player>();
             players.add(client1);
             players.add(client2);
+            @SuppressWarnings("unused")
             Board board = new Board(players);
             // Send a tile to the server
             Tile tile = new Tile(new Quarries(1, 1), new Quarries(1, 1), new Quarries(1, 1));

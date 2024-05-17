@@ -1,9 +1,10 @@
-package view;
+package view.component;
 
 import java.awt.Color;
 
 /**
  * Implements a hexagon outline view.
+ * This class is used to draw the outline of a hexagon.
  */
 public class HexagonOutline extends HexagonView {
     private Color strokeColor = Color.BLUE;

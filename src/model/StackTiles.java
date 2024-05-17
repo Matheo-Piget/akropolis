@@ -6,10 +6,10 @@ import java.util.Stack;
 import java.util.Random;
 
 /**
- * Représente la pile de tuiles dans le jeu Akropolis. Cette pile contient
- * toutes les tuiles qui peuvent être tirées par les joueurs pendant le jeu.
+ * Represents a stack of tiles in the game.
+ * The stack is generated randomly and can be shuffled.
+ * It's where when all players have placed their tiles that the site is updated using the stack.
  */
-
 public class StackTiles extends Stack<Tile> {
     int remainingTiles;
     Random random = new Random();

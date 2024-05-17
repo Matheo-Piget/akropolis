@@ -7,15 +7,19 @@ import model.Board;
 import model.Grid;
 import util.Pair;
 import util.SoundManager;
-import view.BoardView;
-import view.HexagonView;
-import view.ScrollableGridView;
-import view.TileView;
+import view.component.HexagonView;
+import view.component.TileView;
+import view.panel.BoardView;
+import view.panel.ScrollableGridView;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import model.Tile;
 
+/**
+ * Represents the controller for the board in the game.
+ * Wraps the Board model and the BoardView view.
+ */
 public class BoardController extends Controller {
     private final UIController uiController;
     private List<GridController> gridControllers;
@@ -61,7 +65,6 @@ public class BoardController extends Controller {
             MouseAdapter ms = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    System.out.println("Mouse clicked");
                     if (e.getButton() == MouseEvent.BUTTON1) { // Check if left button was clicked
                         if(selectedTile != null){
                             BoardView boardView = (BoardView) view;
@@ -133,7 +136,6 @@ public class BoardController extends Controller {
         if(board.setSelectedTile(tile)){
             selectedTile = tileController;
             boardView.setSelectedTile((TileView) tileController.view);
-            System.out.println("Tile selected");
         }
     }
 

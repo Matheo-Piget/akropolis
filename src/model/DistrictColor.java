@@ -1,6 +1,8 @@
 package model;
 
-// Enum for the different colors of the districts
+/**
+ * Represents the color of a district
+ */
 public enum DistrictColor {
     BLUE, GREEN, YELLOW, PURPLE, RED
 }

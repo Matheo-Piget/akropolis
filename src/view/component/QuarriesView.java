@@ -1,5 +1,9 @@
-package view;
+package view.component;
 
+/**
+ * Implements a quarries view.
+ * This class is used to draw the quarries.
+ */
 public class QuarriesView extends HexagonView {
     private static final java.awt.Color strokeColor = java.awt.Color.BLACK;
     

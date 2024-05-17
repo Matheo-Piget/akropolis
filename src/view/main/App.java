@@ -9,6 +9,10 @@ import util.SoundManager;
 import view.main.states.AppState;
 import view.main.states.StartState;
 
+/** 
+ * Represents the main class of the game.
+ * This class is a singleton and is used to create the main window of the game. 
+ */
 public class App extends JFrame{
 
     private static final ImageIcon appIcon = new ImageIcon("res/menu/akropolis_logo2.png");

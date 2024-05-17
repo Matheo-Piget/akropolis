@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import model.Tile;
 
+/**
+ * Represents the server in the game.
+ * It can accept multiple clients and receive tiles from them.
+ * UNFINISHED AND UNUSED
+ */
 public class Server {
     private ServerSocket serverSocket;
     private int capacity;

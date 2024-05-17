@@ -1,4 +1,4 @@
-package view;
+package view.panel;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -16,6 +16,10 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.Random;
 
+/**
+ * Represents the Akropolis title label.
+ * This class is used to draw the Akropolis title with animated particles.
+ */
 class AkropolisTitleLabel extends JPanel {
     private BufferedImage titleImage;
     private Color color;

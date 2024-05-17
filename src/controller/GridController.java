@@ -2,12 +2,15 @@ package controller;
 
 import model.Grid;
 import model.Hexagon;
-import view.GridView;
-import view.HexagonView;
-import view.HexagonViewFactory;
-import view.ScrollableGridView;
+import view.component.HexagonView;
+import view.component.HexagonViewFactory;
+import view.panel.ScrollableGridView;
 import java.beans.PropertyChangeEvent;
 
+/**
+ * Represents the controller for a grid in the game.
+ * Wraps the Grid model and the GridView view.
+ */
 public class GridController extends Controller {
 
     public GridController(Grid grid, ScrollableGridView gridView) {
@@ -28,9 +31,8 @@ public class GridController extends Controller {
             Hexagon hexagon = (Hexagon) evt.getNewValue();
             // Récupérer la bonne GridView associée à ce contrôleur
             ScrollableGridView gridView = (ScrollableGridView) view;
-            HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon, GridView.hexagonSize);
+            HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon, ScrollableGridView.hexagonSize);
             gridView.addHexagon(hexagonView);
-            System.out.println("Hexagon added to the grid view");
         }
     }
 }

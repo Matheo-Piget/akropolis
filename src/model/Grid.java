@@ -128,7 +128,6 @@ public class Grid extends Model {
                 }
                 assert topMosthexagon != null;
                 newHexagon_i.getPosition().z = topMosthexagon.getZ() + 1;
-                System.out.println("New position: " + newHexagon_i.getPosition());
                 hasNeighbor = true;
             }
         }

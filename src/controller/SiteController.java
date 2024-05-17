@@ -2,9 +2,9 @@ package controller;
 
 import model.Site;
 import model.Tile;
-import view.SiteView;
-import view.TileView;
-import view.TileViewFactory;
+import view.component.TileView;
+import view.component.TileViewFactory;
+import view.panel.SiteView;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -12,6 +12,10 @@ import javax.swing.SwingUtilities;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 
+/**
+ * Represents the controller for a site in the game.
+ * Wraps the Site model and the SiteView view.
+ */
 public class SiteController extends Controller {
     private ArrayList<TileController> tileControllers = new ArrayList<>();
     private final BoardController boardController;
@@ -25,7 +29,6 @@ public class SiteController extends Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Get which tile was clicked by searching for the tile that contains the point
-                System.out.println("Mouse clicked on site");
                 for (TileController tileController : tileControllers) {
                     TileView tileView = (TileView) tileController.view;
                     Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), tileView);

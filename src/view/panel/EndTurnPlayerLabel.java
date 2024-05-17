@@ -1,4 +1,4 @@
-package view;
+package view.panel;
 
 import javax.swing.JComponent;
 import java.awt.FontMetrics;
@@ -10,6 +10,10 @@ import java.awt.Color;
 import java.awt.Container;
 import util.Timeline;
 
+/**
+ * Represents the end turn player label.
+ * This class is used to display the end turn player label with an animation.
+ */
 class EndTurnPlayerLabel extends JLabel {
     private Timeline timeline;
     private final Color outlineColor = Color.WHITE;

@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * This class is the base class for all states
+ */
 public class State implements StatesMethods {
 
     // This is the default state class, it is used to create new states

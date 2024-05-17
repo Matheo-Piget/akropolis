@@ -1,9 +1,10 @@
-package view;
+package view.component;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
 import javax.swing.JComponent;
+
 import java.awt.BasicStroke;
 import java.awt.geom.Path2D;
 import java.awt.Point;
@@ -13,11 +14,11 @@ import java.awt.Font;
 
 /**
  * Represents a hexagon on the game grid.
+ * This class is used to draw a hexagon on the screen.
  */
 public abstract class HexagonView extends JComponent {
 
     private final BasicStroke stroke;
-    protected boolean isHovered = false;
     protected boolean isFilled = false;
     protected BufferedImage texture;
     protected Point pos;
@@ -70,8 +71,18 @@ public abstract class HexagonView extends JComponent {
      * @param h
      */
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
-        if (render != null) {
+        int width = getWidth();
+        int height = getHeight();
+        if (render.getWidth() != width || render.getHeight() != height) {
+            // Dispose of the old image before creating a new one if the size is different
             render.flush();
+        }
+        else if (render != null) {
+            // Clear what was previously drawn
+            Graphics2D g2d = render.createGraphics();
+            g2d.setColor(new Color(0, 0, 0, 0));
+            g2d.fillRect(0, 0, width, height);
+            g2d.dispose();
         }
         render = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         render.setAccelerationPriority(1);
@@ -80,11 +91,7 @@ public abstract class HexagonView extends JComponent {
         TexturePaint texturePaint = new TexturePaint(h.texture, hexagon.getBounds());
         g2d.setPaint(texturePaint);
         g2d.fill(hexagon);
-        if (isHovered) {
-            g2d.setColor(Color.YELLOW);
-        } else {
-            g2d.setColor(strokeColor);
-        }
+        g2d.setColor(strokeColor);
         g2d.setStroke(stroke);
         g2d.draw(hexagon);
         int fontSize = (int) (getHeight() * 0.8);
@@ -139,11 +146,7 @@ public abstract class HexagonView extends JComponent {
             g2d.fill(hexagon);
         }
         // Draw the border of the hexagon
-        if (isHovered) {
-            g2d.setColor(Color.YELLOW);
-        } else {
-            g2d.setColor(strokeColor);
-        }
+        g2d.setColor(strokeColor);
         g2d.setStroke(stroke);
         g2d.draw(hexagon);
         // Draw the height number only when it's not an outline
@@ -172,11 +175,7 @@ public abstract class HexagonView extends JComponent {
         }
         g2d.dispose();
     }
-
-    public void setHovered(boolean hovered) {
-        isHovered = hovered;
-    }
-
+    
     @Override
     public boolean contains(int x, int y) {
         return hexagon.contains(x, y);

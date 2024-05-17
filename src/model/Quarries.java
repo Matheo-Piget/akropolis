@@ -2,7 +2,10 @@ package model;
 
 import util.Point3D;
 
-// Quarries are a type of tile that can be placed on the board that allow you to earn stones useful for buying tiles.
+/**
+ * Represents a quarries in the game.
+ * They give you a stone if you overlap one of them.
+ */
 public class Quarries extends Hexagon{
 
     public Quarries(int x, int y){

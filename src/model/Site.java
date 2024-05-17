@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Represents a site in the game
+ * A site is a collection of tiles where the player can pick tiles from
+ */
 public class Site extends Model {
     private Tile[] tiles;
     private final int capacity;
@@ -36,7 +40,6 @@ public class Site extends Model {
                 tiles[i] = stackTiles.pop();
             }
         }
-        System.out.println(stackTiles.size());
         firePropertyChange("tileUpdated", null, tiles);
     }
 

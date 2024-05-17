@@ -1,10 +1,15 @@
-package view;
+package view.panel;
 
 import model.Player;
 import util.SoundManager;
+import view.View;
+import view.component.HexagonView;
+import view.component.TileView;
+import view.component.HexagonOutline;
 import view.main.App;
 import view.main.states.GameOverState;
 import view.ui.BoardUI;
+import view.ui.ScoreDetails;
 import view.ui.TriangleButton;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -173,7 +178,7 @@ public class BoardView extends JPanel implements View {
                     for (int q = -maxHexagons; q <= maxHexagons; q++) {
                         for (int r = -maxHexagons; r <= maxHexagons; r++) {
                             if (Math.abs(q + r) <= maxHexagons) {
-                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, GridView.hexagonSize,
+                                HexagonOutline hexagon = new HexagonOutline(q, r, 0, ScrollableGridView.hexagonSize,
                                         playerColors.get(gridViews.indexOf(gridView)));
                                 publish(hexagon);
                             }
@@ -410,7 +415,6 @@ public class BoardView extends JPanel implements View {
      * Show the pause menu.
      */
     private void showPauseMenu() {
-        System.out.println("Showing pause menu");
         SwingUtilities.invokeLater(() -> {
             gameSwitch.show(this, "pause");
         });

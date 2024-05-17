@@ -10,6 +10,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class is used to manage the sounds of the game
+ */
 public class SoundManager {
 
     private static final Map<String, Clip> soundMap = new HashMap<>();

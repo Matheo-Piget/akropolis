@@ -2,7 +2,10 @@ package model;
 
 import util.Point3D;
 
-// A place is a tile that allow you to earn more score points.
+/**
+ * Represents a place in the game.
+ * A place is a hexagon with a number of stars and a color.
+ */
 public class Place extends Hexagon{
     private final int stars;
     private final DistrictColor color;

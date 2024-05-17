@@ -30,6 +30,10 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.KeyListener;
 
+/**
+ * Represents the game over state.
+ * This class is used to display the game over screen.
+ */
 public class GameOverState extends State {
 
     private static final GameOverState INSTANCE = new GameOverState();
@@ -43,7 +47,6 @@ public class GameOverState extends State {
 
     @Override
     public void enter() {
-        System.out.println("Entering GameOver State");
         blackScreen = new JPanel(new BorderLayout());
         blackScreen.setSize(App.getInstance().getScreen().getSize());
         KeyListener keyListener = new KeyListener() {
@@ -130,7 +133,6 @@ public class GameOverState extends State {
 
     @Override
     public void exit() {
-        System.out.println("Exiting Game Over State");
         // Remove all components from the screen
         App.getInstance().getScreen().removeAll();
     }
@@ -151,7 +153,6 @@ public class GameOverState extends State {
             case 3 -> "THREE_PLAYER";
             default -> "FOUR_PLAYER";
         };
-        System.out.println("Category: " + category);
 
         // Création du panneau de classement à gauche
         JPanel rankingPanel = createRankingPanel();

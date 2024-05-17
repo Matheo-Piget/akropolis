@@ -3,15 +3,20 @@ package view.main.states;
 import controller.BoardController;
 import model.Board;
 import util.State;
-import view.BoardView;
 import view.main.App;
+import view.panel.BoardView;
 import model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the state of the game when it is being played.
+ * This state is responsible for creating the board and the board controller.
+ */
 public class PlayingState extends State {
     // The players of the game by default there are 1 player
     private final ArrayList<Player> players = new ArrayList<>();
+    // Just in case we need to access the board controller
     private BoardController boardController;
     private static final PlayingState INSTANCE = new PlayingState();
 
@@ -33,7 +38,6 @@ public class PlayingState extends State {
 
     @Override
     public void enter() {
-        System.out.println("Entering Playing State");
         // Then we create the board
         Board board = new Board(players);
         // And we create the board view
@@ -44,7 +48,6 @@ public class PlayingState extends State {
 
     @Override
     public void exit() {
-        System.out.println("Exiting Playing State");
         // Remove everything from the screen
         App.getInstance().getScreen().removeAll();
     }

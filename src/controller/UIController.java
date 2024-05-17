@@ -5,6 +5,10 @@ import model.Player;
 import view.ui.BoardUI;
 import java.beans.PropertyChangeEvent;
 
+/**
+ * Represents the controller for the UI of the game.
+ * Wraps the model and the view of the UI.
+ */
 public class UIController extends Controller {
 
     public UIController(Board model, BoardUI boardUI) {

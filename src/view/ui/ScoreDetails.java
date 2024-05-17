@@ -1,12 +1,11 @@
-package view;
+package view.ui;
 
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import view.ui.UIFactory;
+import view.component.TextureFactory;
 
 public class ScoreDetails extends JPanel {
     JLabel buildingLabel = new JLabel("<html><center>0 x 0 <font color='blue'>★</font> = 0</html>");

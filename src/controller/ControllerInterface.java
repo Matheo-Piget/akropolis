@@ -6,7 +6,6 @@ import view.View;
 
 /**
  * This class is the template that all controllers must follow
- * 
  */
 interface ControllerInterface extends PropertyChangeListener{
 

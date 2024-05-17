@@ -1,4 +1,4 @@
-package view;
+package view.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +8,7 @@ import model.Place;
 
 /**
  * Represents a place on the game grid.
+ * This class is used to draw a place on the screen.
  */
 public class PlaceView extends HexagonView {
     private final Place place;

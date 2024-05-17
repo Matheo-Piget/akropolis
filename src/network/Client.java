@@ -11,6 +11,7 @@ import model.Tile;
 /**
  * Represents a player in the Akropolis game.
  * It's connected directly to the model package.
+ * UNFINISHED AND UNUSED
  */
 public class Client extends Player {
     private Socket socket;
