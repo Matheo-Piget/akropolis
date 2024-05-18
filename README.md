@@ -51,4 +51,4 @@ Akropolis est développé par une équipe de cinq personnes :
 - [Chetouani Bilal](https://gaufre.informatique.univ-paris-diderot.fr/chetouan)
 
 ## 📝 Licence
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails
+Ce projet est sous licence, veuiillez consulter le fichier [LICENSE.md](LICENSE.md) pour plus d'informations.
