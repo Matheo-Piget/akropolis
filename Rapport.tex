@@ -10,6 +10,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{float}
 
 \title{PG4 : Akropolis}
 \author{Nidhal Moussa \& Mathéo Piget \& Benzerdjeb Reyene \& Gbaguidi Nerval \& Chetouani Bilal
@@ -206,15 +207,15 @@
     \begin{verbatim}
         H = sqrt(3) * size
     \end{verbatim}
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.5\textwidth]{coordiante.png}
-        \caption{Voisins d'un hexagone}
-        \end{figure}
     L'avantage de ce système est qu'il permet de facilement calculer les voisins d'un hexagone avec la formule :
     \begin{verbatim}
         (q + 1, r), (q + 1, r - 1), (q, r - 1), (q - 1, r), (q - 1, r + 1), (q, r + 1)
     \end{verbatim}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{coordiante.png}
+        \caption{Voisins d'un hexagone}
+        \end{figure}
     Où q et r sont les coordonnées axiales de l'hexagone.
     C'est aussi un système qui permet de facilement les tracer sur un écran.
     La formule de conversion des coordonnées axiales en coordonnées cartésiennes est la suivante :
