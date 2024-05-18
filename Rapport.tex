@@ -59,10 +59,62 @@
 
     \subsection{Architecture du Projet}\label{subsec:architecture-du-projet}
     Pour ce projet, nous avons opté pour une architecture orientée objet, avec une séparation claire entre les différentes parties du jeu, basé sur un modèle MVC (Modèle-Vue-Contrôleur) car beaucoup plus modulable et facile à maintenir, pour faire des modifications ou ajouter des fonctionnalités.
-    Nous avons également utilisé des classes utilitaires pour gérer le jeu.
     La partie graphique du jeu est gérée par la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
-    Aucune autre bibliothèque n'a été utilisée pour la réalisation du jeu (à part JUnit pour les tests unitaires).
     Avec une grande partie assez abstraite, le jeu est facilement modifiable et extensible, principalement pour les jeux de société.
+    \newline
+    Plusieurs règles ont été mises en place pour faciliter la gestion de ce projet.
+    Nous nous sommes interdit d'utiliser des bibliothèques externes pour la réalisation du jeu, à l'exception de JUnit pour les tests unitaires.
+    La raison de cette interdiction est que nous ne voulious pas utiliser de build tools comme Maven ou Gradle pour gérer les dépendances.
+    Elles auraient demandé à l'utilisateur de les installer pour pouvoir lancer le jeu, ce qui aurait été une contrainte supplémentaire.
+    Nous avons limiter au maximum l'utilisation de variables globales.
+    La raison est que cela évite les cas où un objet a été modifié dans une version précédente du code et que cela a des conséquences inattendues dans une autre partie du code.
+    Nous avons essayé au maximum de profiter de l'orienté objet : chaque classe doit s'autogérer le plus possible.
+    Nous avons evité d'abusé du principe de l'héritage, préférant la composition.
+    L'héritage est un outil puissant mais qui peut être dangereux s'il est mal utilisé.
+    La composition est souvent plus simple et plus flexible que l'héritage.
+    Il est plus facile de changer le comportement d'un objet en changeant les objets avec lesquels il travaille qu'en changeant sa classe mère.
+    En changeant sa classe mère, on change le comportement de tous les objets de cette classe, ce qui peut avoir des conséquences inattendues.
+    \newline
+    En ce qui concerne les noms des variables, nous avons essayé de les rendre le plus explicite possible.
+    Le cammelCase a été utilisé pour les noms de variables, de méthodes et de classes. 
+    Les noms de classes commencent par une majuscule, les noms de méthodes et de variables par une minuscule.
+    Les noms de classes sont des noms qui décrivent en quoi consiste la classe.
+    Les noms de méthodes sont des verbes, les noms de variables sont des noms qui décrivent ce que contient la variable.
+    On essaye de nommer nos variables en anglais. La raison est que c'est la convention la plus utilisée dans le monde de la programmation.
+    De plus, si on travaille sur un projet open source, il est plus facile pour les autres contributeurs de comprendre le code si les noms des variables sont en anglais.
+    C'est toujours une bonne habitude à prendre même si cela peut sembler étrange car le code est souvent lu plus souvent qu'il n'est écrit et il n'est pas rare que quelqu'un dans un autre pays lise le code.
+    De plus, celui qui peut nous évaluer dans le Jury n'est pas forcément très bon en français.
+    Par contre il a assurément un niveau d'anglais suffisant puisqu'il est au moins titulaire d'un Master et que son obtention nécessite un niveau d'anglais suffisant.
+    Cela peut paraître trivial mais cela rend le code plus lisible et plus facile à comprendre.
+    Nous avons profiter au maximum de la JavaDoc pour documenter notre code.
+    L'avantage de la JavaDoc est qu'elle permet de générer une documentation à partir du code source.
+    En plus de cela, les IDE modernes comme IntelliJ IDEA ou Eclipse permettent de voir la JavaDoc d'une méthode ou d'une classe simplement en passant la souris dessus.
+    Cela permet de voir rapidement ce que fait une méthode ou une classe sans avoir à ouvrir le fichier source.
+    \newline
+    Pour ce qui concerne le MVC, nous nous sommes fixé des règles dessus.
+    Le modèle ne doit jamais communiquer directement avec la vue.
+    Il ne doit pas contenir quelque chose qui a trait à l'interface graphique, seulement du code logique.
+    Il ne peut envoyer que des informations au contrôleur ou à d'autres modèles pour lui dire ce qu'il se passe.
+    Pour cela on utilise des PropertyChangeListeners qui permettent de mettre en place le pattern Observer.
+    La mise en place du pattern Observer se réalisera grâce à notre classe abstraite Controller qui implémente l'interface PropertyChangeListener.
+    Chaque controller extend de cette classe abstraite. Les classes du modèle en relation avec le controller extend de la classe Modèle qui contient les méthodes pour ajouter et supprimer des PropertyChangeListeners.
+    Cela réduit le code redodant dans ces classes. L'intérêt de ce pattern est d'éviter une ijection directe de dépendance entre le modèle et la vue.
+    On contrôle plus facilement les interactions entre les classes, savoir ce que l'on veut envoyer et recevoir ce qui facilite le débuggage puisque ces interactions sont centralisées dans la méthode propertyChange.
+    Le contrôleur peut envoyer des informations à la vue pour lui dire de se mettre à jour et peut aussi observer l'état du modèle.
+    La vue ne communiquera jamais directement avec le modèle de plus elle n'inéragira jamais avec le contrôleur.
+    Si il y a un événement utilisateur (comme un clic de souris), si cet événement ne fais que changer l'état de la vue, alors la vue peut le gérer.
+    Sinon c'est le contrôleur qui doit le gérer, l'ajout de ce listener sera donc fait en son sein.
+    \newline
+    Le code du jeu est organisé en plusieurs packages, chacun regroupant des classes ayant un rôle adéquat.
+    Le modèle du jeu est regroupé dans le package \texttt{model}, la vue dans le package \texttt{view} et le contrôleur dans le package \texttt{controller}, eux même contenant des sous-packages pour organiser les classes.
+    Les classes utilitaires, les classes qui n'ont pas vraiment de place dans l'un des 3 packages cités sont regroupées dans le package \texttt{util}.
+    Les classes de tests sont regroupées dans le package \texttt{test}.
+    Les ressources du jeu (images, sons, etc.) sont stockées dans le dossier \texttt{res}.
+    Notons l'existence d'un package \texttt{network} qui contient les classes pour la gestion du multijoueur en ligne, qui n'a pas été implémenté.
+    Il a été laissé en l'état puisqu'il ne gène pas le fonctionnement du jeu en local.
+    Pour rentrer dans les détails, le modèle est composé de plusieurs classes, chacune représentant un élément du jeu (joueur, plateau, bâtiment, etc.).
+    La vue est composée de plusieurs classes, chacune représentant un élément graphique du jeu (fenêtre principale, plateau de jeu, etc.).
+    Pour plus de lisibilité et de clareté, nous avons décidé de faire un schéma UML de notre projet, que vous pouvez retrouver en annexe, voir section \ref{sec:annexes}.
 
     \section{Développement et Fonctionnalités}\label{sec:developpement-et-fonctionnalites}
 
@@ -85,18 +137,6 @@
     Après avoir implémenter le controller, l'enjeux principal était de finaliser la vue et de la rendre agréable visuellement et intuitive.
     Ce qui a été nos objectifs pour les dernières semaine de développement.
     Et enfin pour finir nous avons travaillé sur les tâches annexes, comme la gestion des images, des sons, des scripts bash et powershell ou encore une petite gestion de sauvegarde des scores.
-
-
-    \subsection{Organisation du Code}\label{subsec:organisation-du-code}
-
-    Le code du jeu est organisé en plusieurs packages, chacun regroupant des classes ayant un rôle adéquat.
-    Le modèle du jeu est regroupé dans le package \texttt{model}, la vue dans le package \texttt{view} et le contrôleur dans le package \texttt{controller}, eux même contenant des sous-packages pour organiser les classes.
-    Les classes utilitaires sont regroupées dans le package \texttt{util}.
-    Les classes de tests sont regroupées dans le package \texttt{test}.
-    Les ressources du jeu (images, sons, etc.) sont stockées dans le dossier \texttt{res}.
-    Pour rentrer dans les détails, le modèle est composé de plusieurs classes, chacune représentant un élément du jeu (joueur, plateau, bâtiment, etc.).
-    La vue est composée de plusieurs classes, chacune représentant un élément graphique du jeu (fenêtre principale, plateau de jeu, etc.).
-    Pour plus de lisibilité et de claireté, nous avons décidé de faire un schéma UML de notre projet, que vous pouvez retrouver en annexe, voir section \ref{sec:annexes}.
 
     \subsection{Fonctionnalités Principales}\label{subsec:fonctionnalites-principales}
 
@@ -193,7 +233,7 @@
 
     Comme mentionné précédemment, l'interface graphique du jeu est réalisée en utilisant la bibliothèque Swing, qui permet de créer des interfaces graphiques en Java.
     L'avantage de son utilisation est qu'elle est incluse dans la bibliothèque standard de Java, ce qui signifie qu'elle est disponible sur toutes les plateformes Java.
-    Pour rappel, nous allons brièvement expliquer le fonctionnement de Swing.
+    Nous allons expliquer le fonctionnement de Swing.
     \newline
     Swing utilise un modèle de composants légers, ce qui signifie que les composants Swing sont indépendants de la plateforme et ne dépendent pas des composants natifs de la plateforme.
     Cela signifie que les composants Swing ont un aspect et un comportement cohérents sur toutes les plateformes (sur le papier en tout cas mais en pratique c'est pas toujours le cas).
@@ -270,9 +310,16 @@
     Et la classe Hexagon a été créer sur mesure pour ce projet.
     Dans le modèle une autre difficulté a été de calculer les scores, avec plusieurs contraintes à respecter, comme le placement de la tuile, le type de la tuile, le nombre de tuiles supperposées, ect.
     Après avoir implémenté le modèle, nous avons décidé de nous attaquer à la vue, une autre très grande difficulté du projet pour plusieurs raisons, 
-    la première étant que toute la gestion des coordonnées, que ce soient celles des hexagones, ou de la souris était d'une grande difficulté à implémenter pour facilité cette partie du travail nous sommes aller chercher des ressources sur internet et grâce \href{au site évoqué précédemment}{https://www.redblobgames.com/grids/hexagons/}.
+    la première étant que toute la gestion des coordonnées, que ce soient celles des hexagones, ou de la souris était d'une grande difficulté à implémenter pour facilité cette partie du travail nous sommes aller chercher des ressources sur internet et grâce \href{https://www.redblobgames.com/grids/hexagons/}{au site évoqué précédemment}.
     nous avons pu avoir une aide, surtout dans la gestion des formules pour adapter les coordonnées de la souris et des hexagones.
-
+    Aussi le code graphique n'est pas optimisé. L'énorme majorité de la mémoire est utilisée par les HexagonOutlines qui sont des objets affichant juste une forme avec une bordure hexagonale.
+    Ils sont créer en énorme quantité, un par hexagone donc en mode 4 joueurs ont atteint très facilement plus de 40 000 objets graphiques à afficher.
+    Si l'on observe sur un outil de profiling comme VisualVM, on voit que la mémoire est utilisée à plus de 90\% par ces objets.
+    Cela cause un léger temps de chargement au lancement d'une partie et une consommation de mémoire assez élevée puisqu'ils sont tous créer d'un coup même si ils ne sont pas encore visible.
+    L'approche marche et le jeu ne rame pas mais il est clair que l'on pourrait optimiser cela. Une solution serait de recycler au maximum les objets graphiques en commun en les stockant dans un cache par exemple.
+    Cela aurait rajouté de complexité au code, et puisque le jeu fonctionne correctement nous avons préféré ne pas le faire.
+    La musique prend aussi beaucoup de mémoire car elle est en format wav non compressé.
+    On ne pouvais pas la compresser en mp3 car la librairie Java Sound ne le supporte pas.
 
     \section{Conclusion}\label{sec:conclusion}
 
