@@ -363,12 +363,11 @@ public class Grid extends Model {
      */
     public int calculateMaxBuildingScore() {
         int maxScore = 0;
-        ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
         // on parcous pour les hexagones visible de type building puis calculer pour
         // chaque quartier et prendre le max
         for (Hexagon hexagon : getTopHexagons()) {
             if (hexagon.getType().equals("Building")) {
-                int buildingScore = calculateBuildingScore(hexagon, visitedHexagons);
+                int buildingScore = calculateBuildingScore(hexagon);
                 if (buildingScore > maxScore) {
                     maxScore = buildingScore;
                 }
@@ -440,7 +439,7 @@ public class Grid extends Model {
      * @param hexagon the hexagon to calculate the score
      * @return the score of the building
      */
-    private int calculateBuildingScore(Hexagon hexagon, ArrayList<Hexagon> visitedHexagon) {
+    private int calculateBuildingScore(Hexagon hexagon) {
         return visitBuildingHex(hexagon, new ArrayList<>());
     }
 
