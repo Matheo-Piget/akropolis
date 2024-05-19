@@ -102,13 +102,9 @@ public class MainMenuView extends JPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(2,2, 20, 20));
         buttonPanel.setOpaque(false);
     
-        // Bouton démarrer
         JButton startButton = UIFactory.createStyledButton("Démarrer", e -> startNewGame());
-        // Bouton règles
         JButton rulesButton = UIFactory.createStyledButton("Règles du jeu", e -> UIFactory.showRulesPanel());
-        // Bouton crédits
         JButton creditsButton = UIFactory.createStyledButton("Crédits", e -> showCreditsPanel());
-        // Bouton quitter
         JButton quitButton = UIFactory.createStyledButton("Quitter", e -> System.exit(0));
     
         buttonPanel.add(rulesButton);
@@ -118,7 +114,6 @@ public class MainMenuView extends JPanel {
     
         buttonPanel.add(Box.createVerticalStrut(10));
     
-        // Settings button
         JButton settingsButton = UIFactory.createStyledButton("Paramètres", e -> switcher.show(this, "settingsPanel"));
         buttonPanel.add(settingsButton);
     
@@ -214,37 +209,31 @@ public class MainMenuView extends JPanel {
      * showCreditsPanel
      */
     private void showCreditsPanel() {
-        // Création du dialogue pour les crédits
         JDialog creditsDialog = new JDialog();
         creditsDialog.setTitle("Crédits");
-        creditsDialog.setSize(400, 300); // Taille ajustable selon vos besoins
-        creditsDialog.setLocationRelativeTo(this); // Centre par rapport à MainMenuView
+        creditsDialog.setSize(400, 300); 
+        creditsDialog.setLocationRelativeTo(this); 
         creditsDialog.setLayout(new BorderLayout());
 
-        // Panel semi-transparent qui assombrit l'arrière-plan
+        // Semi-transparent overlay panel
         JPanel overlayPanel = new JPanel();
         overlayPanel.setLayout(new BorderLayout());
-        overlayPanel.setBackground(new Color(0, 0, 0, 150)); // Couleur semi-transparente
+        overlayPanel.setBackground(new Color(0, 0, 0, 150)); 
 
-        // Panel pour les noms des développeurs
         JPanel creditsPanel = new JPanel();
-        creditsPanel.setLayout(new GridLayout(0, 1)); // Disposition en colonne pour les noms
-        // Ajoutez ici les noms des membres de l'équipe
+        creditsPanel.setLayout(new GridLayout(0, 1)); 
         creditsPanel.add(createStyledCreditLabel("Développeur 1: CHETOUANI Bilal"));
         creditsPanel.add(createStyledCreditLabel("Développeur 2: BENZERDJEB Rayene"));
         creditsPanel.add(createStyledCreditLabel("Développeur 3: MOUSSA Nidhal"));
         creditsPanel.add(createStyledCreditLabel("Développeur 4: PIGET Matheo"));
         creditsPanel.add(createStyledCreditLabel("Développeur 5: GBAGUIDI Nerval"));
 
-        // Ajoutez autant de JLabel que nécessaire pour les noms des membres de votre
-        // équipe
 
-        // Ajout des panels au dialogue
         overlayPanel.add(creditsPanel, BorderLayout.CENTER);
         creditsDialog.add(overlayPanel);
 
-        creditsDialog.setModal(true); // Bloque l'interaction avec la fenêtre principale
-        creditsDialog.setVisible(true); // Affiche le dialogue des crédits
+        creditsDialog.setModal(true); // Stop interaction with MainMenuView
+        creditsDialog.setVisible(true); // Show the credits dialog
     }
 
     private JLabel createStyledCreditLabel(String text) {

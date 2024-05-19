@@ -279,7 +279,24 @@
     Cela dit, il est tout à fait possible de combiner Swing avec JavaFX pour profiter des avantages des deux frameworks.
     On peut aussi utiliser des bibliothèques tierces pour ajouter des fonctionnalités manquantes à Swing, ou même créer ses propres composants personnalisés.
     Notre interface reste assez simple à cause de ces limitations et de la non utilisation de frameworks tiers.
-
+    \newline
+    Pour réaliser notre interface graphique, nous avons utilisé tout un ensemble de panel Swing et de composants Swing en les personnalisant en redéfinisssant principalement la méthode paintComponent.
+    La partie la plus complexe de l'interface a été le tracage des hexagones avec l'affichage du plateau de jeu.
+    Nous avons une fonction qui permet de convertir les coordonnées axiales en coordonnées cartésiennes pour pouvoir afficher nos hexagones sur l'écran.
+    Les hexagones sont des polygones réguliers à 6 côtés, nous avons donc utilisé la classe Path2D pour les tracer.
+    Le tracage des hexagones est fait dans la classe HexagonView qui extend de JComponent.
+    Un hexagone a 6 angles de même taille et 6 côtés de même longueur.
+    En sachant que le tour complet d'un cercle trigonométrique fait 2$\pi$ radians, on peut facilement calculer les angles des sommets d'un hexagone.
+    Il suffit de faire une boucle en multipliant l'angle par 2$\pi$/6 pour chaque sommet.
+    Une fois cet hexagone tracé on peut le remplir avec une image ou une couleur. C'est ce que nous avons fait pour chaque classe extendant HexagonView.
+    L'avantage aussi d'avoir nos components qui remplissent l'écran est que l'on peut facilement détecter la position de la souris sur l'écran.
+    Ces components stockent les coordonnées axiales de l'hexagone qu'ils représentent.
+    Il n'y a donc qu'à récupérer les composants qui sont sous la souris pour savoir où l'utilisateur veut placer sa tuile.
+    \newline
+    Pour la grille de jeu, nous avons utilisé un JScrollPane pour permettre de scroller sur le plateau de jeu.
+    Le plateau de étant de très grande taille, il est impossible de tout afficher à l'écran.
+    Pour permettre un scroll confortable, nous avons permis de scroller en maintant le clic droit de la souris et en bougeant la souris.
+    Il a fallu créer un écouteur de souris pour cela qui modifie la valeur du scrollbars du JScrollPane. 
 
     \subsection{Extensions possibles}\label{subsec:extensions}
 
@@ -333,9 +350,10 @@
 
     
     \section{Annexes}\label{sec:annexes}
-
-
-
-    \tableofcontents
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth]{UML.png}
+        \caption{Schéma UML du projet}
+        \end{figure}
 
 \end{document}

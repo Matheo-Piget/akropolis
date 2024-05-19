@@ -98,7 +98,7 @@ public class UIFactory {
             rulesDialog.toFront();
             return;
         }
-        // Création d'un nouveau dialogue
+        // Else, create a new rules panel
         rulesDialog = new JDialog();
         rulesDialog.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -108,10 +108,8 @@ public class UIFactory {
         isRulesPanelOpen = true;
         rulesDialog.setTitle("Règles du jeu");
         rulesDialog.setSize(910, 700);
-        rulesDialog.setLocationRelativeTo(null);// Centre le dialogue sur l'écran.
-        // Crée un panel principal utilisant BorderLayout
+        rulesDialog.setLocationRelativeTo(null);// Center the dialog on the screen
         JPanel mainPanel = new JPanel(new BorderLayout());
-        // liste pour stocker les images des règles du jeu.
         List<ImageIcon> rulesImages = new ArrayList<>();
         for (int i = 7; i >= 1; i--) {
             try {
@@ -128,13 +126,11 @@ public class UIFactory {
         if (!rulesImages.isEmpty()) {
             imagLabel.setIcon(rulesImages.get(0)); // Affiche la première image
         }
-        // Utilise un JScrollPane pour permettre le défilement si l'image est plus
-        // grande que le panel.
+        // Use JScrollPane to allow scrolling through the images
         JScrollPane scrollPane = new JScrollPane(imagLabel);
-        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); // Couleur de fond de la barre de
-        // défilement
-        scrollPane.getVerticalScrollBar().setForeground(new Color(255, 215, 0)); // Couleur de la barre de défilement
-        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0)); // Taille de la barre de défilement
+        scrollPane.getVerticalScrollBar().setBackground(new Color(240, 240, 240)); 
+        scrollPane.getVerticalScrollBar().setForeground(new Color(255, 215, 0)); 
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -143,8 +139,7 @@ public class UIFactory {
 
         final int[] currentIndex = { 0 };
         prevButton.addActionListener(e -> {
-            // Décrémente l'index et met à jour l'image affichée quand le bouton précédent
-            // est cliqué.
+            // Update the displayed image when the previous button is clicked
             if (currentIndex[0] > 0) {
                 currentIndex[0]--;
                 imagLabel.setIcon(rulesImages.get(currentIndex[0]));
@@ -152,26 +147,24 @@ public class UIFactory {
         });
 
         nextButton.addActionListener(e -> {
-            // incrémente l'index et met à jour l'image affichée quand le bouton précédent
-            // est cliqué.
+            // Update the displayed image when the next button is clicked
             if (currentIndex[0] < rulesImages.size() - 1) {
                 currentIndex[0]++;
                 imagLabel.setIcon(rulesImages.get(currentIndex[0]));
             }
         });
 
-        // Panels pour positionner les boutons sur les côtés de l'image
+        // Setup the layout for the buttons
         JPanel leftButtonPanel = new JPanel(new BorderLayout());
         leftButtonPanel.add(prevButton, BorderLayout.CENTER);
 
         JPanel rightButtonPanel = new JPanel(new BorderLayout());
         rightButtonPanel.add(nextButton, BorderLayout.CENTER);
 
-        // Ajoute les boutons de navigation à gauche et à droite de l'image
         mainPanel.add(leftButtonPanel, BorderLayout.WEST);
         mainPanel.add(rightButtonPanel, BorderLayout.EAST);
 
-        rulesDialog.add(mainPanel); // Ajoute le panel principal au dialogue
+        rulesDialog.add(mainPanel); 
         rulesDialog.setVisible(true);
     }
 }

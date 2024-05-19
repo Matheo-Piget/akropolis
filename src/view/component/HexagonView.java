@@ -32,7 +32,7 @@ public abstract class HexagonView extends JComponent {
         // Calculate the coordinates of the six points of the hexagon
         pos = new Point(x, y);
         this.z = z;
-        int center = size / 2 - 1; // Fuck you
+        int center = size / 2 - 1; // Round down to make sure the hexagon fits in the square
         for (int i = 0; i < 6; i++) {
             double xval = center + center * Math.cos(i * 2 * Math.PI / 6);
             double yval = center + center * Math.sin(i * 2 * Math.PI / 6);

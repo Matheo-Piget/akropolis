@@ -68,8 +68,8 @@ public class SoundManager {
         }
         Clip clip = soundMap.get(soundName);
         if (clip != null) {
-            clip.setFramePosition(0); // Rembobiner au début
-            clip.start(); // Commencer à jouer
+            clip.setFramePosition(0); // Restart the sound
+            clip.start();
         }
     }
 

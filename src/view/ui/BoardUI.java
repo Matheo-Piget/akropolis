@@ -165,9 +165,9 @@ public class BoardUI extends JPanel implements View {
     private void applyStyle() {
         // Style pour playerLabel
         playerLabel.setForeground(Color.WHITE);
-        playerLabel.setFont(playerLabel.getFont().deriveFont(Font.BOLD, 16)); // Police en gras de taille 16
+        playerLabel.setFont(playerLabel.getFont().deriveFont(Font.BOLD, 16));
         // Style pour remainingTilesLabel
         remainingTilesLabel.setForeground(Color.WHITE);
-        remainingTilesLabel.setFont(remainingTilesLabel.getFont().deriveFont(Font.ITALIC, 12)); // Police italique de taille 12
+        remainingTilesLabel.setFont(remainingTilesLabel.getFont().deriveFont(Font.ITALIC, 12)); 
     }
 }

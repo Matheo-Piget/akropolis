@@ -146,7 +146,6 @@ public class GameOverState extends State {
 
         blackScreen.setLayout(new GridLayout(1, 3));
 
-        // Récupération de la catégorie en fonction de la taille du classement
         String category = switch (ranking.size()) {
             case 1 -> "ONE_PLAYER";
             case 2 -> "TWO_PLAYER";
@@ -170,6 +169,7 @@ public class GameOverState extends State {
         GraphicsDevice gs = ge.getDefaultScreenDevice();
         GraphicsConfiguration gc = gs.getDefaultConfiguration();
 
+        // A custom panel to display the trophy animation because GIFs lags and have visual artefacts sometimes
         class ImagePanel extends JPanel {
             private VolatileImage vImg;
         
@@ -227,7 +227,7 @@ public class GameOverState extends State {
             e.printStackTrace();
         }
 
-        // Création du panneau des meilleurs scores à droite
+        // Create the leaderboard panel on the right
         JPanel leaderBoardPanel = createLeaderBoardPanel(category);
         blackScreen.add(leaderBoardPanel);
 
@@ -274,7 +274,12 @@ public class GameOverState extends State {
         return rankingPanel;
     }
 
-    // Création du panneau des meilleurs scores
+    /**
+     * Creates the leaderboard panel
+     * 
+     * @param category The category of the leaderboard
+     * @return The leaderboard panel
+     */
     private JPanel createLeaderBoardPanel(String category) {
         LeaderBoard leaderBoard = new LeaderBoard();
         for (Pair<String, Integer> pair : ranking) {

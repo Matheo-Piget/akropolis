@@ -55,20 +55,17 @@ public class PlaceView extends HexagonView {
             // Draw the stars in the first row
             for (int i = 0; i < starsInFirstRow; i++) {
                 Graphics2D g2d = (Graphics2D) g.create();
-                // Dessiner une étoile à la position actuelle
                 drawStar(g2d, startX + i * starSize + 2 * starSize - starSize / 2, startY, starSize);
             }
             // Draw the stars in the second row
             for (int i = 0; i < starsInSecondRow; i++) {
                 Graphics2D g2d = (Graphics2D) g.create();
-                // Dessiner une étoile à la position actuelle
                 drawStar(g2d, startX + i * starSize + starSize, startY + starSize, starSize);
             }
         } else {
             // Draw the stars
             for (int i = 0; i < stars; i++) {
                 Graphics2D g2d = (Graphics2D) g.create();
-                // Dessiner une étoile à la position actuelle
                 drawStar(g2d, startX + i * starSize, startY, starSize);
             }
         }

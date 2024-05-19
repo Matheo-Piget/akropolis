@@ -29,7 +29,6 @@ public class GridController extends Controller {
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getPropertyName().equals("hexagonAdded")) {
             Hexagon hexagon = (Hexagon) evt.getNewValue();
-            // Récupérer la bonne GridView associée à ce contrôleur
             ScrollableGridView gridView = (ScrollableGridView) view;
             HexagonView hexagonView = HexagonViewFactory.createHexagonView(hexagon, ScrollableGridView.hexagonSize);
             gridView.addHexagon(hexagonView);

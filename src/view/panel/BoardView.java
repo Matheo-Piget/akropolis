@@ -243,8 +243,7 @@ public class BoardView extends JPanel implements View {
         this.setPreferredSize(App.getInstance().getScreen().getPreferredSize());
         gamePanel.setOpaque(false);
         scoreDetails = new ScoreDetails();
-        // Fuck you Swing bugged piece of software when I CALL FUCKIN INTEGER IT WORKS
-        // BUT NOT WITH AN INT ???
+        // When I CALL INTEGER IT WORKS BUT NOT WITH AN INT ???
         gamePanel.add(scoreDetails, Integer.valueOf(1));
         scoreDetails.setLocation(App.getInstance().getWidth() - App.getInstance().getScreen().getWidth() / 5, 0);
         gamePanel.add(borderGamePanel, Integer.valueOf(0));
