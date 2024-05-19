@@ -73,6 +73,9 @@ public abstract class HexagonView extends JComponent {
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
         int width = getWidth();
         int height = getHeight();
+        if (render == null) {
+            render = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        }
         if (render.getWidth() != width || render.getHeight() != height) {
             // Dispose of the old image before creating a new one if the size is different
             render.flush();
