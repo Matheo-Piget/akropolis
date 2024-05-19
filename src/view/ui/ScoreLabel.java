@@ -7,8 +7,6 @@ import java.awt.Color;
 class ScoreLabel extends JLabel {
     private Timer timer;
     private boolean isBlinking = false;
-    int nbEtoileHabitation;int nbEtoileMarché ; int nbEtoileCaserne ;
-    int nbEtoileTemples; int nbEtoilesJardins;
 
     public ScoreLabel(int score) {
         super("Score : " + score);

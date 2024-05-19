@@ -47,7 +47,7 @@ public class ScrollableGridView extends JScrollPane implements View {
 
         /**
          * Convert a grid position to a pixel position
-         * 
+         *
          * @param gridPosition The grid position
          * @return The pixel position
          */
@@ -64,7 +64,7 @@ public class ScrollableGridView extends JScrollPane implements View {
          * Get the hexagon at the given pixel position
          * Be careful, it will return null if there is no hexagon at the given mouse
          * position
-         * 
+         *
          * @param pixelPosition The pixel position
          * @return The hexagon at the given pixel position
          */
@@ -99,7 +99,7 @@ public class ScrollableGridView extends JScrollPane implements View {
 
         /**
          * Round the axial coordinates to the nearest hexagon
-         * 
+         *
          * @param q The q coordinate
          * @param r The r coordinate
          * @return The rounded coordinates
@@ -124,7 +124,7 @@ public class ScrollableGridView extends JScrollPane implements View {
 
         /**
          * Add a hexagon to the grid
-         * 
+         *
          * @param hexagon The hexagon to add
          */
         public void addHexagon(HexagonView hexagon) {
@@ -148,6 +148,8 @@ public class ScrollableGridView extends JScrollPane implements View {
             this.repaint(hexagon.getBounds());
         }
     }
+
+    //Fields of the ScrollableGridView class
 
     private final GridView grid;
     private final JScrollBar horizontalScrollBar;

@@ -43,8 +43,6 @@ import java.util.concurrent.CountDownLatch;
  * playable.
  */
 public class BoardView extends JPanel implements View {
-    // DONT USE KEYLISTENER, USE KEYBINDINGS INSTEAD BECAUSE KEYLISTNER IS NOT
-    // RELIABLE AND CAN BE OVERRIDEN BY OTHER COMPONENTS, THEY CAN LOSE FOCUS
 
     // Fields
     private ScrollableGridView currentGridView;
@@ -83,7 +81,7 @@ public class BoardView extends JPanel implements View {
         }
 
         // Create a CountDownLatch with the number of workers in GridView
-        CountDownLatch latch = addHexagonOulineInBackground(maxHexagons);
+        CountDownLatch latch = addHexagonOutlineInBackground(maxHexagons);
 
         // Display loading dialog while workers are running
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -162,7 +160,7 @@ public class BoardView extends JPanel implements View {
      *                    board.
      * @return A CountDownLatch to wait for the workers to finish.
      */
-    private CountDownLatch addHexagonOulineInBackground(int maxHexagons) {
+    private CountDownLatch addHexagonOutlineInBackground(int maxHexagons) {
         CountDownLatch latch = new CountDownLatch(gridViews.size());
         ArrayList<Color> playerColors = new ArrayList<>();
         playerColors.add(Color.BLUE);
@@ -447,6 +445,11 @@ public class BoardView extends JPanel implements View {
         return button;
     }
 
+    /**
+     * Show the game over screen.
+     *
+     * @param players The players and their scores.
+     */
     public void showGameOver(List<Pair<String,Integer>> players) {
         GameOverState.getInstance().setRanking(players);
         App.getInstance().appState.changeState(GameOverState.getInstance());

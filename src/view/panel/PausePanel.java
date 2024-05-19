@@ -30,7 +30,7 @@ class PausePanel extends JPanel {
     private static final String QUIT_BUTTON_LABEL = "Quitter";
     private static final String RULES_BUTTON_LABEL = "Règles";
 
-    private BoardView boardView;
+    private final BoardView boardView;
 
     /**
      * Constructor for the PausePanel class.
@@ -71,16 +71,16 @@ class PausePanel extends JPanel {
         JLabel label = new JLabel(text);
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setForeground(Color.BLACK); // Couleur du texte
-        label.setFont(new Font("Arial", Font.BOLD, 16)); // Police et taille du texte
+        label.setFont(new Font("Arial", Font.BOLD, 16)); // Police and size of the text
 
-        // Ajout des écouteurs pour changer l'apparence lors du survol
+        // add listeners to change the color of the text when the mouse enters or exits the label
         label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label.setForeground(Color.BLUE); // Changement de couleur lors du survol
+                label.setForeground(Color.BLUE); // change the color of the text when the mouse enters the label
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                label.setForeground(Color.BLACK); // Restauration de la couleur d'origine
+                label.setForeground(Color.BLACK); // restore the color of the text when the mouse exits the label
             }
         });
 
@@ -124,7 +124,7 @@ class PausePanel extends JPanel {
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
 
-        // Ajout des écouteurs pour changer l'apparence lors du survol
+        // add listeners to change the color of the button when the mouse enters or exits the button
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 235, 59));
@@ -141,6 +141,9 @@ class PausePanel extends JPanel {
         return button;
     }
 
+    /**
+     * Updates the sound button text based on the current sound state.
+     */
     private void updateButton() {
         Component[] components = getComponents();
         for (Component component : components) {

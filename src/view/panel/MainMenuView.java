@@ -131,7 +131,7 @@ public class MainMenuView extends JPanel {
      * Start a new game
      */
     private void startNewGame() {
-        // Utilisation de JComboBox pour sélectionner le nombre de joueurs
+        // JComboBox for the number of players
         JComboBox<Integer> playerNumberComboBox = new JComboBox<>(new Integer[] { 1, 2, 3, 4 });
         playerNumberComboBox.setSelectedIndex(0); // Sélectionne la première option par défaut
 

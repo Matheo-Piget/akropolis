@@ -35,11 +35,13 @@ public class App extends JFrame{
         add(screen);
         pack();
 
+        // Load the sounds
         SoundManager.loadSound("menu", "/sound/Akropolis.wav");
         SoundManager.loadSound("gameButton", "/sound/ButtonSound.wav");
         SoundManager.loadSound("gameButton2", "/sound/GameButton.wav");
         SoundManager.loadSound("tilePlaced", "/sound/tilePlaceSound.wav");
 
+        // Set the icon of the window
         setIconImage(appIcon.getImage());
 
         setVisible(true);
