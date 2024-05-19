@@ -77,24 +77,8 @@ public class ScrollableGridView extends JScrollPane implements View {
             return null;
         }
 
-        public HexagonView getHexagonAtGridPos(Point gridPosition) {
-            return hexagons.get(new Point(gridPosition.x, gridPosition.y));
-        }
-
         public HexagonView getHexagonAtGridPos(int x, int y) {
             return hexagons.get(new Point(x, y));
-        }
-
-        public Point2D convertPixelPositionToGridPosition(Point2D pixelPosition) {
-            int size = hexagonSize / 2;
-            double x = (pixelPosition.getX() - xOffset) / size;
-            double y = (pixelPosition.getY() - yOffset) / size;
-
-            double q = (2.0 / 3 * x);
-            double r = (-1.0 / 3 * x + Math.sqrt(3) / 3 * y);
-
-            return axialRound(q, r);
-
         }
 
         /**

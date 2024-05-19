@@ -119,34 +119,6 @@ public abstract class Hexagon implements java.io.Serializable{
         this.below = belowTile;
     }
 
-    /**
-     * Checks if the tile has a tile below it.
-     *
-     * @return True if the tile has a tile below it, false otherwise.
-     */
-    public boolean hasBelow() {
-        return below != null;
-    }
-
-    /**
-     * checks if the tile is adjacent to the given tile
-     * @param t the tile to check
-     * @return true if the tile is adjacent to the given tile, false otherwise
-     */
-    public boolean isAdjacent(Hexagon t){
-        Point[] axialDirections = {
-            new Point(1, 0), new Point(1, -1), new Point(0, -1),
-            new Point(-1, 0), new Point(-1, 1), new Point(0, 1)
-    };
-        for (Point point : axialDirections) {
-            Point direct = new Point(this.getX()+point.x, this.getY()+point.y);
-            if (t.getX() ==direct.x && t.getY()==direct.y) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public String toString(){
         return this.getType() + " at " + this.position.toString();
     }

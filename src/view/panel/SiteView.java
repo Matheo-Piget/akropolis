@@ -27,21 +27,6 @@ public class SiteView extends JPanel implements View {
     }
 
     /**
-     * Get the tile clicked
-     * @param x The x position of the click
-     * @param y The y position of the click
-     * @return The tile clicked
-     */
-    public TileView getTileClicked(int x, int y) {
-        for (TileView tileView : getTiles()) {
-            if (tileView.contains(x, y)) {
-                return tileView;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the tiles in the site
      * @return The tiles in the site
      */

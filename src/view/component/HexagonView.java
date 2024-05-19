@@ -67,8 +67,8 @@ public abstract class HexagonView extends JComponent {
 
     /**
      * render hexagon
-     * @param strokeColor
-     * @param h
+     * @param strokeColor the color of the border
+     * @param h the hexagon view to render
      */
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
         int width = getWidth();

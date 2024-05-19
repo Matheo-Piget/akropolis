@@ -77,7 +77,7 @@ public class GameOverState extends State {
         App.getInstance().getScreen().validate();
         JLabel gameFininshed = new JLabel("Les jeux sont faits !");
         customizeLabel(gameFininshed, 30, new java.awt.Color(255, 255, 255, 0), Font.BOLD);
-        String labelText = ranking.size() == 1 ? "Avons-nous un nouveau record ?" : "Le gagnant est : " + ranking.get(0).getKey() + " !";
+        String labelText = ranking.size() == 1 ? "Avons-nous un nouveau record ?" : "Le gagnant est : " + ranking.get(0).key() + " !";
         JLabel logo = new JLabel(labelText);
         // White transparent color
         logo.setForeground(new java.awt.Color(255, 255, 255, 0));
@@ -265,7 +265,7 @@ public class GameOverState extends State {
         rankingPanel.add(title);
 
         for (int i = 0; i < ranking.size(); i++) {
-            JLabel label = new JLabel((i + 1) + " - " + ranking.get(i).getKey() + " : " + ranking.get(i).getValue());
+            JLabel label = new JLabel((i + 1) + " - " + ranking.get(i).key() + " : " + ranking.get(i).value());
             customizeLabel(label, 25, Color.WHITE, Font.BOLD);
             rankingPanel.add(Box.createVerticalStrut(10));
             rankingPanel.add(label);
@@ -283,7 +283,7 @@ public class GameOverState extends State {
     private JPanel createLeaderBoardPanel(String category) {
         LeaderBoard leaderBoard = new LeaderBoard();
         for (Pair<String, Integer> pair : ranking) {
-            leaderBoard.addScore(category, pair.getValue(), pair.getKey());
+            leaderBoard.addScore(category, pair.value(), pair.key());
         }
         LinkedHashMap<String, Integer> leaderBoardValues = leaderBoard.getScores(category);
 

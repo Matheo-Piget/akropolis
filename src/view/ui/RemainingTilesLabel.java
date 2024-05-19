@@ -13,10 +13,4 @@ class RemainingTilesLabel extends JLabel {
         setOpaque(false);
         setForeground(java.awt.Color.WHITE);
     }
-
-    public void setRemainingTiles(int remainingTiles) {
-        this.setText("Tuiles restantes: " + remainingTiles);
-        validate();
-        repaint();
-    }
 }

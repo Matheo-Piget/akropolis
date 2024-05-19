@@ -78,20 +78,6 @@ public class Site extends Model {
     }
 
     /**
-     * This method is used to check if the site is empty
-     *
-     * @return True if the site is empty, false otherwise
-     */
-    public boolean isEmpty() {
-        for (Tile tile : tiles) {
-            if (tile != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * This method is used to get the cost of a tile in the site
      *
      * @param tile The tile to calculate the cost for

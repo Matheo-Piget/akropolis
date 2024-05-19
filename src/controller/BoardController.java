@@ -112,9 +112,9 @@ public class BoardController extends Controller {
                 for (Object obj : unknowList) {
                     if (obj instanceof Pair<?, ?>) {
                         Pair<?, ?> pair = (Pair<?, ?>) obj;
-                        if (pair.getKey() instanceof String && pair.getValue() instanceof Integer) {
-                            String name = (String) pair.getKey();
-                            Integer score = (Integer) pair.getValue();
+                        if (pair.key() instanceof String && pair.value() instanceof Integer) {
+                            String name = (String) pair.key();
+                            Integer score = (Integer) pair.value();
                             players.add(new Pair<String, Integer>(name, score));
                         }
                     }

@@ -320,7 +320,7 @@ public class BoardView extends JPanel implements View {
         infoButton.setLocation(App.getInstance().getWidth() - infoButton.getWidth(),
                 App.getInstance().getHeight() / 2 - infoButton.getHeight());
         infoButton.repaint();
-        pauseButton = createStyledButton("||");
+        pauseButton = createStyledButton();
         pauseButton.setPreferredSize(new Dimension(85, 85));
         pauseButton.addActionListener(e -> {
             SoundManager.playSound("gameButton2");
@@ -412,19 +412,16 @@ public class BoardView extends JPanel implements View {
      * Show the pause menu.
      */
     private void showPauseMenu() {
-        SwingUtilities.invokeLater(() -> {
-            gameSwitch.show(this, "pause");
-        });
+        SwingUtilities.invokeLater(() -> gameSwitch.show(this, "pause"));
     }
 
     /**
      * Create a styled JButton.
      *
-     * @param text The text on the button.
      * @return A styled JButton.
      */
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
+    private JButton createStyledButton() {
+        JButton button = new JButton("||");
         button.setPreferredSize(new Dimension(150, 50));
         button.setBackground(new Color(255, 215, 0));
         button.setForeground(Color.BLACK);

@@ -228,6 +228,17 @@ package util <<Node>>{
         + paintComponent(Graphics g) : void
     }
 
+    class SoundManger{
+
+        - Map<String, Clip>
+        ==
+        + SoundManager(String soundName)
+        ==
+        + play() : void
+        + stop() : void
+
+    }
+
     class Point3D {
         - int x
         - int y
@@ -275,6 +286,11 @@ package util <<Node>>{
         + stop() : void
         + reset() : void
         + record KeyFrame(int delay, ActionListener action)
+    }
+
+    class Pair{
+        - K first
+        - V second
     }
 
 }
@@ -578,6 +594,18 @@ package view.main.states <<Node>>{
         + transitionTo(State nextState): void
     }
 
+    class GameOverState extends util.State {
+        - GameOverState INSTANCE
+        ==
+        + GameOverState()
+        ==
+        getInstance(): GameOverState
+        ==
+        + enter(): void
+        + exit(): void
+        + transitionTo(State nextState): void
+    }
+
 }
 
 package view.main <<Node>>{
@@ -688,6 +716,10 @@ Site o-- Board
 
 Tile o-- Site
 
+Pair o-- BoardController
+Pair o-- Board
+Pair o-- GameOverState
+Pair o-- BoardView
 
 Player o-- Grid
 

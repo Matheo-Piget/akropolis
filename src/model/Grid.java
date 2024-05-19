@@ -47,10 +47,6 @@ public class Grid extends Model {
         }
     }
 
-    public Map<Point3D, Hexagon> getHexagons() {
-        return hexagons;
-    }
-
     /**
      * Adds a hexagon to the grid at the specified position.
      *
@@ -191,20 +187,6 @@ public class Grid extends Model {
         return sameHexagon;
     }
 
-    public static boolean isAValidTile(Tile t) {
-        Hexagon h1 = t.hexagons.get(0);
-        Hexagon h2 = t.hexagons.get(1);
-        Hexagon h3 = t.hexagons.get(2);
-        boolean adjacent1_2 = h1.isAdjacent(h2);
-        boolean adjacent1_3 = h1.isAdjacent(h3);
-        boolean adjacent2_3 = h2.isAdjacent(h3);
-        int z1 = h1.getZ();
-        int z2 = h2.getZ();
-        int z3 = h3.getZ();
-        System.out.println("z1: " + h1.getZ() + ", z2: " + h2.getZ() + ", z3: " + h3.getZ());
-        return (z1 == z2) && (z2 == z3) && adjacent1_2 && adjacent1_3 && adjacent2_3;
-    }
-
     /**
      * Retrieves the topmost hexagon at the specified position in the grid.
      *
@@ -264,13 +246,6 @@ public class Grid extends Model {
      */
     private boolean hexagonIsSurrounded(Hexagon hexagon) {
         return getNeighbors(hexagon).size() == 6;
-    }
-
-    /***
-     * Clear the grid/board, for new game or otherwise
-     */
-    public void clearGrid() {
-        hexagons.clear();
     }
 
     /**
@@ -381,15 +356,11 @@ public class Grid extends Model {
         int totalScore = 0;
         ArrayList<Hexagon> visitedHexagons = new ArrayList<>();
         for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Building":
-                    int buildingScore = visitBuildingHex(hexagon, visitedHexagons);
-                    if (buildingScore > totalScore) {
-                        totalScore = buildingScore;
-                    }
-                    break;
-                default:
-                    break;
+            if (hexagon.getType().equals("Building")) {
+                int buildingScore = visitBuildingHex(hexagon, visitedHexagons);
+                if (buildingScore > totalScore) {
+                    totalScore = buildingScore;
+                }
             }
         }
         return totalScore;
@@ -506,21 +477,17 @@ public class Grid extends Model {
     public int calculateMarketScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Market":
-                    boolean hasMarketNeighbor = false;
-                    for (Hexagon neighbor : getNeighbors(hexagon)) {
-                        if (neighbor.getType().equals("Market")) {
-                            hasMarketNeighbor = true;
-                            break;
-                        }
+            if (hexagon.getType().equals("Market")) {
+                boolean hasMarketNeighbor = false;
+                for (Hexagon neighbor : getNeighbors(hexagon)) {
+                    if (neighbor.getType().equals("Market")) {
+                        hasMarketNeighbor = true;
+                        break;
                     }
-                    if (!hasMarketNeighbor) {
-                        totalScore += hexagon.getElevation();
-                    }
-                    break;
-                default:
-                    break;
+                }
+                if (!hasMarketNeighbor) {
+                    totalScore += hexagon.getElevation();
+                }
             }
         }
         return totalScore;
@@ -534,12 +501,8 @@ public class Grid extends Model {
     public int calculateBarrackScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Barrack":
-                    totalScore += (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation() : 0;
-                    break;
-                default:
-                    break;
+            if (hexagon.getType().equals("Barrack")) {
+                totalScore += (getNeighbors(hexagon).size() < 6) ? hexagon.getElevation() : 0;
             }
         }
         return totalScore;
@@ -553,12 +516,8 @@ public class Grid extends Model {
     public int calculateTempleScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Temple":
-                    totalScore += hexagonIsSurrounded(hexagon) ? hexagon.getElevation() : 0;
-                    break;
-                default:
-                    break;
+            if (hexagon.getType().equals("Temple")) {
+                totalScore += hexagonIsSurrounded(hexagon) ? hexagon.getElevation() : 0;
             }
         }
         return totalScore;
@@ -572,12 +531,8 @@ public class Grid extends Model {
     public int calculateGardenScoreNoPlaces() {
         int totalScore = 0;
         for (Hexagon hexagon : getTopHexagons()) {
-            switch (hexagon.getType()) {
-                case "Garden":
-                    totalScore += hexagon.getElevation();
-                    break;
-                default:
-                    break;
+            if (hexagon.getType().equals("Garden")) {
+                totalScore += hexagon.getElevation();
             }
         }
         return totalScore;

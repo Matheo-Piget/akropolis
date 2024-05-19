@@ -34,26 +34,7 @@ public class Point3D extends Point{
     public String toString(){
         return "(" + x + ", " + y + ", " + z + ")";
     }
-    public void setLocation(int x, int y, int z){
-        super.setLocation(x, y);
-        this.z = z;
-    }
-    public void setLocation(Point p, int z){
-        super.setLocation(p);
-        this.z = z;
-    }
-    public void setLocation(Point3D p){
-        super.setLocation(p);
-        this.z = p.z;
-    }
-    public void move(int dx, int dy, int dz){
-        super.move(dx, dy);
-        this.z += dz;
-    }
-    public void translate(int dx, int dy, int dz){
-        super.translate(dx, dy);
-        this.z += dz;
-    }
+
     public void setLocation(int x, int y){
         super.setLocation(x, y);
     }

@@ -7,7 +7,7 @@ import java.awt.Color;
  * This class is used to draw the outline of a hexagon.
  */
 public class HexagonOutline extends HexagonView {
-    private Color strokeColor = Color.BLUE;
+    private Color strokeColor;
 
     public HexagonOutline(int x, int y, int z, int size, Color strokeColor) {
         super(x, y, z, size);

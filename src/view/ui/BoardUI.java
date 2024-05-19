@@ -109,7 +109,6 @@ public class BoardUI extends JPanel implements View {
         int max = switch (numberOfPlayers) {
             case 1, 2 -> 27;
             case 3 -> 36;
-            case 4 -> 55;
             default -> 55;
         };
         bar.setMaximum(max); 
