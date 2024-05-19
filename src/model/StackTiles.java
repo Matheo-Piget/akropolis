@@ -18,7 +18,7 @@ public class StackTiles extends Stack<Tile> {
      * Constructs a new stack of tiles with a given size.
      * 
      * @param size The size of the stack.
-     *             @pre. size > 0
+     *             precondition size > 0
      */
     public StackTiles(int size) {
         super();
