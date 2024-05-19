@@ -66,15 +66,19 @@ public abstract class HexagonView extends JComponent {
     }
 
     /**
-     * render hexagon filled with the given stroke color
-     * @param strokeColor The color of the border
-     * @param h The hexagon view to fill
+     * render hexagon
+     * @param strokeColor
+     * @param h
      */
     private void renderHexagonFilled(Color strokeColor, HexagonView h) {
         int width = getWidth();
         int height = getHeight();
-        if (render != null && (render.getWidth() != width || render.getHeight() != height)) {
-            render.flush(); // Dispose of the old image before creating a new one
+        if (render == null) {
+            render = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        }
+        if (render.getWidth() != width || render.getHeight() != height) {
+            // Dispose of the old image before creating a new one if the size is different
+            render.flush();
         }
         else if (render != null) {
             // Clear what was previously drawn
