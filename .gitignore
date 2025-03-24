@@ -45,3 +45,7 @@ build/
 ## Project ###
 res/save/settings.ini
 res/save/leaderBoard.save
+
+/.IDEA
+auxil
+
