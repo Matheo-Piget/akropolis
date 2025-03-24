@@ -20,7 +20,7 @@ Pour profiter du jeu, merci de réaliser l'installation de Java (version 16 ou u
 1. Clonez ce dépôt sur votre machine locale :
 
 ```bash
-git clone https://gaufre.informatique.univ-paris-diderot.fr/moussan/akropolis.git
+git clone https://github.com/Matheo-Piget/akropolis.git
 ```
 
 2. Accédez au répertoire du projet :
@@ -40,15 +40,6 @@ ou powershell si vous êtes sous Windows:
 ````powershell
 .\run.ps1
 ````
-
-## 🤝 Équipe
-Akropolis est développé par une équipe de cinq personnes :
-
-- [Moussa Nidhal](https://gaufre.informatique.univ-paris-diderot.fr/moussan)
-- [Piget Mathéo](https://gaufre.informatique.univ-paris-diderot.fr/piget)
-- [Benzerdjeb Reyene](https://gaufre.informatique.univ-paris-diderot.fr/benzerdj)
-- [Gbaguidi Nerval](https://gaufre.informatique.univ-paris-diderot.fr/gbaguidi)
-- [Chetouani Bilal](https://gaufre.informatique.univ-paris-diderot.fr/chetouan)
 
 ## 📝 Licence
 Ce projet est sous licence, veuiillez consulter le fichier [LICENSE.md](LICENSE.md) pour plus d'informations.
